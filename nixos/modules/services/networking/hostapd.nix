@@ -66,7 +66,6 @@ in
       };
 
       interface = mkOption {
-        default = "";
         example = "wlp2s0";
         type = types.str;
         description = lib.mdDoc ''

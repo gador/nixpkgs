@@ -1,5 +1,9 @@
-{ lib, fetchPypi, buildPythonPackage, flask
+{ lib
+, fetchPypi
+, buildPythonPackage
+, flask
 , brotli
+, pytestCheckHook
 }:
 
 buildPythonPackage rec {
@@ -17,9 +21,16 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = [ flask brotli ];
 
+  checkInputs = [
+    pytestCheckHook
+  ];
+
+  pythonImportsCheck = [ "flask_compress " ];
+
   meta = with lib; {
     description = "Compress responses in your Flask app with gzip";
-    homepage = "https://libwilliam.github.io/flask-compress/";
+    homepage = "https://github.com/colour-science/flask-compress";
     license = licenses.mit;
+    maintainers = with maintainers; [ gador ];
   };
 }

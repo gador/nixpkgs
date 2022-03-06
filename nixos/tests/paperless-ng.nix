@@ -1,12 +1,13 @@
-import ./make-test-python.nix ({ lib, ... }: {
+import ./make-test-python.nix ({ pkgs, lib, package ? pkgs.paperless-ng, ... }: {
   name = "paperless-ng";
-  meta.maintainers = with lib.maintainers; [ earvstedt Flakebi ];
+  meta.maintainers = with lib.maintainers; [ earvstedt Flakebi gador ];
 
   nodes.machine = { pkgs, ... }: {
     environment.systemPackages = with pkgs; [ imagemagick jq ];
     services.paperless-ng = {
       enable = true;
       passwordFile = builtins.toFile "password" "admin";
+      package = package;
     };
   };
 

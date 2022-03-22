@@ -27,40 +27,40 @@ let
       [
         # the following dependencies are non trivial to update since later versions introduce backwards incompatible
         # changes that might affect plugins, or due to other observed problems
-        (mkOverride "click" "7.1.2" "d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a")
+        #(mkOverride "click" "7.1.2" "d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a")
         (mkOverride "flask-babel" "1.0.0" "0gmb165vkwv5v7dxsxa2i3zhafns0fh938m2zdcrv4d8z5l099yn")
-        (mkOverride "itsdangerous" "1.1.0" "321b033d07f2a4136d3ec762eac9f16a10ccd60f53c0c91af90217ace7ba1f19")
-        (mkOverride "jinja2" "2.11.3" "a6d58433de0ae800347cab1fa3043cebbabe8baa9d29e668f1c768cb87a333c6")
+        #(mkOverride "itsdangerous" "1.1.0" "321b033d07f2a4136d3ec762eac9f16a10ccd60f53c0c91af90217ace7ba1f19")
+        #(mkOverride "jinja2" "2.11.3" "a6d58433de0ae800347cab1fa3043cebbabe8baa9d29e668f1c768cb87a333c6")
         (mkOverride "markdown" "3.1.1" "2e50876bcdd74517e7b71f3e7a76102050edec255b3983403f1a63e7c8a41e7a")
-        (mkOverride "markupsafe" "1.1.1" "29872e92839765e546828bb7754a68c418d927cd064fd4708fab9fe9c8bb116b")
+        #(mkOverride "markupsafe" "1.1.1" "29872e92839765e546828bb7754a68c418d927cd064fd4708fab9fe9c8bb116b")
 
         # Requires flask<2, cannot mkOverride because tests need to be disabled
-        (
-          self: super: {
-            flask = super.flask.overridePythonAttrs (oldAttrs: rec {
-              version = "1.1.4";
-              src = oldAttrs.src.override {
-                inherit version;
-                sha256 = "15ni4xlm57a15f5hipp8w0c9zba20179bvfns2392fiq1lcbdghg";
-              };
-              doCheck = false;
-            });
-          }
-        )
+        #(
+        #  self: super: {
+        #    flask = super.flask.overridePythonAttrs (oldAttrs: rec {
+        #      version = "1.1.4";
+        #      src = oldAttrs.src.override {
+        #        inherit version;
+        #        sha256 = "15ni4xlm57a15f5hipp8w0c9zba20179bvfns2392fiq1lcbdghg";
+        #      };
+        #      doCheck = false;
+        #    });
+        #  }
+        #)
 
         # Requires werkezug<2, cannot mkOverride because tests need to be disabled
-        (
-          self: super: {
-            werkzeug = super.werkzeug.overridePythonAttrs (oldAttrs: rec {
-              version = "1.0.1";
-              src = oldAttrs.src.override {
-                inherit version;
-                sha256 = "6c80b1e5ad3665290ea39320b91e1be1e0d5f60652b964a3070216de83d2e47c";
-              };
-              doCheck = false;
-            });
-          }
-        )
+        #(
+        #  self: super: {
+        #    werkzeug = super.werkzeug.overridePythonAttrs (oldAttrs: rec {
+        #      version = "1.0.1";
+        #      src = oldAttrs.src.override {
+        #        inherit version;
+        #        sha256 = "6c80b1e5ad3665290ea39320b91e1be1e0d5f60652b964a3070216de83d2e47c";
+        #      };
+        #      doCheck = false;
+        #    });
+        #  }
+        #)
 
         # Requires unidecode>=0.04.14,<0.05. Upstream changed the source naming between releases
         (
@@ -194,6 +194,7 @@ let
               #pytestFlagsArray = [ "-W ignore::DeprecationWarning" ];
               disabledTestPaths = oldAttrs.disabledTestPaths ++ [
                 "tests/asgi/test_asgi_servers.py"
+                "tests/test_wsgi_servers.py"
               ];
             });
           }
@@ -208,6 +209,7 @@ let
                 "test_cookies.py"
                 # requires network
                 "test_worker.py"
+                "test_server_events.py"
               ];
             });
           }
@@ -253,14 +255,14 @@ let
           self: super: {
             octoprint-pisupport = self.buildPythonPackage rec {
               pname = "OctoPrint-PiSupport";
-              version = "2021.10.28";
+              version = "2022.3.1";
               format = "setuptools";
 
               src = fetchFromGitHub {
                 owner = "OctoPrint";
                 repo = "OctoPrint-PiSupport";
                 rev = version;
-                sha256 = "01bpvv1sn3113fdpw6b90c2rj8lqay118x609yy64z9ccm93khl9";
+                sha256 = "fuDIvmz9u4f1Kptm6pd9TfQd9DVKiak4THUd66QpRO4=";
               };
 
               # requires octoprint itself during tests
@@ -273,13 +275,13 @@ let
           self: super: {
             octoprint = self.buildPythonPackage rec {
               pname = "OctoPrint";
-              version = "1.7.3";
+              version = "1.8.0rc2";
 
               src = fetchFromGitHub {
                 owner = "OctoPrint";
                 repo = "OctoPrint";
                 rev = version;
-                sha256 = "sha256-U6g7WysHHOlZ4p5BM4tw3GGAxQmxv6ltYgAp1rO/eCg=";
+                sha256 = "sha256-0DX9xQ/yhrVPQD14DhGlIS7ikMJAF4p+uJaQ3MUcaKs=";
               };
 
               propagatedBuildInputs = with super; [

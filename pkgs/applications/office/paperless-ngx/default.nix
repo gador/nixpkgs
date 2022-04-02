@@ -12,16 +12,12 @@
 , unpaper
 , liberation_ttf
 , pkgs
+, poppler_utils
 }:
 
 let
   py = python3.override {
     packageOverrides = self: super: {
-      django = super.django_3;
-      django-picklefield = super.django-picklefield.overrideAttrs (oldAttrs: {
-        # Checks do not pass with django 3
-        doInstallCheck = false;
-      });
       # Incompatible with aioredis 2
       aioredis = super.aioredis.overridePythonAttrs (oldAttrs: rec {
         version = "1.3.1";
@@ -30,27 +26,61 @@ let
           sha256 = "0fi7jd5hlx8cnv1m97kv9hc4ih4l8v15wzkqwsp73is4n0qazy0m";
         };
       });
+
+      django-extensions = super.django-extensions.overridePythonAttrs (oldAttrs: rec {
+        disabledTestPaths = oldAttrs.disabledTestPaths ++ [
+
+          "tests/management/commands/test_pipchecker.py"
+          "tests/management/commands/test_show_urls.py"
+          "tests/test_admin_widgets.py"
+          "tests/test_dumpscript.py"
+          "tests/test_management_command.py"
+          "tests/management/commands/test_show_template_tags.py"
+          "tests/management/commands/shell_plus_tests/test_import_subclasses.py"
+          "tests/management/test_email_notifications.py"
+          "tests/test_runscript.py"
+          "tests/auth/test_mixins.py"
+        ];
+      });
+
+      ocrmypdf = super.ocrmypdf.overridePythonAttrs (oldAttrs: rec {
+        postPatch = ''
+          # https://github.com/ocrmypdf/OCRmyPDF/issues/933
+          substituteInPlace setup.cfg \
+            --replace "pdfminer.six!=20200720,>=20191110,<=20211012" "pdfminer.six"
+        '';
+      });
+      pdfminer_six = super.pdfminer_six.overridePythonAttrs (oldAttrs: rec {
+        version = "20220319";
+        postPatch = ''
+          # Verion is not stored in repo, gets added by a GitHub action after tag is created
+          # https://github.com/pdfminer/pdfminer.six/pull/727
+          substituteInPlace pdfminer/__init__.py --replace "__VERSION__" ${version}
+        '';
+      });
+
+
     };
   };
 
-  path = lib.makeBinPath [ ghostscript imagemagick jbig2enc optipng pngquant qpdf tesseract4 unpaper ];
+  path = lib.makeBinPath [ ghostscript imagemagick jbig2enc optipng pngquant qpdf tesseract4 unpaper poppler_utils ];
 in
 py.pkgs.pythonPackages.buildPythonApplication rec {
   pname = "paperless-ngx";
-  version = "ngx-1.6.0-rc1";
+  version = "ngx-1.6.0";
 
   src = fetchFromGitHub {
     owner = "paperless-ngx";
     repo = pname;
     rev = version;
-    sha256 = "WblWDC29NYK4nceKT6qcu/SUq7lbsT5cg6YYaWGbooQ=";
+    sha256 = "ymVa9edCvhchdJ/Av8B2kKTDVPfUidzzLumqWIgnYfg=";
   };
 
   format = "other";
 
   # Make bind address configurable
   postPatch = ''
-    substituteInPlace gunicorn.conf.py --replace "bind = '0.0.0.0:8000'" ""
+    substituteInPlace gunicorn.conf.py --replace "bind = f'0.0.0.0:{os.getenv(\"PAPERLESS_PORT\", 8000)}'" ""
   '';
 
   propagatedBuildInputs = with py.pkgs.pythonPackages; [
@@ -145,6 +175,8 @@ py.pkgs.pythonPackages.buildPythonApplication rec {
     whitenoise
     whoosh
     zope_interface
+    pyzbar
+    pdf2image
   ];
 
   doCheck = true;
@@ -170,9 +202,9 @@ py.pkgs.pythonPackages.buildPythonApplication rec {
 
   installPhase = ''
     mkdir -p $out/lib
-    cp -r . $out/lib/paperless-ng
-    chmod +x $out/lib/paperless-ng/src/manage.py
-    makeWrapper $out/lib/paperless-ng/src/manage.py $out/bin/paperless-ng \
+    cp -r . $out/lib/paperless-ngx
+    chmod +x $out/lib/paperless-ngx/src/manage.py
+    makeWrapper $out/lib/paperless-ngx/src/manage.py $out/bin/paperless-ngx \
       --prefix PYTHONPATH : "$PYTHONPATH" \
       --prefix PATH : "${path}"
   '';

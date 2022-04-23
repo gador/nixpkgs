@@ -1355,7 +1355,11 @@ with pkgs;
 
   simplenes = callPackage ../applications/emulators/simplenes { };
 
-  snes9x-gtk = callPackage ../applications/emulators/snes9x-gtk { };
+  snes9x = callPackage ../applications/emulators/snes9x { };
+
+  snes9x-gtk = callPackage ../applications/emulators/snes9x {
+    withGtk = true;
+  };
 
   stella = callPackage ../applications/emulators/stella { };
 
@@ -2102,6 +2106,8 @@ with pkgs;
   dotter = callPackage ../tools/misc/dotter { };
 
   droidcam = callPackage ../applications/video/droidcam { };
+
+  droidmote = callPackage ../tools/inputmethods/droidmote { };
 
   ecdsautils = callPackage ../tools/security/ecdsautils { };
 

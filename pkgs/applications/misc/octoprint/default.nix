@@ -166,6 +166,8 @@ let
                     "watchdog"
                     "wrapt"
                     "zeroconf"
+                    "Flask-Login"
+                    "werkzeug"
                   ];
                 in
                 ''

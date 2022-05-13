@@ -41,6 +41,8 @@
 , ycmd
 , zoxide
 , nodejs
+, xdotool
+, xorg
 
 # test dependencies
 , neovim-unwrapped
@@ -291,6 +293,10 @@ self: super: {
     '';
   });
 
+  fzf-lua = super.fzf-lua.overrideAttrs (old: {
+    propagatedBuildInputs = [ fzf ];
+  });
+
   fzf-vim = super.fzf-vim.overrideAttrs (old: {
     dependencies = with self; [ fzfWrapper ];
   });
@@ -450,11 +456,8 @@ self: super: {
         --replace "code-minimap" "${code-minimap}/bin/code-minimap"
     '';
 
-    doCheck = true;
-    checkPhase = ''
-      ${neovim-unwrapped}/bin/nvim -n -u NONE -i NONE -V1 --cmd "set rtp+=$out" --cmd "runtime! plugin/*.vim" -c "MinimapToggle"  +quit!
-    '';
-
+    doInstallCheck = true;
+    vimCommandCheck = "MinimapToggle";
   });
 
   ncm2 = super.ncm2.overrideAttrs (old: {
@@ -608,6 +611,14 @@ self: super: {
       substituteInPlace plugin/statix.vim --replace statix ${statix}/bin/statix
     '';
   };
+
+  stylish-nvim = super.stylish-nvim.overrideAttrs (old: {
+      postPatch = ''
+        substituteInPlace lua/stylish/common/mouse_hover_handler.lua --replace xdotool ${xdotool}/bin/xdotool
+        substituteInPlace lua/stylish/components/menu.lua --replace xdotool ${xdotool}/bin/xdotool
+        substituteInPlace lua/stylish/components/menu.lua --replace xwininfo ${xorg.xwininfo}/bin/xwininfo
+      '';
+  });
 
   sved =
     let
@@ -1119,6 +1130,7 @@ self: super: {
       "coc-flutter"
       "coc-git"
       "coc-go"
+      "coc-haxe"
       "coc-highlight"
       "coc-html"
       "coc-imselect"

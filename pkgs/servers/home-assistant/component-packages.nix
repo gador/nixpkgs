@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2022.5.3";
+  version = "2022.5.4";
   components = {
     "abode" = ps: with ps; [
       abodepy
@@ -2032,7 +2032,8 @@
       poolsense
     ];
     "powerwall" = ps: with ps; [
-    ]; # missing inputs: tesla-powerwall
+      tesla-powerwall
+    ];
     "profiler" = ps: with ps; [
       guppy3
       objgraph
@@ -2826,7 +2827,7 @@
     "uk_transport" = ps: with ps; [
     ];
     "ukraine_alarm" = ps: with ps; [
-      ukrainealarm
+      uasiren
     ];
     "unifi" = ps: with ps; [
       aiounifi
@@ -2884,7 +2885,8 @@
     "vacuum" = ps: with ps; [
     ];
     "vallox" = ps: with ps; [
-    ]; # missing inputs: vallox-websocket-api
+      vallox-websocket-api
+    ];
     "vasttrafik" = ps: with ps; [
     ]; # missing inputs: vtjp
     "velbus" = ps: with ps; [
@@ -3557,6 +3559,7 @@
     "plugwise"
     "point"
     "poolsense"
+    "powerwall"
     "profiler"
     "prometheus"
     "prosegur"
@@ -3732,6 +3735,7 @@
     "utility_meter"
     "uvc"
     "vacuum"
+    "vallox"
     "velbus"
     "venstar"
     "vera"

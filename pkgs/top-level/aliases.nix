@@ -94,6 +94,7 @@ mapAliases ({
   avxsynth = throw "avxsynth was removed because it was broken"; # Added 2021-05-18
   awesome-4-0 = awesome; # Added 2022-05-05
   aws-okta = throw "aws-okta is on indefinite hiatus. See https://github.com/segmentio/aws-okta/issues/278"; # Added 2022-04-05;
+  axoloti = throw "axoloti has been removed: abandoned by upstream"; # Added 2022-05-13
   azureus = throw "azureus is now known as vuze and the version in nixpkgs was really outdated"; # Added 2021-08-02
 
   ### B ###
@@ -205,6 +206,7 @@ mapAliases ({
   cpuminer-multi = throw "cpuminer-multi has been removed: deleted by upstream"; # Added 2022-01-07
   crafty = throw "crafty has been removed: deleted by upstream"; # Added 2022-01-07
   cryptol = throw "cryptol was removed due to prolonged broken build"; # Added 2020-08-21
+  ctl = throw "ctl has been removed: abandoned by upstream"; # Added 2022-05-13
 
   # CUDA Toolkit
   cudatoolkit_6 = throw "cudatoolkit_6 has been removed in favor of newer versions"; # Added 2021-02-14
@@ -285,6 +287,7 @@ mapAliases ({
   dart_old = throw "Non-stable versions of Dart have been removed"; # Added 2020-01-15
   dart_stable = dart; # Added 2020-01-15
   dat = nodePackages.dat;
+  dashpay = throw "'dashpay' has been removed because it was unmaintained"; # Added 2022-05-12
   dbus_daemon = throw "'dbus_daemon' has been renamed to/replaced by 'dbus.daemon'"; # Converted to throw 2022-02-22
   dbus_glib = throw "'dbus_glib' has been renamed to/replaced by 'dbus-glib'"; # Converted to throw 2022-02-22
   dbus_libs = throw "'dbus_libs' has been renamed to/replaced by 'dbus'"; # Converted to throw 2022-02-22
@@ -314,8 +317,10 @@ mapAliases ({
   demjson = with python3Packages; toPythonApplication demjson; # Added 2022-01-18
   desktop_file_utils = throw "'desktop_file_utils' has been renamed to/replaced by 'desktop-file-utils'"; # Converted to throw 2022-02-22
   devicemapper = throw "'devicemapper' has been renamed to/replaced by 'lvm2'"; # Converted to throw 2022-02-22
+  dfu-util-axoloti = throw "dfu-util-axoloti has been removed: abandoned by upstream"; # Added 2022-05-13
   dhall-text = throw "'dhall-text' has been deprecated in favor of the 'dhall text' command from 'dhall'"; # Added 2022-03-26
   digikam5 = throw "'digikam5' has been renamed to/replaced by 'digikam'"; # Converted to throw 2022-02-22
+  dirmngr = throw "dirmngr has been removed: merged into gnupg"; # Added 2022-05-13
   disper = throw "disper has been removed: abandoned by upstream"; # Added 2022-03-18
   displaycal = throw "displaycal has been removed from nixpkgs, as it hasn't migrated to python3"; # Added 2022-01-12
   dmtx = throw "'dmtx' has been renamed to/replaced by 'dmtx-utils'"; # Converted to throw 2022-02-22
@@ -551,7 +556,8 @@ mapAliases ({
   holochain-go = throw "holochain-go was abandoned by upstream"; # Added 2022-01-01
   htmlTidy = throw "'htmlTidy' has been renamed to/replaced by 'html-tidy'"; # Converted to throw 2022-02-22
   ht-rust = xh; # Added 2021-02-13
-  hydra-flakes = throw "hydra-flakes: Flakes support has been merged into Hydra's master. Please use `hydra-unstable` now"; # Added 2020-04-06
+  hydra-flakes = throw "hydra-flakes: Flakes support has been merged into Hydra's master. Please use `hydra_unstable` now"; # Added 2020-04-06
+  hydra-unstable = hydra_unstable; # added 2022-05-10
 
   ### I ###
 
@@ -560,6 +566,8 @@ mapAliases ({
   icecat-bin = throw "icecat-bin has been removed, the binary builds are not maintained upstream"; # Added 2022-02-15
   icedtea8_web = adoptopenjdk-icedtea-web; # Added 2019-08-21
   icedtea_web = adoptopenjdk-icedtea-web; # Added 2019-08-21
+  icu59 = throw "icu59 has been removed, use a more recent version instead"; # Added 2022-05-14
+  icu65 = throw "icu65 has been removed, use a more recent version instead"; # Added 2022-05-14
   idea = throw "'idea' has been renamed to/replaced by 'jetbrains'"; # Converted to throw 2022-02-22
   imapproxy = throw "imapproxy has been removed because it did not support a supported openssl version"; # added 2021-12-15
   imagemagick7Big = imagemagickBig; # Added 2021-02-22
@@ -671,6 +679,7 @@ mapAliases ({
   liblastfm = libsForQt5.liblastfm; # Added 2020-06-14
   liblrdf = throw "'liblrdf' has been renamed to/replaced by 'lrdf'"; # Converted to throw 2022-02-22
   libmsgpack = throw "'libmsgpack' has been renamed to/replaced by 'msgpack'"; # Converted to throw 2022-02-22
+  libnih = throw "'libnih' has been removed"; # Converted to throw 2022-05-17
   libosmpbf = throw "libosmpbf was removed because it is no longer required by osrm-backend";
   libpng_apng = throw "libpng_apng has been removed, because it is equivalent to libpng"; # Added 2021-03-21
   libpulseaudio-vanilla = libpulseaudio; # Added 2022-04-20
@@ -693,6 +702,7 @@ mapAliases ({
   libudev = throw "'libudev' has been renamed to/replaced by 'udev'"; # Converted to throw 2022-02-22
   libungif = giflib; # Added 2020-02-12
   libusb = libusb1; # Added 2020-04-28
+  libusb1-axoloti = throw "libusb1-axoloti has been removed: axoloti has been removed"; # Added 2022-05-13
   libva-full = throw "'libva-full' has been renamed to/replaced by 'libva'"; # Converted to throw 2022-02-22
   libva1-full = throw "'libva1-full' has been renamed to/replaced by 'libva1'"; # Converted to throw 2022-02-22
   libwnck3 = libwnck;
@@ -897,6 +907,7 @@ mapAliases ({
   ### O ###
 
   oathToolkit = oath-toolkit; # Added 2022-04-04
+  oci-image-tool = throw "oci-image-tool is no longer actively maintained, and has had major deficiencies for several years."; # Added 2022-05-14;
   oracleXE = throw "oracleXE has been removed, as it's heavily outdated and unmaintained"; # Added 2020-10-09
   OVMF-CSM = throw "OVMF-CSM has been removed in favor of OVMFFull"; # Added 2021-10-16
   OVMF-secureBoot = throw "OVMF-secureBoot has been removed in favor of OVMFFull"; # Added 2021-10-16

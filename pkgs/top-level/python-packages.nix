@@ -4117,6 +4117,8 @@ in {
 
   icontract = callPackage ../development/python-modules/icontract { };
 
+  icontract-hypothesis = callPackage ../development/python-modules/icontract-hypothesis { };
+
   identify = callPackage ../development/python-modules/identify { };
 
   idna = callPackage ../development/python-modules/idna { };

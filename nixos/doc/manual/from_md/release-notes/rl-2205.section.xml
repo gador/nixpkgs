@@ -16,15 +16,8 @@
     </para>
     <itemizedlist>
       <listitem>
-        <para>
-          Nix has been updated from 2.3 to 2.8. This mainly brings
-          experimental support for Flakes, but also marks the
-          <literal>nix</literal> command as experimental which now has
-          to be enabled via the configuration explicitly. For more
-          information and instructions for upgrades, see the
-          <link xlink:href="https://nixos.org/manual/nix/stable/release-notes/release-notes.html">Release
-          Notes</link>.
-        </para>
+<literallayout>Nix has been updated from 2.3 to 2.8. This mainly brings experimental support for Flakes, but also marks the <literal>nix</literal> command as experimental which now has to be enabled via the configuration explicitly. For more information and instructions for upgrades, see the relase notes for <link xlink:href="https://nixos.org/manual/nix/stable/release-notes/rl-2.4.html">nix-2.4</link>,
+<link xlink:href="https://nixos.org/manual/nix/stable/release-notes/rl-2.5.html">nix-2.5</link>, <link xlink:href="https://nixos.org/manual/nix/stable/release-notes/rl-2.6.html">nix-2.6</link>, <link xlink:href="https://nixos.org/manual/nix/stable/release-notes/rl-2.7.html">nix-2.7</link> and <link xlink:href="https://nixos.org/manual/nix/stable/release-notes/rl-2.8.html">nix-2.8</link></literallayout>
       </listitem>
       <listitem>
         <para>
@@ -801,6 +794,13 @@
           <literal>services.openldap.settings</literal>, which
           represents your <literal>cn=config</literal>.
         </para>
+        <para>
+          Additionally with 2.5 the argon2 module was included in the
+          standard distrubtion and renamed from
+          <literal>pw-argon2</literal> to <literal>argon2</literal>.
+          Remember to update your <literal>olcModuleLoad</literal> entry
+          in <literal>cn=config</literal>.
+        </para>
       </listitem>
       <listitem>
         <para>
@@ -1006,7 +1006,7 @@
     };
 
     extraConfigFiles = [
-      /run/keys/matrix-synapse/secrets.yaml
+      &quot;/run/keys/matrix-synapse/secrets.yaml&quot;
     ];
   };
 }
@@ -1014,7 +1014,9 @@
         <para>
           The secrets in your original config should be migrated into a
           YAML file that is included via
-          <literal>extraConfigFiles</literal>.
+          <literal>extraConfigFiles</literal>. The filename must be
+          quoted to prevent nix from copying it to the (world readable)
+          store.
         </para>
         <para>
           Additionally a few option defaults have been synced up with

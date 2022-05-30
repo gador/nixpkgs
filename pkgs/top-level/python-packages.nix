@@ -209,6 +209,8 @@ in {
 
   aenum = callPackage ../development/python-modules/aenum { };
 
+  aeppl = callPackage ../development/python-modules/aeppl { };
+
   aesara = callPackage ../development/python-modules/aesara { };
 
   aesedb = callPackage ../development/python-modules/aesedb { };
@@ -1225,6 +1227,8 @@ in {
 
   bids-validator = callPackage ../development/python-modules/bids-validator { };
 
+  biliass = callPackage ../development/python-modules/biliass { };
+
   billiard = callPackage ../development/python-modules/billiard { };
 
   bimmer-connected = callPackage ../development/python-modules/bimmer-connected { };
@@ -2071,8 +2075,6 @@ in {
 
   dask-mpi = callPackage ../development/python-modules/dask-mpi { };
 
-  dask-xgboost = callPackage ../development/python-modules/dask-xgboost { };
-
   dask-yarn = callPackage ../development/python-modules/dask-yarn { };
 
   databases = callPackage ../development/python-modules/databases { };
@@ -2134,6 +2136,10 @@ in {
   dcmstack = callPackage ../development/python-modules/dcmstack { };
 
   ddt = callPackage ../development/python-modules/ddt { };
+
+  deal = callPackage ../development/python-modules/deal { };
+
+  deal-solver = callPackage ../development/python-modules/deal-solver { };
 
   deap = callPackage ../development/python-modules/deap { };
 
@@ -2348,6 +2354,8 @@ in {
 
   django-mailman3 = callPackage ../development/python-modules/django-mailman3 { };
 
+  django-model-utils = callPackage ../development/python-modules/django-model-utils { };
+
   django-modelcluster = callPackage ../development/python-modules/django_modelcluster { };
 
   django-multiselectfield = callPackage ../development/python-modules/django-multiselectfield { };
@@ -2359,6 +2367,8 @@ in {
   django_nose = callPackage ../development/python-modules/django_nose { };
 
   django-oauth-toolkit = callPackage ../development/python-modules/django-oauth-toolkit { };
+
+  django-otp = callPackage ../development/python-modules/django-otp { };
 
   django-paintstore = callPackage ../development/python-modules/django-paintstore { };
 
@@ -2393,6 +2403,8 @@ in {
   djangorestframework-dataclasses = callPackage ../development/python-modules/djangorestframework-dataclasses { };
 
   djangorestframework-camel-case = callPackage ../development/python-modules/djangorestframework-camel-case { };
+
+  djangorestframework-guardian = callPackage ../development/python-modules/djangorestframework-guardian { };
 
   djangorestframework-recursive = callPackage ../development/python-modules/djangorestframework-recursive { };
 
@@ -2538,6 +2550,8 @@ in {
 
   dpath = callPackage ../development/python-modules/dpath { };
 
+  dpcontracts = callPackage ../development/python-modules/dpcontracts { };
+
   dpkt = callPackage ../development/python-modules/dpkt { };
 
   dragonfly = callPackage ../development/python-modules/dragonfly { };
@@ -2595,6 +2609,10 @@ in {
   duo-client = callPackage ../development/python-modules/duo-client { };
 
   durus = callPackage ../development/python-modules/durus {  };
+
+  dvclive = callPackage ../development/python-modules/dvclive {  };
+
+  dvc-render = callPackage ../development/python-modules/dvc-render {  };
 
   dwdwfsapi = callPackage ../development/python-modules/dwdwfsapi { };
 
@@ -2822,6 +2840,8 @@ in {
   exifread = callPackage ../development/python-modules/exifread { };
 
   expects = callPackage ../development/python-modules/expects { };
+
+  expecttest = callPackage ../development/python-modules/expecttest { };
 
   expiringdict = callPackage ../development/python-modules/expiringdict { };
 
@@ -3267,6 +3287,8 @@ in {
   funcsigs = callPackage ../development/python-modules/funcsigs { };
 
   functools32 = callPackage ../development/python-modules/functools32 { };
+
+  functorch = callPackage ../development/python-modules/functorch { };
 
   funcy = callPackage ../development/python-modules/funcy { };
 
@@ -4093,6 +4115,8 @@ in {
 
   idasen = callPackage ../development/python-modules/idasen { };
 
+  icontract = callPackage ../development/python-modules/icontract { };
+
   identify = callPackage ../development/python-modules/identify { };
 
   idna = callPackage ../development/python-modules/idna { };
@@ -4709,6 +4733,8 @@ in {
 
   launchpadlib = callPackage ../development/python-modules/launchpadlib { };
 
+  laundrify-aio = callPackage ../development/python-modules/laundrify-aio { };
+
   lazr_config = callPackage ../development/python-modules/lazr/config.nix { };
 
   lazr_delegates = callPackage ../development/python-modules/lazr/delegates.nix { };
@@ -5308,7 +5334,9 @@ in {
 
   minexr = callPackage ../development/python-modules/minexr { };
 
-  miniaudio = callPackage ../development/python-modules/miniaudio { };
+  miniaudio = callPackage ../development/python-modules/miniaudio {
+    inherit (pkgs.darwin.apple_sdk.frameworks) AudioToolbox CoreAudio;
+  };
 
   minidb = callPackage ../development/python-modules/minidb { };
 
@@ -5861,6 +5889,8 @@ in {
   numba-scipy = callPackage ../development/python-modules/numba-scipy { };
 
   numcodecs = callPackage ../development/python-modules/numcodecs { };
+
+  numdifftools = callPackage ../development/python-modules/numdifftools { };
 
   numericalunits = callPackage ../development/python-modules/numericalunits { };
 
@@ -6515,6 +6545,8 @@ in {
 
   pysbd = callPackage ../development/python-modules/pysbd { };
 
+  pyschemes = callPackage ../development/python-modules/pyschemes { };
+
   pyshark = callPackage ../development/python-modules/pyshark { };
 
   pysiaalarm = callPackage ../development/python-modules/pysiaalarm { };
@@ -6797,7 +6829,9 @@ in {
 
   protonup = callPackage ../development/python-modules/protonup { };
 
-  protonvpn-nm-lib = callPackage ../development/python-modules/protonvpn-nm-lib { };
+  protonvpn-nm-lib = callPackage ../development/python-modules/protonvpn-nm-lib {
+    pkgs-systemd = pkgs.systemd;
+  };
 
   prov = callPackage ../development/python-modules/prov { };
 
@@ -8289,6 +8323,8 @@ in {
 
   pytest-sugar = callPackage ../development/python-modules/pytest-sugar { };
 
+  pytest-test-utils = callPackage ../development/python-modules/pytest-test-utils { };
+
   pytest-testmon = callPackage ../development/python-modules/pytest-testmon { };
 
   pytest-timeout = callPackage ../development/python-modules/pytest-timeout { };
@@ -9462,7 +9498,7 @@ in {
 
   serverlessrepo = callPackage ../development/python-modules/serverlessrepo { };
 
-  service-identity = callPackage ../development/python-modules/service_identity { };
+  service-identity = callPackage ../development/python-modules/service-identity { };
 
   setproctitle = callPackage ../development/python-modules/setproctitle { };
 
@@ -10819,6 +10855,8 @@ in {
     inherit (pkgs.darwin.apple_sdk.frameworks) ApplicationServices CoreServices;
   };
 
+  vaa = callPackage ../development/python-modules/vaa { };
+
   validate-email = callPackage ../development/python-modules/validate-email { };
 
   validators = callPackage ../development/python-modules/validators { };
@@ -11012,6 +11050,8 @@ in {
   webapp2 = callPackage ../development/python-modules/webapp2 { };
 
   webassets = callPackage ../development/python-modules/webassets { };
+
+  webauthn = callPackage ../development/python-modules/webauthn { };
 
   web = callPackage ../development/python-modules/web { };
 
@@ -11344,6 +11384,8 @@ in {
   ytmusicapi = callPackage ../development/python-modules/ytmusicapi { };
 
   yubico-client = callPackage ../development/python-modules/yubico-client { };
+
+  yutto = callPackage ../tools/misc/yutto { };
 
   z3c-checkversions = callPackage ../development/python-modules/z3c-checkversions { };
 

@@ -4969,6 +4969,12 @@
     githubId = 1498782;
     name = "Jesse Haber-Kucharsky";
   };
+  hamburger1984 = {
+    email = "hamburger1984@gmail.com";
+    github = "hamburger1984";
+    githubId = 438976;
+    name = "Andreas Krohn";
+  };
   hamhut1066 = {
     email = "github@hamhut1066.com";
     github = "moredhel";
@@ -5960,6 +5966,12 @@
     githubId = 1667473;
     name = "Jethro Kuan";
   };
+  jevy = {
+    email = "jevin@quickjack.ca";
+    github = "jevy";
+    githubId = 110620;
+    name = "Jevin Maltais";
+  };
   jfb = {
     email = "james@yamtime.com";
     github = "tftio";
@@ -6672,6 +6684,13 @@
       fingerprint = "932F 3E8E 1C0F 4A98 95D7  B8B8 B0CA A28A 0295 8308";
     }];
   };
+  kenran = {
+    email = "johannes.maier@mailbox.org";
+    github = "kenranunderscore";
+    githubId = 5188977;
+    matrix = "@kenran_:matrix.org";
+    name = "Johannes Maier";
+  };
   kentjames = {
     email = "jameschristopherkent@gmail.com";
     github = "kentjames";
@@ -6702,6 +6721,13 @@
     github = "Unkn0wnCat";
     githubId = 8211181;
     name = "Kevin Kandlbinder";
+  };
+  kfears = {
+    email = "kfearsoff@gmail.com";
+    github = "KFearsoff";
+    githubId = 66781795;
+    matrix = "@kfears:matrix.org";
+    name = "KFears";
   };
   kfollesdal = {
     email = "kfollesdal@gmail.com";
@@ -7055,13 +7081,6 @@
     github = "kuznero";
     githubId = 449813;
     name = "Roman Kuznetsov";
-  };
-  kvark = {
-    name = "Dzmitry Malyshau";
-    email = "kvark@fastmail.com";
-    matrix = "@kvark:matrix.org";
-    github = "kvark";
-    githubId = 107301;
   };
   kwohlfahrt = {
     email = "kai.wohlfahrt@gmail.com";
@@ -9110,6 +9129,12 @@
     github = "neilmayhew";
     githubId = 166791;
     name = "Neil Mayhew";
+  };
+  nek0 = {
+    email = "nek0@nek0.eu";
+    github = "nek0";
+    githubId = 1859691;
+    name = "Amedeo Molnár";
   };
   nelsonjeppesen = {
     email = "nix@jeppesen.io";
@@ -11832,6 +11857,12 @@
     email = "loic.martel@protonmail.com";
     github = "simarra";
     githubId = 14372987;
+  };
+  simoneruffini = {
+    email = "simone.ruffini@tutanota.com";
+    github = "simoneruffini";
+    githubId = 50401154;
+    name = "Simone Ruffini";
   };
   simonchatts = {
     email = "code@chatts.net";

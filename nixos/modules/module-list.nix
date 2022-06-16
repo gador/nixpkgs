@@ -169,6 +169,7 @@
   ./programs/gpaste.nix
   ./programs/gnupg.nix
   ./programs/gphoto2.nix
+  ./programs/haguichi.nix
   ./programs/hamster.nix
   ./programs/htop.nix
   ./programs/iftop.nix
@@ -196,6 +197,7 @@
   ./programs/npm.nix
   ./programs/noisetorch.nix
   ./programs/oblogout.nix
+  ./programs/openvpn3.nix
   ./programs/pantheon-tweaks.nix
   ./programs/partition-manager.nix
   ./programs/plotinus.nix
@@ -658,6 +660,7 @@
   ./services/monitoring/do-agent.nix
   ./services/monitoring/fusion-inventory.nix
   ./services/monitoring/grafana.nix
+  ./services/monitoring/grafana-agent.nix
   ./services/monitoring/grafana-image-renderer.nix
   ./services/monitoring/grafana-reporter.nix
   ./services/monitoring/graphite.nix
@@ -771,6 +774,7 @@
   ./services/networking/ergo.nix
   ./services/networking/ergochat.nix
   ./services/networking/eternal-terminal.nix
+  ./services/networking/expressvpn.nix
   ./services/networking/fakeroute.nix
   ./services/networking/ferm.nix
   ./services/networking/fireqos.nix

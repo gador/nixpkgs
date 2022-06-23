@@ -1147,6 +1147,8 @@ with pkgs;
 
   cope = callPackage ../tools/misc/cope { };
 
+  dterm = callPackage ../tools/misc/dterm { };
+
   ejson2env = callPackage ../tools/admin/ejson2env { };
 
   davinci-resolve = callPackage ../applications/video/davinci-resolve { };
@@ -8227,6 +8229,8 @@ with pkgs;
   loki = callPackage ../development/libraries/loki { stdenv = gcc10StdenvCompat; };
 
   longview = callPackage ../servers/monitoring/longview { };
+
+  lorien = callPackage ../applications/graphics/lorien { };
 
   lout = callPackage ../tools/typesetting/lout { };
 
@@ -21865,7 +21869,9 @@ with pkgs;
     gn = gn1924;
   };
 
-  ergochat = callPackage ../servers/irc/ergochat { };
+  ergochat = callPackage ../servers/irc/ergochat {
+    buildGoModule = buildGo118Module;
+  };
 
   etcd = etcd_3_3;
   etcd_3_3 = callPackage ../servers/etcd/3.3.nix { };
@@ -26759,7 +26765,7 @@ with pkgs;
   fragments = callPackage ../applications/networking/p2p/fragments { };
 
   freecad = libsForQt5.callPackage ../applications/graphics/freecad {
-    boost = python3Packages.boost169;
+    boost = python3Packages.boost;
     inherit (python3Packages)
       GitPython
       matplotlib
@@ -33603,7 +33609,9 @@ with pkgs;
 
   verifast = callPackage ../applications/science/logic/verifast {};
 
-  veriT = callPackage ../applications/science/logic/verit {};
+  veriT = callPackage ../applications/science/logic/verit {
+    stdenv = gccStdenv;
+  };
 
   why3 = callPackage ../applications/science/logic/why3 { };
 

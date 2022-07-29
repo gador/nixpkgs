@@ -120,7 +120,8 @@ pythonPackages.buildPythonApplication rec {
       --replace "pytz==2021.*" "pytz" \
       --replace "Werkzeug==2.0.3" "werkzeug>=2.*" \
       --replace "azure-identity==1.9.0" "azure-identity==1.*" \
-      --replace "azure-mgmt-resource==21.0.0" "azure-mgmt-resource==21.*"
+      --replace "azure-mgmt-resource==21.0.0" "azure-mgmt-resource==21.*" \
+      --replace "Authlib==0.15.*" "Authlib"
     # don't use Server Mode (can be overridden later)
     substituteInPlace pkg/pip/setup_pip.py \
       --replace "req = req.replace('psycopg2', 'psycopg2-binary')" "req = req" \

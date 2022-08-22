@@ -26,7 +26,7 @@
 
 buildPythonPackage rec {
   pname = "pyunifiprotect";
-  version = "4.0.11";
+  version = "4.1.3";
   format = "pyproject";
 
   disabled = pythonOlder "3.9";
@@ -35,7 +35,7 @@ buildPythonPackage rec {
     owner = "briis";
     repo = pname;
     rev = "refs/tags/v${version}";
-    hash = "sha256-81nottXXenkIPiDnR8O44ELStoh8i2yROYCPvBLiWSU=";
+    hash = "sha256-tZo8+McpnJ1gekghtgH6m5w7nmVWB8CTxz5RGHv3xtE=";
   };
 
   propagatedBuildInputs = [
@@ -71,6 +71,8 @@ buildPythonPackage rec {
   postPatch = ''
     substituteInPlace pyproject.toml \
       --replace "--cov=pyunifiprotect --cov-append" ""
+    substituteInPlace setup.cfg \
+      --replace "pydantic!=1.9.1" "pydantic"
   '';
 
   pythonImportsCheck = [

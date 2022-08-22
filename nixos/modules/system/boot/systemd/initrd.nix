@@ -100,12 +100,6 @@ let
 
   fileSystems = filter utils.fsNeededForBoot config.system.build.fileSystems;
 
-  fstab = pkgs.writeText "initrd-fstab" (lib.concatMapStringsSep "\n"
-    ({ fsType, mountPoint, device, options, autoFormat, autoResize, ... }@fs: let
-        opts = options ++ optional autoFormat "x-systemd.makefs" ++ optional autoResize "x-systemd.growfs";
-        finalDevice = if (lib.elem "bind" options) then "/sysroot${device}" else device;
-      in "${finalDevice} /sysroot${mountPoint} ${fsType} ${lib.concatStringsSep "," opts}") fileSystems);
-
   needMakefs = lib.any (fs: fs.autoFormat) fileSystems;
   needGrowfs = lib.any (fs: fs.autoResize) fileSystems;
 
@@ -354,8 +348,6 @@ in {
           DefaultEnvironment=PATH=/bin:/sbin ${optionalString (isBool cfg.emergencyAccess && cfg.emergencyAccess) "SYSTEMD_SULOGIN_FORCE=1"}
         '';
 
-        "/etc/fstab".source = fstab;
-
         "/lib/modules".source = "${modulesClosure}/lib/modules";
         "/lib/firmware".source = "${modulesClosure}/lib/firmware";
 
@@ -373,6 +365,9 @@ in {
           ${pkgs.buildPackages.perl}/bin/perl -0pe 's/## file: iwlwifi.conf(.+?)##/##/s;' $src > $out
         '';
         "/etc/modprobe.d/debian.conf".source = pkgs.kmod-debian-aliases;
+
+        "/etc/os-release".source = config.boot.initrd.osRelease;
+        "/etc/initrd-release".source = config.boot.initrd.osRelease;
 
       };
 

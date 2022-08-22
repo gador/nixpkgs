@@ -785,7 +785,7 @@ in
               default = null;
               example = "fast";
               type = types.nullOr types.str;
-              description = ''
+              description = lib.mdDoc ''
                 DEPRECATED, use `driverOptions`.
                 Option specifying the rate in which we'll ask our link partner
                 to transmit LACPDU packets in 802.3ad mode.
@@ -796,7 +796,7 @@ in
               default = null;
               example = 100;
               type = types.nullOr types.int;
-              description = ''
+              description = lib.mdDoc ''
                 DEPRECATED, use `driverOptions`.
                 Miimon is the number of millisecond in between each round of polling
                 by the device driver for failed links. By default polling is not
@@ -809,7 +809,7 @@ in
               default = null;
               example = "active-backup";
               type = types.nullOr types.str;
-              description = ''
+              description = lib.mdDoc ''
                 DEPRECATED, use `driverOptions`.
                 The mode which the bond will be running. The default mode for
                 the bonding driver is balance-rr, optimizing for throughput.
@@ -822,7 +822,7 @@ in
               default = null;
               example = "layer2+3";
               type = types.nullOr types.str;
-              description = ''
+              description = lib.mdDoc ''
                 DEPRECATED, use `driverOptions`.
                 Selects the transmit hash policy to use for slave selection in
                 balance-xor, 802.3ad, and tlb modes.
@@ -876,10 +876,9 @@ in
           primary = { port = 9001; local = { address = "192.0.2.1"; dev = "eth0"; }; };
           backup =  { port = 9002; };
         };
-      description = ''
+      description = lib.mdDoc ''
         This option allows you to configure Foo Over UDP and Generic UDP Encapsulation
-        endpoints. See <citerefentry><refentrytitle>ip-fou</refentrytitle>
-        <manvolnum>8</manvolnum></citerefentry> for details.
+        endpoints. See {manpage}`ip-fou(8)` for details.
       '';
       type = with types; attrsOf (submodule {
         options = {
@@ -998,10 +997,9 @@ in
               options = {
                 type = mkOption {
                   type = enum [ "fou" "gue" ];
-                  description = ''
+                  description = lib.mdDoc ''
                     Selects encapsulation type. See
-                    <citerefentry><refentrytitle>ip-link</refentrytitle>
-                    <manvolnum>8</manvolnum></citerefentry> for details.
+                    {manpage}`ip-link(8)` for details.
                   '';
                 };
 

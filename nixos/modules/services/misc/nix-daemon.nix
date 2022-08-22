@@ -155,30 +155,29 @@ in
         type = types.enum [ "other" "batch" "idle" ];
         default = "other";
         example = "batch";
-        description = ''
+        description = lib.mdDoc ''
           Nix daemon process CPU scheduling policy. This policy propagates to
-          build processes. <literal>other</literal> is the default scheduling
-          policy for regular tasks. The <literal>batch</literal> policy is
-          similar to <literal>other</literal>, but optimised for
-          non-interactive tasks. <literal>idle</literal> is for extremely
+          build processes. `other` is the default scheduling
+          policy for regular tasks. The `batch` policy is
+          similar to `other`, but optimised for
+          non-interactive tasks. `idle` is for extremely
           low-priority tasks that should only be run when no other task
           requires CPU time.
 
-          Please note that while using the <literal>idle</literal> policy may
+          Please note that while using the `idle` policy may
           greatly improve responsiveness of a system performing expensive
           builds, it may also slow down and potentially starve crucial
           configuration updates during load.
 
-          <literal>idle</literal> may therefore be a sensible policy for
+          `idle` may therefore be a sensible policy for
           systems that experience only intermittent phases of high CPU load,
           such as desktop or portable computers used interactively. Other
-          systems should use the <literal>other</literal> or
-          <literal>batch</literal> policy instead.
+          systems should use the `other` or
+          `batch` policy instead.
 
           For more fine-grained resource control, please refer to
-          <citerefentry><refentrytitle>systemd.resource-control
-          </refentrytitle><manvolnum>5</manvolnum></citerefentry> and adjust
-          <option>systemd.services.nix-daemon</option> directly.
+          {manpage}`systemd.resource-control(5)` and adjust
+          {option}`systemd.services.nix-daemon` directly.
       '';
       };
 
@@ -265,7 +264,7 @@ in
               type = types.nullOr types.str;
               default = null;
               example = "/root/.ssh/id_buildhost_builduser";
-              description = ''
+              description = lib.mdDoc ''
                 The path to the SSH private key with which to authenticate on
                 the build machine. The private key must not have a passphrase.
                 If null, the building user (root on NixOS machines) must have an
@@ -563,13 +562,13 @@ in
             trusted-public-keys = mkOption {
               type = types.listOf types.str;
               example = [ "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs=" ];
-              description = ''
+              description = lib.mdDoc ''
                 List of public keys used to sign binary caches. If
-                <option>nix.settings.trusted-public-keys</option> is enabled,
+                {option}`nix.settings.trusted-public-keys` is enabled,
                 then Nix will use a binary from a binary cache if and only
-                if it is signed by <emphasis>any</emphasis> of the keys
+                if it is signed by *any* of the keys
                 listed here. By default, only the key for
-                <uri>cache.nixos.org</uri> is included.
+                `cache.nixos.org` is included.
               '';
             };
 
@@ -606,13 +605,13 @@ in
               type = types.listOf types.str;
               default = [ "*" ];
               example = [ "@wheel" "@builders" "alice" "bob" ];
-              description = ''
+              description = lib.mdDoc ''
                 A list of names of users (separated by whitespace) that are
                 allowed to connect to the Nix daemon. As with
-                <option>nix.settings.trusted-users</option>, you can specify groups by
-                prefixing them with <literal>@</literal>. Also, you can
-                allow all users by specifying <literal>*</literal>. The
-                default is <literal>*</literal>. Note that trusted users are
+                {option}`nix.settings.trusted-users`, you can specify groups by
+                prefixing them with `@`. Also, you can
+                allow all users by specifying `*`. The
+                default is `*`. Note that trusted users are
                 always allowed to connect.
               '';
             };
@@ -631,10 +630,7 @@ in
         description = ''
           Configuration for Nix, see
           <link xlink:href="https://nixos.org/manual/nix/stable/#sec-conf-file"/> or
-          <citerefentry>
-            <refentrytitle>nix.conf</refentrytitle>
-            <manvolnum>5</manvolnum>
-          </citerefentry> for avalaible options.
+          <citerefentry><refentrytitle>nix.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry> for avalaible options.
           The value declared here will be translated directly to the key-value pairs Nix expects.
 
           You can use <command>nix-instantiate --eval --strict '&lt;nixpkgs/nixos&gt;' -A config.nix.settings</command>

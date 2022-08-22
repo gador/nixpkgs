@@ -189,9 +189,9 @@ in
       allowAnonymousEdits = mkOption {
         type = types.bool;
         default = false;
-        description = ''
-          Whether to allow guests to edit existing notes with the `freely' permission,
-          when <option>allowAnonymous</option> is enabled.
+        description = lib.mdDoc ''
+          Whether to allow guests to edit existing notes with the `freely` permission,
+          when {option}`allowAnonymous` is enabled.
         '';
       };
       allowFreeURL = mkOption {
@@ -937,7 +937,7 @@ in
               id = mkOption {
                 type = types.str;
                 default = "";
-                description = ''
+                description = lib.mdDoc ''
                   Attribute map for `id'.
                   Defaults to `NameID' of SAML response.
                 '';
@@ -945,7 +945,7 @@ in
               username = mkOption {
                 type = types.str;
                 default = "";
-                description = ''
+                description = lib.mdDoc ''
                   Attribute map for `username'.
                   Defaults to `NameID' of SAML response.
                 '';
@@ -953,10 +953,10 @@ in
               email = mkOption {
                 type = types.str;
                 default = "";
-                description = ''
-                  Attribute map for `email'.
-                  Defaults to `NameID' of SAML response if
-                  <option>identifierFormat</option> has
+                description = lib.mdDoc ''
+                  Attribute map for `email`.
+                  Defaults to `NameID` of SAML response if
+                  {option}`identifierFormat` has
                   the default value.
                 '';
               };
@@ -983,9 +983,7 @@ in
       default = null;
       example = "/var/lib/hedgedoc/hedgedoc.env";
       description = ''
-        Environment file as defined in <citerefentry>
-        <refentrytitle>systemd.exec</refentrytitle><manvolnum>5</manvolnum>
-        </citerefentry>.
+        Environment file as defined in <citerefentry><refentrytitle>systemd.exec</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
 
         Secrets may be passed to the service without adding them to the world-readable
         Nix store, by specifying placeholder variables as the option value in Nix and

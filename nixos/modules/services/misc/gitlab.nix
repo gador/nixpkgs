@@ -319,11 +319,10 @@ in {
         type = with types; either str (listOf str);
         default = [];
         example = "03:00";
-        description = ''
+        description = lib.mdDoc ''
           The time(s) to run automatic backup of GitLab
           state. Specified in systemd's time format; see
-          <citerefentry><refentrytitle>systemd.time</refentrytitle>
-          <manvolnum>7</manvolnum></citerefentry>.
+          {manpage}`systemd.time(7)`.
         '';
       };
 
@@ -339,10 +338,9 @@ in {
         default = 0;
         example = 48;
         apply = x: x * 60 * 60;
-        description = ''
+        description = lib.mdDoc ''
           How long to keep the backups around, in
-          hours. <literal>0</literal> means <quote>keep
-          forever</quote>.
+          hours. `0` means “keep forever”.
         '';
       };
 
@@ -416,9 +414,9 @@ in {
       databaseHost = mkOption {
         type = types.str;
         default = "";
-        description = ''
-          GitLab database hostname. An empty string means <quote>use
-          local unix socket connection</quote>.
+        description = lib.mdDoc ''
+          GitLab database hostname. An empty string means
+          “use local unix socket connection”.
         '';
       };
 
@@ -753,8 +751,7 @@ in {
         description = ''
           The number of worker processes Puma should spawn. This
           controls the amount of parallel Ruby code can be
-          executed. GitLab recommends <quote>Number of CPU cores -
-          1</quote>, but at least two.
+          executed. GitLab recommends <literal>Number of CPU cores - 1</literal>, but at least two.
 
           <note>
             <para>

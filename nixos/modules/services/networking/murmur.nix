@@ -219,7 +219,7 @@ in
       registerHostname = mkOption {
         type = types.str;
         default = "";
-        description = ''
+        description = lib.mdDoc ''
           DNS hostname where your server can be reached. This is only
           needed if you want your server to be accessed by its
           hostname and not IP - but the name *must* resolve on the
@@ -262,9 +262,7 @@ in
         default = null;
         example = "/var/lib/murmur/murmurd.env";
         description = ''
-          Environment file as defined in <citerefentry>
-          <refentrytitle>systemd.exec</refentrytitle><manvolnum>5</manvolnum>
-          </citerefentry>.
+          Environment file as defined in <citerefentry><refentrytitle>systemd.exec</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
 
           Secrets may be passed to the service without adding them to the world-readable
           Nix store, by specifying placeholder variables as the option value in Nix and

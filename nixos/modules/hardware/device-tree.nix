@@ -14,6 +14,15 @@ let
         '';
       };
 
+      filter = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "*rpi*.dtb";
+        description = lib.mdDoc ''
+          Only apply to .dtb files matching glob expression.
+        '';
+      };
+
       dtsFile = mkOption {
         type = types.nullOr types.path;
         description = lib.mdDoc ''
@@ -150,6 +159,7 @@ in
           '';
           type = types.listOf (types.coercedTo types.path (path: {
             name = baseNameOf path;
+            filter = null;
             dtboFile = path;
           }) overlayType);
           description = lib.mdDoc ''
@@ -161,7 +171,7 @@ in
           default = null;
           type = types.nullOr types.path;
           internal = true;
-          description = ''
+          description = lib.mdDoc ''
             A path containing the result of applying `overlays` to `kernelPackage`.
           '';
         };

@@ -100,6 +100,8 @@ let self = rec {
 
   vfs-libarchive = callPackage ../applications/video/kodi/addons/vfs-libarchive { };
 
+  waveform-visualization = callPackage ../applications/video/kodi/addons/visualization-waveform { };
+
   youtube = callPackage ../applications/video/kodi/addons/youtube { };
 
   # addon packages (dependencies)

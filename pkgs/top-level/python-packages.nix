@@ -1691,6 +1691,8 @@ in {
 
   certbot-dns-cloudflare = callPackage ../development/python-modules/certbot-dns-cloudflare { };
 
+  certbot-dns-inwx = callPackage ../development/python-modules/certbot-dns-inwx { };
+
   certbot-dns-rfc2136 = callPackage ../development/python-modules/certbot-dns-rfc2136 { };
 
   certbot-dns-google = callPackage ../development/python-modules/certbot-dns-google { };
@@ -2124,6 +2126,7 @@ in {
   cryptography = callPackage ../development/python-modules/cryptography {
     inherit (pkgs.darwin) libiconv;
     inherit (pkgs.darwin.apple_sdk.frameworks) Security;
+    openssl = pkgs.openssl_1_1;
   };
 
   cryptolyzer = callPackage ../development/python-modules/cryptolyzer { };
@@ -2615,6 +2618,10 @@ in {
   django-statici18n = callPackage ../development/python-modules/django-statici18n { };
 
   django-storages = callPackage ../development/python-modules/django-storages { };
+
+  django-stubs = callPackage ../development/python-modules/django-stubs { };
+
+  django-stubs-ext = callPackage ../development/python-modules/django-stubs-ext { };
 
   django-tables2 = callPackage ../development/python-modules/django-tables2 { };
 
@@ -3246,6 +3253,8 @@ in {
   fipy = callPackage ../development/python-modules/fipy { };
 
   fire = callPackage ../development/python-modules/fire { };
+
+  fireflyalgorithm = callPackage ../development/python-modules/fireflyalgorithm { };
 
   firetv = callPackage ../development/python-modules/firetv { };
 
@@ -3897,6 +3906,8 @@ in {
   goveelights = callPackage ../development/python-modules/goveelights { };
 
   gpapi = callPackage ../development/python-modules/gpapi { };
+
+  gpaw = callPackage ../development/python-modules/gpaw { };
 
   gpiozero = callPackage ../development/python-modules/gpiozero { };
 
@@ -4798,6 +4809,8 @@ in {
 
   jsonrpc-websocket = callPackage ../development/python-modules/jsonrpc-websocket { };
 
+  jsons = callPackage ../development/python-modules/jsons { };
+
   jsonschema = callPackage ../development/python-modules/jsonschema { };
 
   jsonstreams = callPackage ../development/python-modules/jsonstreams { };
@@ -5050,6 +5063,8 @@ in {
   leather = callPackage ../development/python-modules/leather { };
 
   leb128 = callPackage ../development/python-modules/leb128 { };
+
+  led-ble = callPackage ../development/python-modules/led-ble { };
 
   ledger = (toPythonModule (pkgs.ledger.override {
     usePython = true;
@@ -5390,7 +5405,10 @@ in {
 
   lzstring = callPackage ../development/python-modules/lzstring { };
 
-  m2crypto = callPackage ../development/python-modules/m2crypto { };
+  m2crypto = callPackage ../development/python-modules/m2crypto {
+    # https://gitlab.com/m2crypto/m2crypto/-/issues/310
+    openssl = pkgs.openssl_1_1;
+  };
 
   m2r = callPackage ../development/python-modules/m2r { };
 
@@ -6384,6 +6402,11 @@ in {
 
   opentimestamps = callPackage ../development/python-modules/opentimestamps { };
 
+  openturns = toPythonModule (pkgs.openturns.override {
+    python3Packages = self;
+    enablePython = true;
+  });
+
   opentracing = callPackage ../development/python-modules/opentracing { };
 
   openvino = toPythonModule (pkgs.openvino.override {
@@ -6468,6 +6491,8 @@ in {
   outcome = callPackage ../development/python-modules/outcome { };
 
   ovh = callPackage ../development/python-modules/ovh { };
+
+  ovmfvartool = callPackage ../development/python-modules/ovmfvartool { };
 
   ovoenergy = callPackage ../development/python-modules/ovoenergy { };
 
@@ -7229,6 +7254,8 @@ in {
   psutil = callPackage ../development/python-modules/psutil {
     inherit (pkgs.darwin.apple_sdk.frameworks) IOKit;
   };
+
+  psutil-home-assistant = callPackage ../development/python-modules/psutil-home-assistant { };
 
   psycopg = callPackage ../development/python-modules/psycopg { };
 
@@ -9912,6 +9939,8 @@ in {
 
   sensor-state-data = callPackage ../development/python-modules/sensor-state-data { };
 
+  sensorpro-ble = callPackage ../development/python-modules/sensorpro-ble { };
+
   sensorpush-ble = callPackage ../development/python-modules/sensorpush-ble { };
 
   sentencepiece = callPackage ../development/python-modules/sentencepiece {
@@ -10685,6 +10714,8 @@ in {
 
   tbm-utils = callPackage ../development/python-modules/tbm-utils { };
 
+  tcxparser = callPackage ../development/python-modules/tcxparser { };
+
   tcxreader = callPackage ../development/python-modules/tcxreader { };
 
   teamcity-messages = callPackage ../development/python-modules/teamcity-messages { };
@@ -10892,6 +10923,8 @@ in {
 
   tilestache = callPackage ../development/python-modules/tilestache { };
 
+  tilt-ble = callPackage ../development/python-modules/tilt-ble { };
+
   timeago = callPackage ../development/python-modules/timeago { };
 
   timecop = callPackage ../development/python-modules/timecop { };
@@ -10947,6 +10980,8 @@ in {
   tololib = callPackage ../development/python-modules/tololib { };
 
   toml = callPackage ../development/python-modules/toml { };
+
+  toml-adapt = callPackage ../development/python-modules/toml-adapt { };
 
   tomli = callPackage ../development/python-modules/tomli { };
 
@@ -11227,6 +11262,7 @@ in {
   tzlocal = callPackage ../development/python-modules/tzlocal { };
 
   uamqp = callPackage ../development/python-modules/uamqp {
+    openssl = pkgs.openssl_1_1;
     inherit (pkgs.darwin.apple_sdk.frameworks) CFNetwork CoreFoundation Security;
   };
 

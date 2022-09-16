@@ -100,6 +100,8 @@ let self = rec {
 
   vfs-libarchive = callPackage ../applications/video/kodi/addons/vfs-libarchive { };
 
+  visualization-matrix = callPackage ../applications/video/kodi/addons/visualization-matrix { };
+
   youtube = callPackage ../applications/video/kodi/addons/youtube { };
 
   # addon packages (dependencies)

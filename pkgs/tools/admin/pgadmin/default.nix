@@ -74,7 +74,17 @@ let
 
   # keep the scope, as it is used throughout the derivation and tests
   # this also makes potential future overrides easier
-  pythonPackages = python3.pkgs;
+  pythonPackages = python3.pkgs.overrideScope (final: prev: rec {
+    # flask 2.2 is incompatible with pgadmin 6.13
+    # https://redmine.postgresql.org/issues/7651
+    flask = prev.flask.overridePythonAttrs (oldAttrs: rec {
+      version = "2.1.3";
+      src = oldAttrs.src.override {
+        inherit version;
+        sha256 = "sha256-FZcuUBffBXXD1sCQuhaLbbkCWeYgrI1+qBOjlrrVtss=";
+      };
+    });
+  });
 
 in
 

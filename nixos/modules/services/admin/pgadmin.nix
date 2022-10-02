@@ -37,14 +37,14 @@ in
     };
 
     initialEmail = mkOption {
-      description = lib.mdDoc "Initial email for the pgAdmin account.";
+      description = lib.mdDoc "Initial email for the pgAdmin account";
       type = types.str;
     };
 
     initialPasswordFile = mkOption {
       description = lib.mdDoc ''
         Initial password file for the pgAdmin account.
-        NOTE: Should be string not a store path, to prevent the password from being world readable.
+        NOTE: Should be string not a store path, to prevent the password from being world readable
       '';
       type = types.path;
     };
@@ -52,39 +52,39 @@ in
     emailServer = {
       enable = mkOption {
         description = lib.mdDoc ''
-          Enable SMTP email server. This is necessary, if you want to use password recovery or change your own password.
+          Enable SMTP email server. This is necessary, if you want to use password recovery or change your own password
         '';
         type = types.bool;
         default = false;
       };
       address = mkOption {
-        description = lib.mdDoc "SMTP server for email delivery.";
+        description = lib.mdDoc "SMTP server for email delivery";
         type = types.str;
         default = "localhost";
       };
       port = mkOption {
-        description = lib.mdDoc "SMTP server port for email delivery.";
+        description = lib.mdDoc "SMTP server port for email delivery";
         type = types.port;
         default = 25;
       };
       useSSL = mkOption {
-        description = lib.mdDoc "SMTP server should use SSL.";
+        description = lib.mdDoc "SMTP server should use SSL";
         type = types.bool;
         default = false;
       };
       useTLS = mkOption {
-        description = lib.mdDoc "SMTP server should use TLS.";
+        description = lib.mdDoc "SMTP server should use TLS";
         type = types.bool;
         default = false;
       };
       username = mkOption {
-        description = lib.mdDoc "SMTP server username for email delivery.";
-        type = types.str;
+        description = lib.mdDoc "SMTP server username for email delivery";
+        type = types.nullOr types.str;
         default = null;
       };
       sender = mkOption {
         description = lib.mdDoc ''
-          SMTP server sender email for email delivery. Some servers require this to be a valid email address from that server.
+          SMTP server sender email for email delivery. Some servers require this to be a valid email address from that server
         '';
         type = types.str;
         example = "noreply@example.com";
@@ -92,7 +92,7 @@ in
       passwordFile = mkOption {
         description = lib.mdDoc ''
           Password for SMTP email account.
-          NOTE: Should be string not a store path, to prevent the password from being world readable.
+          NOTE: Should be string not a store path, to prevent the password from being world readable
         '';
         type = types.path;
       };
@@ -103,7 +103,7 @@ in
     settings = mkOption {
       description = lib.mdDoc ''
         Settings for pgadmin4.
-        [Documentation](https://www.pgadmin.org/docs/pgadmin4/development/config_py.html).
+        [Documentation](https://www.pgadmin.org/docs/pgadmin4/development/config_py.html)
       '';
       type = pyType;
       default = { };
@@ -174,12 +174,11 @@ in
     users.groups.pgadmin = { };
 
     environment.etc."pgadmin/config_system.py" = {
-      text =
-        (if cfg.emailServer.enable then ''
-          with open("${cfg.emailServer.passwordFile}") as f:
-            pw = f.read()
-          MAIL_PASSWORD = pw
-        '' else "") + formatPy cfg.settings;
+      text = lib.optionalString cfg.emailServer.enable ''
+        with open("${cfg.emailServer.passwordFile}") as f:
+          pw = f.read()
+        MAIL_PASSWORD = pw
+      '' + formatPy cfg.settings;
       mode = "0600";
       user = "pgadmin";
       group = "pgadmin";

@@ -3,7 +3,9 @@
 
 set -eu -o pipefail
 
-nixpkgs="$(git rev-parse --show-toplevel)"
+scriptDir=$(cd "${BASH_SOURCE[0]%/*}" && pwd)
+nixpkgs=$(realpath "$scriptDir"/../../../..)
+
 newest_version="$(curl -s https://www.pgadmin.org/versions.json | jq -r .pgadmin4.version)"
 old_version=$(nix-instantiate --eval -E "(import \"$nixpkgs\" { config = {}; overlays = []; }).pgadmin4.version" | tr -d '"')
 url="https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${newest_version}/source/pgadmin4-${newest_version}.tar.gz"

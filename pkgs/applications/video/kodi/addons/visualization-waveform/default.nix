@@ -1,4 +1,4 @@
-{ lib, rel, buildKodiBinaryAddon, fetchFromGitHub, pkgconfig, glm, libGL }:
+{ lib, rel, buildKodiBinaryAddon, fetchFromGitHub, pkg-config, glm, libGL }:
 
 buildKodiBinaryAddon rec {
   pname = "visualization-waveform";
@@ -7,16 +7,14 @@ buildKodiBinaryAddon rec {
 
   src = fetchFromGitHub {
     owner = "xbmc";
-    repo = "visualization.waveform";
+    repo = namespace;
     rev = "${version}-${rel}";
     hash = "sha256-IQLW4CDNtt/ptE679hnoXbharq61Ru9S2m7QbJLtNSI=";
   };
 
-  extraBuildInputs = [ pkgconfig libGL ];
+  extraBuildInputs = [ pkg-config libGL ];
 
   propagatedBuildInputs = [ glm ];
-
-
   meta = with lib; {
     homepage = "https://github.com/xbmc/visualization.waveform";
     description = "Waveform visualization for kodi";

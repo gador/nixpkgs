@@ -1,4 +1,4 @@
-{ stdenv
+{ ccacheStdenv
 , fetchurl
 , lib
 , pam
@@ -133,7 +133,7 @@ let
 
   langsSpaces = concatStringsSep " " langs;
 
-  mkDrv = if kdeIntegration then mkDerivation else stdenv.mkDerivation;
+  mkDrv = if kdeIntegration then mkDerivation else ccacheStdenv.mkDerivation;
 
   srcs = {
     third_party =
@@ -238,6 +238,8 @@ in
   dontUseCmakeBuildDir = true;
 
   preConfigure = ''
+    export CCACHE_DIR=/nix/var/cache/ccache
+    export CCACHE_UMASK=007
     configureFlagsArray=(
       "--with-parallelism=$NIX_BUILD_CORES"
       "--with-lang=${langsSpaces}"

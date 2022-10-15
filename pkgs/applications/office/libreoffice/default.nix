@@ -195,10 +195,8 @@ in
     tar -xf ${srcs.translations}
   '';
 
-  patches = [
-    ./skip-failed-test-with-icu70.patch
-    ./gpgme-1.18.patch
-  ];
+  patches = optional (variant == "still") [ ./skip-failed-test-with-icu70.patch ./gpgme-1.18.patch ]
+  ;
 
   ### QT/KDE
   #

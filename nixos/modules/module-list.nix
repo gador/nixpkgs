@@ -263,6 +263,7 @@
   ./security/pam.nix
   ./security/pam_usb.nix
   ./security/pam_mount.nix
+  ./security/please.nix
   ./security/polkit.nix
   ./security/rngd.nix
   ./security/rtkit.nix
@@ -391,9 +392,9 @@
   ./services/desktops/pipewire/pipewire-media-session.nix
   ./services/desktops/pipewire/wireplumber.nix
   ./services/desktops/gnome/at-spi2-core.nix
-  ./services/desktops/gnome/chrome-gnome-shell.nix
   ./services/desktops/gnome/evolution-data-server.nix
   ./services/desktops/gnome/glib-networking.nix
+  ./services/desktops/gnome/gnome-browser-connector.nix
   ./services/desktops/gnome/gnome-initial-setup.nix
   ./services/desktops/gnome/gnome-keyring.nix
   ./services/desktops/gnome/gnome-online-accounts.nix
@@ -683,6 +684,7 @@
   ./services/monitoring/heapster.nix
   ./services/monitoring/incron.nix
   ./services/monitoring/kapacitor.nix
+  ./services/monitoring/karma.nix
   ./services/monitoring/kthxbye.nix
   ./services/monitoring/loki.nix
   ./services/monitoring/longview.nix
@@ -713,6 +715,7 @@
   ./services/monitoring/unifi-poller.nix
   ./services/monitoring/ups.nix
   ./services/monitoring/uptime.nix
+  ./services/monitoring/vmagent.nix
   ./services/monitoring/vnstat.nix
   ./services/monitoring/zabbix-agent.nix
   ./services/monitoring/zabbix-proxy.nix
@@ -1004,6 +1007,7 @@
   ./services/security/certmgr.nix
   ./services/security/cfssl.nix
   ./services/security/clamav.nix
+  ./services/security/endlessh-go.nix
   ./services/security/fail2ban.nix
   ./services/security/fprintd.nix
   ./services/security/haka.nix

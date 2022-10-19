@@ -40,8 +40,8 @@
             concat($optionIdPrefix,
               translate(
                 attr[@name = 'name']/string/@value,
-                '*&lt; >[]:&quot;',
-                '________'
+                '*&lt; >[]:',
+                '_______'
             ))" />
           <varlistentry>
             <term xlink:href="#{$id}">

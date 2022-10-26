@@ -1,6 +1,6 @@
 { lib
 , beautifulsoup4
-, buildPythonApplication
+, buildPythonPackage
 , fetchPypi
 , filelock
 , requests
@@ -10,16 +10,16 @@
 , pythonOlder
 }:
 
-buildPythonApplication rec {
+buildPythonPackage rec {
   pname = "gdown";
-  version = "4.5.2";
+  version = "4.5.3";
   format = "setuptools";
 
   disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-YhYzlsBJegYXOnuV/IH0feIXl//EY79GFskHmSZsYcM=";
+    hash = "sha256-bL991BCFiMc0qliBMdjh1S5k8Ic4cPcfdMusGV8MYO8=";
   };
 
   propagatedBuildInputs = [

@@ -347,6 +347,7 @@
   ./services/continuous-integration/hercules-ci-agent/default.nix
   ./services/continuous-integration/hydra/default.nix
   ./services/continuous-integration/github-runner.nix
+  ./services/continuous-integration/github-runners.nix
   ./services/continuous-integration/gitlab-runner.nix
   ./services/continuous-integration/gocd-agent/default.nix
   ./services/continuous-integration/gocd-server/default.nix
@@ -612,6 +613,7 @@
   ./services/misc/nix-optimise.nix
   ./services/misc/nix-ssh-serve.nix
   ./services/misc/novacomd.nix
+  ./services/misc/ntfy-sh.nix
   ./services/misc/nzbget.nix
   ./services/misc/nzbhydra2.nix
   ./services/misc/octoprint.nix
@@ -716,6 +718,7 @@
   ./services/monitoring/ups.nix
   ./services/monitoring/uptime.nix
   ./services/monitoring/vmagent.nix
+  ./services/monitoring/uptime-kuma.nix
   ./services/monitoring/vnstat.nix
   ./services/monitoring/zabbix-agent.nix
   ./services/monitoring/zabbix-proxy.nix
@@ -1071,6 +1074,7 @@
   ./services/web-apps/calibre-web.nix
   ./services/web-apps/code-server.nix
   ./services/web-apps/baget.nix
+  ./services/web-apps/changedetection-io.nix
   ./services/web-apps/convos.nix
   ./services/web-apps/dex.nix
   ./services/web-apps/discourse.nix
@@ -1249,6 +1253,7 @@
   ./system/boot/systemd/user.nix
   ./system/boot/timesyncd.nix
   ./system/boot/tmp.nix
+  ./system/boot/uvesafb.nix
   ./system/etc/etc-activation.nix
   ./tasks/auto-upgrade.nix
   ./tasks/bcache.nix

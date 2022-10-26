@@ -10,8 +10,6 @@ let
 
     # Libs
 
-    buildOcaml = callPackage ../build-support/ocaml { };
-
     buildOasisPackage = callPackage ../build-support/ocaml/oasis.nix { };
 
     buildDunePackage = callPackage ../build-support/ocaml/dune.nix {};
@@ -93,6 +91,8 @@ let
     bls12-381 = callPackage ../development/ocaml-modules/bls12-381 { };
     bls12-381-gen = callPackage ../development/ocaml-modules/bls12-381/gen.nix { };
     bls12-381-legacy = callPackage ../development/ocaml-modules/bls12-381/legacy.nix { };
+
+    bls12-381-signature = callPackage ../development/ocaml-modules/bls12-381-signature { };
 
     bos = callPackage ../development/ocaml-modules/bos { };
 
@@ -529,8 +529,6 @@ let
 
     hashcons = callPackage ../development/ocaml-modules/hashcons { };
 
-    herelib = callPackage ../development/ocaml-modules/herelib { };
-
     hidapi = callPackage ../development/ocaml-modules/hidapi { };
 
     higlo = callPackage ../development/ocaml-modules/higlo { };
@@ -920,8 +918,6 @@ let
 
     mldoc =  callPackage ../development/ocaml-modules/mldoc { };
 
-    mlgmp =  callPackage ../development/ocaml-modules/mlgmp { };
-
     mlgmpidl =  callPackage ../development/ocaml-modules/mlgmpidl { };
 
     mm = callPackage ../development/ocaml-modules/mm { };
@@ -1274,8 +1270,6 @@ let
 
     parany = callPackage ../development/ocaml-modules/parany { };
 
-    pipebang = callPackage ../development/ocaml-modules/pipebang { };
-
     portaudio = callPackage ../development/ocaml-modules/portaudio {
       inherit (pkgs) portaudio;
     };
@@ -1327,8 +1321,6 @@ let
     printbox-text = callPackage ../development/ocaml-modules/printbox/text.nix { };
 
     process = callPackage ../development/ocaml-modules/process { };
-
-    prof_spacetime = callPackage ../development/ocaml-modules/prof_spacetime { };
 
     progress = callPackage ../development/ocaml-modules/progress { };
 
@@ -1441,6 +1433,12 @@ let
     terminal_size = callPackage ../development/ocaml-modules/terminal_size { };
 
     tezos-base58 = callPackage ../development/ocaml-modules/tezos-base58 { };
+
+    tezos-bls12-381-polynomial = callPackage ../development/ocaml-modules/tezos-bls12-381-polynomial { };
+
+    tezos-plompiler = callPackage ../development/ocaml-modules/tezos-bls12-381-polynomial/plompiler.nix { };
+
+    tezos-plonk = callPackage ../development/ocaml-modules/tezos-bls12-381-polynomial/plonk.nix { };
 
     theora = callPackage ../development/ocaml-modules/theora { };
 
@@ -1658,6 +1656,8 @@ in let inherit (pkgs) callPackage; in rec
   ocamlPackages_4_13 = mkOcamlPackages (callPackage ../development/compilers/ocaml/4.13.nix { });
 
   ocamlPackages_4_14 = mkOcamlPackages (callPackage ../development/compilers/ocaml/4.14.nix { });
+
+  ocamlPackages_5_0 = mkOcamlPackages (callPackage ../development/compilers/ocaml/5.0.nix { });
 
   ocamlPackages_latest = ocamlPackages_4_14;
 

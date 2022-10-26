@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2022.10.4";
+  version = "2022.10.5";
   components = {
     "abode" = ps: with ps; [
       abodepy
@@ -1028,7 +1028,8 @@
       afsapi
     ];
     "fully_kiosk" = ps: with ps; [
-    ]; # missing inputs: python-fullykiosk
+      python-fullykiosk
+    ];
     "futurenow" = ps: with ps; [
       pyfnip
     ];
@@ -2356,7 +2357,8 @@
       pillow
     ];
     "prusalink" = ps: with ps; [
-    ]; # missing inputs: pyprusalink
+      pyprusalink
+    ];
     "ps4" = ps: with ps; [
     ]; # missing inputs: pyps4-2ndscreen
     "pulseaudio_loopback" = ps: with ps; [
@@ -3801,6 +3803,7 @@
     "fritzbox_callmonitor"
     "fronius"
     "frontend"
+    "fully_kiosk"
     "garages_amsterdam"
     "gdacs"
     "generic"
@@ -4052,6 +4055,7 @@
     "prometheus"
     "prosegur"
     "proximity"
+    "prusalink"
     "pure_energie"
     "push"
     "pushbullet"

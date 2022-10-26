@@ -433,6 +433,8 @@ in {
 
   aiorun = callPackage ../development/python-modules/aiorun { };
 
+  aiorwlock = callPackage ../development/python-modules/aiorwlock { };
+
   aiosenseme = callPackage ../development/python-modules/aiosenseme { };
 
   aiosenz = callPackage ../development/python-modules/aiosenz { };
@@ -1747,6 +1749,8 @@ in {
 
   cgroup-utils = callPackage ../development/python-modules/cgroup-utils { };
 
+  chacha20poly1305 = callPackage ../development/python-modules/chacha20poly1305 { };
+
   chacha20poly1305-reuseable = callPackage ../development/python-modules/chacha20poly1305-reuseable { };
 
   chai = callPackage ../development/python-modules/chai { };
@@ -1879,6 +1883,8 @@ in {
 
   click-plugins = callPackage ../development/python-modules/click-plugins { };
 
+  click-shell = callPackage ../development/python-modules/click-shell { };
+
   click-spinner = callPackage ../development/python-modules/click-spinner { };
 
   click-repl = callPackage ../development/python-modules/click-repl { };
@@ -1970,8 +1976,6 @@ in {
   codecov = callPackage ../development/python-modules/codecov { };
 
   codepy = callPackage ../development/python-modules/codepy { };
-
-  codespell = callPackage ../development/python-modules/codespell { };
 
   cogapp = callPackage ../development/python-modules/cogapp { };
 
@@ -2190,6 +2194,8 @@ in {
   curtsies = callPackage ../development/python-modules/curtsies { };
 
   curve25519-donna = callPackage ../development/python-modules/curve25519-donna { };
+
+  cvelib = callPackage ../development/python-modules/cvelib { };
 
   cvxopt = callPackage ../development/python-modules/cvxopt { };
 
@@ -2772,8 +2778,6 @@ in {
   dnslib = callPackage ../development/python-modules/dnslib { };
 
   dnspython = callPackage ../development/python-modules/dnspython { };
-
-  dnspythonchia = callPackage ../development/python-modules/dnspythonchia { };
 
   doc8 = callPackage ../development/python-modules/doc8 { };
 
@@ -3441,7 +3445,7 @@ in {
 
   flask-limiter = callPackage ../development/python-modules/flask-limiter { };
 
-  flask_login = callPackage ../development/python-modules/flask-login { };
+  flask-login = callPackage ../development/python-modules/flask-login { };
 
   flask_mail = callPackage ../development/python-modules/flask-mail { };
 
@@ -3522,6 +3526,8 @@ in {
   flit = callPackage ../development/python-modules/flit { };
 
   flit-core = callPackage ../development/python-modules/flit-core { };
+
+  flit-scm = callPackage ../development/python-modules/flit-scm { };
 
   flow-record = callPackage ../development/python-modules/flow-record { };
 
@@ -3814,8 +3820,6 @@ in {
 
   gidgethub = callPackage ../development/python-modules/gidgethub { };
 
-  gigalixir = callPackage ../development/python-modules/gigalixir { };
-
   gin-config = callPackage ../development/python-modules/gin-config { };
 
   gios = callPackage ../development/python-modules/gios { };
@@ -4034,6 +4038,8 @@ in {
   gps3 = callPackage ../development/python-modules/gps3 { };
 
   gpsoauth = callPackage ../development/python-modules/gpsoauth { };
+
+  gpustat = callPackage ../development/python-modules/gpustat { };
 
   gpxpy = callPackage ../development/python-modules/gpxpy { };
 
@@ -4614,6 +4620,8 @@ in {
 
   inquirer = callPackage ../development/python-modules/inquirer { };
 
+  inscriptis = callPackage ../development/python-modules/inscriptis { };
+
   insegel = callPackage ../development/python-modules/insegel { };
 
   installer = callPackage ../development/python-modules/installer { };
@@ -4778,9 +4786,6 @@ in {
 
   jaxlib-bin = callPackage ../development/python-modules/jaxlib/bin.nix {
     cudaSupport = pkgs.config.cudaSupport or false;
-    # At the time of writing (2022-04-18), `cudaPackages.nccl` is broken, so we
-    # pin to `cudaPackages_11_6` instead.
-    cudaPackages = pkgs.cudaPackages_11_6;
   };
 
   jaxlib-build = callPackage ../development/python-modules/jaxlib rec {
@@ -4790,9 +4795,6 @@ in {
     };
     # Some platforms don't have `cudaSupport` defined, hence the need for 'or false'.
     cudaSupport = pkgs.config.cudaSupport or false;
-    # At the time of writing (2022-04-18), `cudaPackages.nccl` is broken, so we
-    # pin to `cudaPackages_11_6` instead.
-    cudaPackages = pkgs.cudaPackages_11_6;
     IOKit = pkgs.darwin.apple_sdk_11_0.IOKit;
     protobuf = pkgs.protobuf3_20; # jaxlib-build 0.3.15 won't build with protobuf 3.21
   };
@@ -6040,8 +6042,6 @@ in {
 
   mutf8 = callPackage ../development/python-modules/mutf8 { };
 
-  mutmut = callPackage ../development/python-modules/mutmut { };
-
   mujson = callPackage ../development/python-modules/mujson { };
 
   mwclient = callPackage ../development/python-modules/mwclient { };
@@ -6151,6 +6151,8 @@ in {
   nbval = callPackage ../development/python-modules/nbval { };
 
   nbxmpp = callPackage ../development/python-modules/nbxmpp { };
+
+  nc-dnsapi = callPackage ../development/python-modules/nc-dnsapi { };
 
   ncclient = callPackage ../development/python-modules/ncclient { };
 
@@ -6342,8 +6344,6 @@ in {
 
   notify2 = callPackage ../development/python-modules/notify2 { };
 
-  notifymuch = callPackage ../development/python-modules/notifymuch {};
-
   notmuch = callPackage ../development/python-modules/notmuch {
     inherit (pkgs) notmuch;
   };
@@ -6521,6 +6521,8 @@ in {
   openbabel-bindings = callPackage ../development/python-modules/openbabel-bindings {
       openbabel = callPackage ../development/libraries/openbabel { inherit (self) python; };
   };
+
+  opencensus = callPackage ../development/python-modules/opencensus { };
 
   opencv3 = toPythonModule (pkgs.opencv3.override {
     enablePython = true;
@@ -7036,6 +7038,10 @@ in {
 
   pkuseg = callPackage ../development/python-modules/pkuseg { };
 
+  playwright = callPackage ../development/python-modules/playwright {
+    inherit (pkgs) jq;
+  };
+
   pmsensor = callPackage ../development/python-modules/pmsensor { };
 
   ppdeep = callPackage ../development/python-modules/ppdeep { };
@@ -7133,6 +7139,8 @@ in {
   python-ecobee-api = callPackage ../development/python-modules/python-ecobee-api { };
 
   python-flirt = callPackage ../development/python-modules/python-flirt { };
+
+  python-fullykiosk = callPackage ../development/python-modules/python-fullykiosk { };
 
   python-glanceclient = callPackage ../development/python-modules/python-glanceclient { };
 
@@ -7257,8 +7265,6 @@ in {
   poetry-plugin-export = callPackage ../development/python-modules/poetry-plugin-export { };
 
   poetry-semver = callPackage ../development/python-modules/poetry-semver { };
-
-  poetry2conda = callPackage ../development/python-modules/poetry2conda { };
 
   poezio = callPackage ../applications/networking/instant-messengers/poezio { };
 
@@ -7691,6 +7697,8 @@ in {
   pycontracts = callPackage ../development/python-modules/pycontracts { };
 
   pycosat = callPackage ../development/python-modules/pycosat { };
+
+  pycotap = callPackage ../development/python-modules/pycotap { };
 
   pycountry = callPackage ../development/python-modules/pycountry { };
 
@@ -8402,6 +8410,8 @@ in {
 
   pyprosegur = callPackage ../development/python-modules/pyprosegur { };
 
+  pyprusalink = callPackage ../development/python-modules/pyprusalink { };
+
   pyptlib = callPackage ../development/python-modules/pyptlib { };
 
   pypubsub = callPackage ../development/python-modules/pypubsub { };
@@ -8483,7 +8493,9 @@ in {
 
   pyramid_multiauth = callPackage ../development/python-modules/pyramid_multiauth { };
 
-  pyreadstat = callPackage ../development/python-modules/pyreadstat { };
+  pyreadstat = callPackage ../development/python-modules/pyreadstat {
+    inherit (pkgs.darwin) libiconv;
+  };
 
   pyrealsense2 = toPythonModule (pkgs.librealsense.override {
     enablePython = true;
@@ -8680,6 +8692,8 @@ in {
   pysnow = callPackage ../development/python-modules/pysnow { };
 
   pysocks = callPackage ../development/python-modules/pysocks { };
+
+  pysol-cards = callPackage ../development/python-modules/pysol-cards { };
 
   pysolr = callPackage ../development/python-modules/pysolr { };
 
@@ -9001,6 +9015,8 @@ in {
   python-binance = callPackage ../development/python-modules/python-binance { };
 
   python-box = callPackage ../development/python-modules/python-box { };
+
+  python-bsblan = callPackage ../development/python-modules/python-bsblan { };
 
   python-cinderclient = callPackage ../development/python-modules/python-cinderclient { };
 
@@ -9615,6 +9631,8 @@ in {
   raven = callPackage ../development/python-modules/raven { };
 
   rawkit = callPackage ../development/python-modules/rawkit { };
+
+  ray = callPackage ../development/python-modules/ray { redis = pkgs.redis; };
 
   rbtools = callPackage ../development/python-modules/rbtools { };
 
@@ -10320,6 +10338,8 @@ in {
   skodaconnect = callPackage ../development/python-modules/skodaconnect { };
 
   skorch = callPackage ../development/python-modules/skorch { };
+
+  skrl = callPackage ../development/python-modules/skrl { };
 
   skybellpy = callPackage ../development/python-modules/skybellpy { };
 
@@ -12029,6 +12049,13 @@ in {
       withWebKit = true;
     };
   };
+
+  wxPython_4_2 = callPackage ../development/python-modules/wxPython/4.2.nix {
+    wxGTK = pkgs.wxGTK32.override {
+      withWebKit = true;
+    };
+  };
+
 
   x11_hash = callPackage ../development/python-modules/x11_hash { };
 

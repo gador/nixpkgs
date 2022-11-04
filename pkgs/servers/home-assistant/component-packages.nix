@@ -1606,7 +1606,8 @@
     ]; # missing inputs: lacrosse-view
     "lametric" = ps: with ps; [
       aiohttp-cors
-    ]; # missing inputs: demetriek
+      demetriek
+    ];
     "landisgyr_heat_meter" = ps: with ps; [
       ultraheat-api
     ];
@@ -2944,7 +2945,8 @@
     "switch_as_x" = ps: with ps; [
     ];
     "switchbee" = ps: with ps; [
-    ]; # missing inputs: pyswitchbee
+      pyswitchbee
+    ];
     "switchbot" = ps: with ps; [
       pyswitchbot
       aiohttp-cors
@@ -3917,6 +3919,7 @@
     "konnected"
     "kraken"
     "kulersky"
+    "lametric"
     "landisgyr_heat_meter"
     "lastfm"
     "launch_library"
@@ -4174,6 +4177,7 @@
     "surepetcare"
     "switch"
     "switch_as_x"
+    "switchbee"
     "switchbot"
     "switcher_kis"
     "syncthing"

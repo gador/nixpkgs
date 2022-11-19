@@ -7,13 +7,13 @@
 
 stdenv.mkDerivation rec {
   pname = "box64";
-  version = "0.1.8";
+  version = "0.2.0";
 
   src = fetchFromGitHub {
     owner = "ptitSeb";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-6k8Enbafnj19ATtgmw8W7LxtRpM3Ousj1bpZbbtq8TM=";
+    hash = "sha256-eMp2eSWMRJQvLRQKUirBua6Kt7ZtyebfUnKIlibkNFU=";
   };
 
   nativeBuildInputs = [

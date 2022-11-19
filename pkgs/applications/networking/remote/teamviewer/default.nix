@@ -1,5 +1,5 @@
 { mkDerivation, lib, fetchurl, autoPatchelfHook, makeWrapper, xdg-utils, dbus
-, qtbase, qtwebkit, qtwebengine, qtx11extras, qtquickcontrols, getconf, glibc
+, qtbase, qtwebengine, qtx11extras, qtquickcontrols, getconf, glibc
 , libXrandr, libX11, libXext, libXdamage, libXtst, libSM, libXfixes, coreutils
 , wrapQtAppsHook
 }:
@@ -8,11 +8,11 @@ mkDerivation rec {
   pname = "teamviewer";
   # teamviewer itself has not development files but the dev output removes propagated other dev outputs from runtime
   outputs = [ "out" "dev" ];
-  version = "15.29.4";
+  version = "15.35.5";
 
   src = fetchurl {
     url = "https://dl.tvcdn.de/download/linux/version_15x/teamviewer_${version}_amd64.deb";
-    sha256 = "sha256-jkFqOtU+D62S7QmNPvz58Z8wJ79lkN11pWQrtNdD+Uk=";
+    sha256 = "sha256-gfiqvqByVUxlZy/9RmofiXnxLCHfh6V3Jg3M402yDlA=";
   };
 
   unpackPhase = ''
@@ -21,7 +21,7 @@ mkDerivation rec {
   '';
 
   nativeBuildInputs = [ autoPatchelfHook makeWrapper wrapQtAppsHook ];
-  buildInputs = [ dbus getconf qtbase qtwebkit qtwebengine qtx11extras libX11 ];
+  buildInputs = [ dbus getconf qtbase qtwebengine qtx11extras libX11 ];
   propagatedBuildInputs = [ qtquickcontrols ];
 
   installPhase = ''

@@ -31,6 +31,16 @@ let
     # Override the version of some packages pinned in Home Assistant's setup.py and requirements_all.txt
 
     (self: super: {
+      # https://github.com/postlund/pyatv/issues/1879
+      aiohttp = super.aiohttp.overridePythonAttrs (oldAttrs: rec {
+        pname = "aiohttp";
+        version = "3.8.1";
+        src = self.fetchPypi {
+          inherit pname version;
+          hash = "sha256-/FRx4aVN4V73HBvG6+gNTcaB6mAOaL/Ry85AQn8LdXg=";
+        };
+      });
+
       backoff = super.backoff.overridePythonAttrs (oldAttrs: rec {
         version = "1.11.1";
         src = fetchFromGitHub {
@@ -39,17 +49,6 @@ let
           rev = "v${version}";
           hash = "sha256-87IMcLaoCn0Vns8Ub/AFmv0gXtS0aPZX0cSt7+lOPm4=";
         };
-      });
-
-      gcal-sync = super.gcal-sync.overridePythonAttrs (oldAttrs: rec {
-        version = "2.2.3";
-        src = fetchFromGitHub {
-          owner = "allenporter";
-          repo = "gcal_sync";
-          rev = "refs/tags/${version}";
-          hash = "sha256-5PoKdJBrNhPfcDxmprc/1jX7weIs7HSxFzzvjKOjGbY=";
-        };
-        doCheck = false; # requires aiohttp>=1.0.0
       });
 
       gridnet = super.gridnet.overridePythonAttrs (oldAttrs: rec {
@@ -73,6 +72,16 @@ let
         };
       });
 
+      nibe = super.nibe.overridePythonAttrs (oldAttrs: rec {
+        version = "0.5.0";
+        src = fetchFromGitHub {
+          owner = "yozik04";
+          repo = "nibe";
+          rev = "refs/tags/${version}";
+          hash = "sha256-DguGWNJfc5DfbcKMX2eMM2U1WyVPcdtv2BmpVloOFSU=";
+        };
+      });
+
       # pytest-aiohttp>0.3.0 breaks home-assistant tests
       pytest-aiohttp = super.pytest-aiohttp.overridePythonAttrs (oldAttrs: rec {
         version = "0.3.0";
@@ -81,7 +90,7 @@ let
           pname = "pytest-aiohttp";
           hash = "sha256-ySmFQzljeXc3WDhwO2L+9jUoWYvAqdRRY566lfSqpE8=";
         };
-        propagatedBuildInputs = with python3.pkgs; [ aiohttp pytest ];
+        propagatedBuildInputs = with self; [ aiohttp pytest ];
         doCheck = false;
         patches = [];
       });
@@ -92,6 +101,9 @@ let
         doCheck = false; # requires aiohttp>=1.0.0
       });
       aioopenexchangerates = super.aioopenexchangerates.overridePythonAttrs (oldAttrs: {
+        doCheck = false; # requires aiohttp>=1.0.0
+      });
+      gcal-sync = super.gcal-sync.overridePythonAttrs (oldAttrs: {
         doCheck = false; # requires aiohttp>=1.0.0
       });
       hass-nabucasa = super.hass-nabucasa.overridePythonAttrs (oldAttrs: {
@@ -145,6 +157,16 @@ let
 
       pydeconz = super.pydeconz.overridePythonAttrs (oldAttrs: rec {
         doCheck = false; # requires pytest-aiohttp>=1.0.0
+      });
+
+      pysensibo = super.pysensibo.overridePythonAttrs (oldAttrs: rec {
+        version = "1.0.20";
+        src = fetchFromGitHub {
+          owner = "andrey-git";
+          repo = "pysensibo";
+          rev = "refs/tags/${version}";
+          hash = "sha256-L2NP4XS+dPlBr2h8tsGoa4G7tI9yiI4fwrhvQaKkexk=";
+        };
       });
 
       python-slugify = super.python-slugify.overridePythonAttrs (oldAttrs: rec {
@@ -236,7 +258,7 @@ let
   extraPackagesFile = writeText "home-assistant-packages" (lib.concatMapStringsSep "\n" (pkg: pkg.pname) extraBuildInputs);
 
   # Don't forget to run parse-requirements.py after updating
-  hassVersion = "2022.11.1";
+  hassVersion = "2022.11.4";
 
 in python.pkgs.buildPythonApplication rec {
   pname = "homeassistant";
@@ -254,7 +276,7 @@ in python.pkgs.buildPythonApplication rec {
     owner = "home-assistant";
     repo = "core";
     rev = version;
-    hash = "sha256-2zpNrkRYsmJEq+4L0J6wJodmda5r8NWgYVtYwAHKSps=";
+    hash = "sha256-3vNwWPFSR9Ap89rAxZjUOptigBaDlboxvLZysMyUUX0=";
   };
 
   # leave this in, so users don't have to constantly update their downstream patch handling
@@ -267,6 +289,7 @@ in python.pkgs.buildPythonApplication rec {
 
   postPatch = let
     relaxedConstraints = [
+      "aiohttp"
       "attrs"
       "awesomeversion"
       "bcrypt"

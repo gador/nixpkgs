@@ -85,6 +85,7 @@
 , "coc-smartf"
 , "coc-snippets"
 , "coc-solargraph"
+, "coc-spell-checker"
 , "coc-stylelint"
 , "coc-sumneko-lua"
 , "coc-sqlfluff"
@@ -124,6 +125,7 @@
 , "@electron-forge/cli"
 , "eas-cli"
 , "elm-oracle"
+, "elm-test"
 , "emoj"
 , "emojione"
 , {"epgstation": "../../applications/video/epgstation"}
@@ -208,6 +210,7 @@
 , "less-plugin-clean-css"
 , "live-server"
 , "livedown"
+, "localtunnel"
 , "lodash"
 , "lua-fmt"
 , "lv_font_conv"

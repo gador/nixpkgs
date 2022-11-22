@@ -157,6 +157,7 @@
   ./programs/extra-container.nix
   ./programs/feedbackd.nix
   ./programs/file-roller.nix
+  ./programs/firefox.nix
   ./programs/firejail.nix
   ./programs/fish.nix
   ./programs/flashrom.nix
@@ -186,6 +187,8 @@
   ./programs/less.nix
   ./programs/liboping.nix
   ./programs/light.nix
+  ./programs/mdevctl.nix
+  ./programs/mepo.nix
   ./programs/mosh.nix
   ./programs/mininet.nix
   ./programs/msmtp.nix
@@ -320,6 +323,7 @@
   ./services/backup/znapzend.nix
   ./services/blockchain/ethereum/geth.nix
   ./services/blockchain/ethereum/erigon.nix
+  ./services/blockchain/ethereum/lighthouse.nix
   ./services/backup/zrepl.nix
   ./services/cluster/corosync/default.nix
   ./services/cluster/hadoop/default.nix
@@ -378,6 +382,7 @@
   ./services/databases/pgmanage.nix
   ./services/databases/postgresql.nix
   ./services/databases/redis.nix
+  ./services/databases/surrealdb.nix
   ./services/databases/victoriametrics.nix
   ./services/desktops/accountsservice.nix
   ./services/desktops/bamf.nix
@@ -486,6 +491,7 @@
   ./services/hardware/vdr.nix
   ./services/home-automation/home-assistant.nix
   ./services/home-automation/zigbee2mqtt.nix
+  ./services/home-automation/evcc.nix
   ./services/logging/SystemdJournal2Gelf.nix
   ./services/logging/awstats.nix
   ./services/logging/filebeat.nix
@@ -572,7 +578,6 @@
   ./services/misc/etcd.nix
   ./services/misc/etebase-server.nix
   ./services/misc/etesync-dav.nix
-  ./services/misc/ethminer.nix
   ./services/misc/exhibitor.nix
   ./services/misc/felix.nix
   ./services/misc/freeswitch.nix
@@ -715,6 +720,7 @@
   ./services/monitoring/teamviewer.nix
   ./services/monitoring/telegraf.nix
   ./services/monitoring/thanos.nix
+  ./services/monitoring/tremor-rs.nix
   ./services/monitoring/tuptime.nix
   ./services/monitoring/unifi-poller.nix
   ./services/monitoring/ups.nix
@@ -771,6 +777,7 @@
   ./services/networking/blockbook-frontend.nix
   ./services/networking/blocky.nix
   ./services/networking/charybdis.nix
+  ./services/networking/chisel-server.nix
   ./services/networking/cjdns.nix
   ./services/networking/cloudflare-dyndns.nix
   ./services/networking/cntlm.nix
@@ -1045,6 +1052,7 @@
   ./services/security/vault.nix
   ./services/security/vaultwarden/default.nix
   ./services/security/yubikey-agent.nix
+  ./services/system/automatic-timezoned.nix
   ./services/system/cachix-agent/default.nix
   ./services/system/cachix-watch-store.nix
   ./services/system/cloud-init.nix
@@ -1221,6 +1229,7 @@
   ./services/x11/xfs.nix
   ./services/x11/xserver.nix
   ./system/activation/activation-script.nix
+  ./system/activation/specialisation.nix
   ./system/activation/top-level.nix
   ./system/boot/binfmt.nix
   ./system/boot/emergency-mode.nix

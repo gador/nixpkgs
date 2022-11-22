@@ -13,6 +13,15 @@ in {
     services.erigon = {
       enable = mkEnableOption (lib.mdDoc "Ethereum implementation on the efficiency frontier");
 
+      secretJwtPath = mkOption {
+        type = types.path;
+        description = lib.mdDoc ''
+          Path to the secret jwt used for the http api authentication.
+        '';
+        default = "";
+        example = "config.age.secrets.ERIGON_JWT.path";
+      };
+
       settings = mkOption {
         description = lib.mdDoc ''
           Configuration for Erigon
@@ -76,11 +85,12 @@ in {
       after = [ "network.target" ];
 
       serviceConfig = {
-        ExecStart = "${pkgs.erigon}/bin/erigon --config ${configFile}";
+        LoadCredential = "ERIGON_JWT:${cfg.secretJwtPath}";
+        ExecStart = "${pkgs.erigon}/bin/erigon --config ${configFile} --authrpc.jwtsecret=%d/ERIGON_JWT";
+        DynamicUser = true;
         Restart = "on-failure";
         StateDirectory = "erigon";
         CapabilityBoundingSet = "";
-        DynamicUser = true;
         NoNewPrivileges = true;
         PrivateTmp = true;
         ProtectHome = true;
@@ -97,7 +107,6 @@ in {
         RestrictNamespaces = true;
         LockPersonality = true;
         RemoveIPC = true;
-        RestrictAddressFamilies = [ "AF_INET" "AF_INET6" ];
         SystemCallFilter = [ "@system-service" "~@privileged" ];
       };
     };

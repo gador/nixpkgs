@@ -425,6 +425,39 @@ in {
           Do automatic database migrations.
         '';
       };
+
+      mediaAutoRemove = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          example = false;
+          description = lib.mdDoc ''
+            Automatically remove remote media attachments and preview cards older than the configured amount of days.
+
+            Recommended in https://docs.joinmastodon.org/admin/setup/.
+          '';
+        };
+
+        startAt = lib.mkOption {
+          type = lib.types.str;
+          default = "daily";
+          example = "hourly";
+          description = lib.mdDoc ''
+            How often to remove remote media.
+
+            The format is described in {manpage}`systemd.time(7)`.
+          '';
+        };
+
+        olderThanDays = lib.mkOption {
+          type = lib.types.int;
+          default = 30;
+          example = 14;
+          description = lib.mdDoc ''
+            How old remote media needs to be in order to be removed.
+          '';
+        };
+      };
     };
   };
 
@@ -585,6 +618,22 @@ in {
       path = with pkgs; [ file imagemagick ffmpeg ];
     };
 
+    systemd.services.mastodon-media-auto-remove = lib.mkIf cfg.mediaAutoRemove.enable {
+      description = "Mastodon media auto remove";
+      environment = env;
+      serviceConfig = {
+        Type = "oneshot";
+        EnvironmentFile = "/var/lib/mastodon/.secrets_env";
+      } // cfgService;
+      script = let
+        olderThanDays = toString cfg.mediaAutoRemove.olderThanDays;
+      in ''
+        ${cfg.package}/bin/tootctl media remove --days=${olderThanDays}
+        ${cfg.package}/bin/tootctl preview_cards remove --days=${olderThanDays}
+      '';
+      startAt = cfg.mediaAutoRemove.startAt;
+    };
+
     services.nginx = lib.mkIf cfg.configureNginx {
       enable = true;
       recommendedProxySettings = true; # required for redirections to work
@@ -639,7 +688,7 @@ in {
           inherit (cfg) group;
         };
       })
-      (lib.attrsets.setAttrByPath [ cfg.user "packages" ] [ cfg.package mastodonEnv ])
+      (lib.attrsets.setAttrByPath [ cfg.user "packages" ] [ cfg.package mastodonEnv pkgs.imagemagick ])
     ];
 
     users.groups.${cfg.group}.members = lib.optional cfg.configureNginx config.services.nginx.user;

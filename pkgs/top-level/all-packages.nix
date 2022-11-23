@@ -508,6 +508,8 @@ with pkgs;
 
   hobbes = callPackage ../development/tools/hobbes { stdenv = gcc10StdenvCompat; };
 
+  honeycomb-refinery = callPackage ../servers/tracing/honeycomb/refinery { };
+
   html5validator = python3Packages.callPackage ../applications/misc/html5validator { };
 
   buildcatrust = with python3.pkgs; toPythonApplication buildcatrust;
@@ -7147,6 +7149,8 @@ with pkgs;
   git-remote-codecommit = python3Packages.callPackage ../applications/version-management/git-and-tools/git-remote-codecommit { };
 
   git-remote-gcrypt = callPackage ../applications/version-management/git-and-tools/git-remote-gcrypt { };
+
+  git-remote-ipld = callPackage ../applications/version-management/git-and-tools/git-remote-ipld { };
 
   git-remote-hg = callPackage ../applications/version-management/git-and-tools/git-remote-hg { };
 
@@ -14999,7 +15003,6 @@ with pkgs;
 
   buildRustCrate = callPackage ../build-support/rust/build-rust-crate { };
   buildRustCrateHelpers = callPackage ../build-support/rust/build-rust-crate/helpers.nix { };
-  cratesIO = callPackage ../build-support/rust/crates-io.nix { };
 
   cargo-espflash = callPackage ../development/tools/rust/cargo-espflash {
     inherit (darwin.apple_sdk.frameworks) Security;
@@ -15013,8 +15016,6 @@ with pkgs;
     inherit (darwin.apple_sdk.frameworks) Security;
     inherit (linuxPackages) perf;
   };
-
-  carnix = (callPackage ../build-support/rust/carnix.nix { }).carnix { };
 
   defaultCrateOverrides = callPackage ../build-support/rust/default-crate-overrides.nix { };
 

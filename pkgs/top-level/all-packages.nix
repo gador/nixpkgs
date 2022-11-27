@@ -11616,6 +11616,8 @@ with pkgs;
 
   sqliteman = callPackage ../applications/misc/sqliteman { };
 
+  sqlite3-to-mysql = callPackage ../tools/misc/sqlite3-to-mysql { };
+
   sqls = callPackage ../applications/misc/sqls { };
 
   stdman = callPackage ../data/documentation/stdman { };

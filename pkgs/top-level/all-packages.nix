@@ -37917,7 +37917,11 @@ with pkgs;
     branch = "canary";
   };
 
-  golden-cheetah = libsForQt5.callPackage ../applications/misc/golden-cheetah {};
+  golden-cheetah = golden-cheetah-source;
+
+  golden-cheetah-source = libsForQt5.callPackage ../applications/misc/golden-cheetah {};
+
+  golden-cheetah-app = callPackage ../applications/misc/golden-cheetah-app {};
 
   linkchecker = callPackage ../tools/networking/linkchecker { };
 

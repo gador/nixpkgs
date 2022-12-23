@@ -96,6 +96,7 @@ in {
   blockbook-frontend = handleTest ./blockbook-frontend.nix {};
   blocky = handleTest ./blocky.nix {};
   boot = handleTestOn ["x86_64-linux" "aarch64-linux"] ./boot.nix {};
+  bootspec = handleTestOn ["x86_64-linux"] ./bootspec.nix {};
   boot-stage1 = handleTest ./boot-stage1.nix {};
   borgbackup = handleTest ./borgbackup.nix {};
   botamusique = handleTest ./botamusique.nix {};
@@ -435,6 +436,7 @@ in {
   nginx = handleTest ./nginx.nix {};
   nginx-auth = handleTest ./nginx-auth.nix {};
   nginx-etag = handleTest ./nginx-etag.nix {};
+  nginx-globalredirect = handleTest ./nginx-globalredirect.nix {};
   nginx-http3 = handleTest ./nginx-http3.nix {};
   nginx-modsecurity = handleTest ./nginx-modsecurity.nix {};
   nginx-njs = handleTest ./nginx-njs.nix {};

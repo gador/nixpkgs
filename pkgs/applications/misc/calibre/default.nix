@@ -73,6 +73,7 @@ stdenv.mkDerivation rec {
     qmake
     removeReferencesTo
     wrapGAppsHook
+    wrapQtAppsHook
   ];
 
   buildInputs = [

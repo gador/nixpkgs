@@ -7,20 +7,23 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "ruff";
-  version = "0.0.192";
+  version = "0.0.205";
 
   src = fetchFromGitHub {
     owner = "charliermarsh";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-EhivXOuXeq+x7fozMdof4Sh9jFXYLqyVK4ysWzUbM4s=";
+    sha256 = "sha256-fs9AjYnsOV3tbmoXoIfK5OJbErfImQl01TvorS/R4zc=";
   };
 
-  cargoSha256 = "sha256-7EoYQ0WvlVp1Cbg/1kkMX0SoC3Ae6lDdwHju0CyFkAg=";
+  cargoSha256 = "sha256-YirtNOamGgjM84rZcZhOXfWj1WD4vvAJvi6nKx0lmTI=";
 
   buildInputs = lib.optionals stdenv.isDarwin [
     darwin.apple_sdk.frameworks.CoreServices
   ];
+
+  # building tests fails with `undefined symbols`
+  doCheck = false;
 
   meta = with lib; {
     description = "An extremely fast Python linter";

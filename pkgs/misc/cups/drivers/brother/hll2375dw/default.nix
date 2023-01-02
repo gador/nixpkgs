@@ -34,7 +34,7 @@ stdenv.mkDerivation rec {
   buildInputs = [ perl ];
 
   src = fetchurl {
-    url = "download.brother.com/welcome/dlf103535//hll2375dwpdrv-${version}.i386.deb";
+    url = "https://download.brother.com/welcome/dlf103535//hll2375dwpdrv-${version}.i386.deb";
     hash = "sha256-N5VCBZLFrfw29QjjzlSvQ12urvyaf7ez/RJ08UwqHdk=";
   };
 

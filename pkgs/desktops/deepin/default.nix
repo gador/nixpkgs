@@ -41,6 +41,7 @@ let
 
     #### Go Packages
     go-lib = callPackage ./go-package/go-lib { inherit replaceAll; };
+    go-gir-generator = callPackage ./go-package/go-gir-generator { };
 
     #### ARTWORK
     dde-account-faces = callPackage ./artwork/dde-account-faces { };

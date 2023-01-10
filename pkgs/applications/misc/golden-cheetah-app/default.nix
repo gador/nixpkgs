@@ -29,6 +29,6 @@ appimageTools.wrapType2 {
     platforms = platforms.linux;
     maintainers = with maintainers; [ gador ];
     license = licenses.gpl2Plus;
-    sourceProvenance = sourceTypes.binaryNativeCode;
+    sourceProvenance = [ sourceTypes.binaryNativeCode ];
   };
 }

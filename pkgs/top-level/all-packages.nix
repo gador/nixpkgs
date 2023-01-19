@@ -19618,6 +19618,8 @@ with pkgs;
 
   filtron = callPackage ../servers/filtron { };
 
+  fizz = callPackage ../development/libraries/fizz { };
+
   flann = callPackage ../development/libraries/flann { };
 
   flatcc = callPackage ../development/libraries/flatcc { };

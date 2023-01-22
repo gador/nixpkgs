@@ -12,18 +12,18 @@
 
 buildPythonApplication rec {
   pname = "git-machete";
-  version = "3.13.2";
+  version = "3.14.2";
 
   src = fetchFromGitHub {
     owner = "virtuslab";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-K9oJvvESHWCJFSgqycA7N4cG7WbTDwXZExnXUs4Qlp8=";
+    hash = "sha256-uIVt7pneJq7l/kMSa7VqhcQgXhHCrpBGEqE7QZaDyQQ=";
   };
 
   nativeBuildInputs = [ installShellFiles ];
 
-  checkInputs = [
+  nativeCheckInputs = [
     git
     pytest-mock
     pytestCheckHook

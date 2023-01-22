@@ -474,6 +474,15 @@ self: super: {
   # https://github.com/kkardzis/curlhs/issues/6
   curlhs = dontCheck super.curlhs;
 
+  # curl 7.87.0 introduces a preprocessor typechecker of sorts which fails on
+  # incorrect usages of curl_easy_getopt and similar functions. Presumably
+  # because the wrappers in curlc.c don't use static values for the different
+  # arguments to curl_easy_getinfo, it complains and needs to be disabled.
+  # https://github.com/GaloisInc/curl/issues/28
+  curl = appendConfigureFlags [
+    "--ghc-option=-DCURL_DISABLE_TYPECHECK"
+  ] super.curl;
+
   # https://github.com/hvr/token-bucket/issues/3
   token-bucket = dontCheck super.token-bucket;
 
@@ -2095,10 +2104,6 @@ self: super: {
   # https://github.com/zellige/hs-geojson/issues/29
   geojson = dontCheck super.geojson;
 
-  # Test suite doesn't compile
-  # https://github.com/erebe/wstunnel/issues/145
-  wstunnel = dontCheck super.wstunnel;
-
   # Test data missing from sdist
   # https://github.com/ngless-toolkit/ngless/issues/152
   NGLess = dontCheck super.NGLess;
@@ -2319,4 +2324,8 @@ self: super: {
     revision = null;
     editedCabalFile = null;
   }) super.true-name);
+
+  # posix-api has had broken tests since 2020 (until at least 2023-01-11)
+  # raehik has a fix pending: https://github.com/andrewthad/posix-api/pull/14
+  posix-api = dontCheck super.posix-api;
 } // import ./configuration-tensorflow.nix {inherit pkgs haskellLib;} self super

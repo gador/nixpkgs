@@ -16,7 +16,7 @@
 
 let
   pname = "hassil";
-  version = "0.1.4";
+  version = "0.2.4";
 in
 buildPythonPackage {
   inherit pname version;
@@ -24,7 +24,7 @@ buildPythonPackage {
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-ygaPdfH2jBk2xvlgt7V8/VcZAtv6Lwsi8g+stK/DdT8=";
+    hash = "sha256-lgGo3zK1GN3MEOinXuvT5nCc8LBCxAHiW0CZfS8Yy7Y=";
   };
 
   nativeBuildInputs = [
@@ -43,7 +43,7 @@ buildPythonPackage {
     pyyaml
   ];
 
-  checkInputs = [
+  nativeCheckInputs = [
     pytestCheckHook
   ];
 

@@ -1212,6 +1212,8 @@ self: super: with self; {
 
   bellows = callPackage ../development/python-modules/bellows { };
 
+  bencoder = callPackage ../development/python-modules/bencoder { };
+
   beniget = callPackage ../development/python-modules/beniget { };
 
   bespon = callPackage ../development/python-modules/bespon { };
@@ -2579,6 +2581,8 @@ self: super: with self; {
   django-js-reverse = callPackage ../development/python-modules/django-js-reverse { };
 
   django-logentry-admin = callPackage ../development/python-modules/django-logentry-admin { };
+
+  django-login-required-middleware = callPackage ../development/python-modules/django-login-required-middleware { };
 
   django-mailman3 = callPackage ../development/python-modules/django-mailman3 { };
 
@@ -4799,9 +4803,6 @@ self: super: with self; {
 
   jaxlib-build = callPackage ../development/python-modules/jaxlib rec {
     inherit (pkgs.darwin) cctools;
-    buildBazelPackage = pkgs.buildBazelPackage.override {
-      stdenv = if stdenv.isDarwin then pkgs.darwin.apple_sdk_11_0.stdenv else stdenv;
-    };
     # Some platforms don't have `cudaSupport` defined, hence the need for 'or false'.
     cudaSupport = pkgs.config.cudaSupport or false;
     IOKit = pkgs.darwin.apple_sdk_11_0.IOKit;
@@ -10895,6 +10896,8 @@ self: super: with self; {
   sqlparse = callPackage ../development/python-modules/sqlparse { };
 
   sqlsoup = callPackage ../development/python-modules/sqlsoup { };
+
+  sqltrie = callPackage ../development/python-modules/sqltrie { };
 
   srp = callPackage ../development/python-modules/srp { };
 

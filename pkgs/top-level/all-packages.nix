@@ -30211,7 +30211,10 @@ with pkgs;
 
   inherit (callPackage ../applications/virtualization/singularity/packages.nix { })
     apptainer
-    singularity;
+    singularity
+    apptainer-overriden-nixos
+    singularity-overriden-nixos
+    ;
 
   skate = callPackage ../applications/misc/skate { };
 

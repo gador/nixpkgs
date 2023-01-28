@@ -14,6 +14,20 @@ let
     self = py;
     packageOverrides = lib.foldr lib.composeExtensions (self: super: { }) (
       [
+        (
+          self: super: {
+            flask-limiter = super.flask-limiter.overridePythonAttrs (oldAttrs: rec {
+              version = "2.6.2";
+              src = fetchFromGitHub {
+                owner = "alisaifee";
+                repo = "flask-limiter";
+                rev = version;
+                sha256 = "sha256-eWOdJ7m3cY08ASN/X+7ILJK99iLJJwCY8294fwJiDew=";
+              };
+              doCheck = false;
+            });
+          }
+        )
         # Built-in dependency
         (
           self: super: {

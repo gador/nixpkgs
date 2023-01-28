@@ -30209,6 +30209,8 @@ with pkgs;
 
   shepherd = nodePackages."@nerdwallet/shepherd";
 
+  singularity = callPackage ../applications/virtualization/singularity { };
+
   skate = callPackage ../applications/misc/skate { };
 
   slack = callPackage ../applications/networking/instant-messengers/slack { };
@@ -30218,8 +30220,6 @@ with pkgs;
   slack-term = callPackage ../applications/networking/instant-messengers/slack-term { };
 
   slweb = callPackage ../applications/misc/slweb { };
-
-  singularity = callPackage ../applications/virtualization/singularity { };
 
   sonixd = callPackage ../applications/audio/sonixd { };
 

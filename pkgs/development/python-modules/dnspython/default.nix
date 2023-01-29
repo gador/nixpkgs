@@ -6,23 +6,28 @@
 , setuptools-scm
 , pytestCheckHook
 , cacert
+, cryptography
 }:
 
 buildPythonPackage rec {
   pname = "dnspython";
-  version = "2.2.1";
-  disabled = pythonOlder "3.6";
+  version = "2.3.0";
+  disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
     extension = "tar.gz";
-    sha256 = "0gk00m8zxjghxnzafhars51k5ahd6wfhf123nrc1j5gzlsj6jx8g";
+    hash = "sha256-Ik4ysD60a+cOEu9tZOC+Ejpk5iGrTAgi/21FDVKlQLk=";
   };
 
   nativeCheckInputs = [
     pytestCheckHook
   ] ++ lib.optionals stdenv.isDarwin [
     cacert
+  ];
+
+  propagatedBuildInputs = [
+    cryptography
   ];
 
   disabledTests = [

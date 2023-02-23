@@ -316,7 +316,8 @@ in
         ++ lib.optional config.services.colord.enable pkgs.colord-kde
         ++ lib.optional config.services.hardware.bolt.enable pkgs.plasma5Packages.plasma-thunderbolt
         ++ lib.optionals config.services.samba.enable [ kdenetwork-filesharing pkgs.samba ]
-        ++ lib.optional config.services.xserver.wacom.enable pkgs.wacomtablet;
+        ++ lib.optional config.services.xserver.wacom.enable pkgs.wacomtablet
+        ++ lib.optional config.services.flatpak.enable flatpak-kcm;
 
       # Extra services for D-Bus activation
       services.dbus.packages = [
@@ -378,12 +379,7 @@ in
 
       security.pam.services.kde = { allowNullPassword = true; };
 
-      # Doing these one by one seems silly, but we currently lack a better
-      # construct for handling common pam configs.
-      security.pam.services.gdm.enableKwallet = true;
-      security.pam.services.kdm.enableKwallet = true;
-      security.pam.services.lightdm.enableKwallet = true;
-      security.pam.services.sddm.enableKwallet = true;
+      security.pam.services.login.enableKwallet = true;
 
       systemd.user.services = {
         plasma-early-setup = mkIf cfg.runUsingSystemd {

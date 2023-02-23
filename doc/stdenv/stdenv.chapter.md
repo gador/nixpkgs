@@ -95,6 +95,27 @@ installPhase() {
 genericBuild
 ```
 
+### Building a `stdenv` package in `nix-shell` {#sec-building-stdenv-package-in-nix-shell}
+
+To build a `stdenv` package in a [`nix-shell`](https://nixos.org/manual/nix/unstable/command-ref/nix-shell.html), use
+
+```bash
+nix-shell '<nixpkgs>' -A some_package
+eval ${unpackPhase:-unpackPhase}
+cd $sourceRoot
+eval ${patchPhase:-patchPhase}
+eval ${configurePhase:-configurePhase}
+eval ${buildPhase:-buildPhase}
+```
+
+To modify a [phase](#sec-stdenv-phases), first print it with
+
+```bash
+type buildPhase
+```
+
+then change it in a text editor, and paste it back to the terminal.
+
 ## Tools provided by `stdenv` {#sec-tools-of-stdenv}
 
 The standard environment provides the following packages:
@@ -1308,7 +1329,7 @@ bin/blib.a(bios_console.o): In function `bios_handle_cup':
 
 Adds the `-O2 -D_FORTIFY_SOURCE=2` compiler options. During code generation the compiler knows a great deal of information about buffer sizes (where possible), and attempts to replace insecure unlimited length buffer function calls with length-limited ones. This is especially useful for old, crufty code. Additionally, format strings in writable memory that contain `%n` are blocked. If an application depends on such a format string, it will need to be worked around.
 
-Additionally, some warnings are enabled which might trigger build failures if compiler warnings are treated as errors in the package build. In this case, set `NIX_CFLAGS_COMPILE` to `-Wno-error=warning-type`.
+Additionally, some warnings are enabled which might trigger build failures if compiler warnings are treated as errors in the package build. In this case, set `env.NIX_CFLAGS_COMPILE` to `-Wno-error=warning-type`.
 
 This needs to be turned off or fixed for errors similar to:
 

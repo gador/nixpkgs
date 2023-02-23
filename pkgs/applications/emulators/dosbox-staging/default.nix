@@ -1,15 +1,10 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, SDL2
-, SDL2_image
-, SDL2_net
-, alsa-lib
+{ alsa-lib
 , copyDesktopItems
+, fetchFromGitHub
 , fluidsynth
 , glib
 , gtest
-, irr1
+, lib
 , libGL
 , libGLU
 , libjack2
@@ -25,7 +20,12 @@
 , ninja
 , opusfile
 , pkg-config
+, irr1
+, SDL2
+, SDL2_image
+, SDL2_net
 , speexdsp
+, stdenv
 }:
 
 stdenv.mkDerivation (self: {
@@ -33,9 +33,9 @@ stdenv.mkDerivation (self: {
   version = "0.80.1";
 
   src = fetchFromGitHub {
-    owner = "dosbox-staging";
-    repo = "dosbox-staging";
-    rev = "v${self.version}";
+    owner = pname;
+    repo = pname;
+    rev = "v${version}";
     hash = "sha256-I90poBeLSq1c8PXyjrx7/UcbfqFNnnNiXfJdWhLPGMc=";
   };
 
@@ -49,9 +49,6 @@ stdenv.mkDerivation (self: {
   ];
 
   buildInputs = [
-    SDL2
-    SDL2_image
-    SDL2_net
     alsa-lib
     fluidsynth
     glib
@@ -66,10 +63,13 @@ stdenv.mkDerivation (self: {
     libslirp
     libsndfile
     opusfile
+    SDL2
+    SDL2_image
+    SDL2_net
     speexdsp
   ];
 
-  NIX_CFLAGS_COMPILE = [
+  env.NIX_CFLAGS_COMPILE = toString [
     "-I${SDL2_image}/include/SDL2"
     "-I${SDL2_net}/include/SDL2"
   ];

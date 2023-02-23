@@ -4,6 +4,7 @@
 , socat
 , iptables
 , iproute2
+, ipset
 , bridge-utils
 , btrfs-progs
 , conntrack-tools
@@ -249,6 +250,7 @@ buildGoModule rec {
     socat
     iptables
     iproute2
+    ipset
     bridge-utils
     ethtool
     util-linux # kubelet wants 'nsenter' from util-linux: https://github.com/kubernetes/kubernetes/issues/26093#issuecomment-705994388
@@ -319,7 +321,14 @@ buildGoModule rec {
 
   passthru.updateScript = ./update.sh;
 
-  passthru.tests = nixosTests.k3s;
+  passthru.mkTests = version:
+    let k3s_version = "k3s_" + lib.replaceStrings ["."] ["_"] (lib.versions.majorMinor version);
+    in {
+      single-node = nixosTests.k3s.single-node.${k3s_version};
+      multi-node = nixosTests.k3s.multi-node.${k3s_version};
+    };
+  passthru.tests = passthru.mkTests k3sVersion;
+
 
   meta = baseMeta;
 }

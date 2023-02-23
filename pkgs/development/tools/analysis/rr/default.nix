@@ -24,6 +24,7 @@ stdenv.mkDerivation rec {
   postPatch = ''
     substituteInPlace src/Command.cc --replace '_BSD_SOURCE' '_DEFAULT_SOURCE'
     sed '7i#include <math.h>' -i src/Scheduler.cc
+    sed '1i#include <ctime>' -i src/test-monitor/test-monitor.cc
     patchShebangs .
   '';
 
@@ -49,7 +50,7 @@ stdenv.mkDerivation rec {
   ];
 
   # we turn on additional warnings due to hardening
-  NIX_CFLAGS_COMPILE = "-Wno-error";
+  env.NIX_CFLAGS_COMPILE = "-Wno-error";
 
   hardeningDisable = [ "fortify" ];
 

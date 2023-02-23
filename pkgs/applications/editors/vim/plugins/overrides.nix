@@ -700,6 +700,10 @@ self: super: {
     callPackage ./nvim-treesitter/overrides.nix { } self super
   );
 
+  nvim-ufo = super.nvim-ufo.overrideAttrs (old: {
+    dependencies = with self; [ promise-async ];
+  });
+
   octo-nvim = super.octo-nvim.overrideAttrs (old: {
     dependencies = with self; [ telescope-nvim plenary-nvim ];
   });
@@ -941,6 +945,10 @@ self: super: {
     dependencies = with self; [ telescope-nvim ];
   });
 
+  telescope-undo-nvim = super.telescope-undo-nvim.overrideAttrs (old: {
+    dependencies = with self; [ telescope-nvim ];
+  });
+
   telescope-z-nvim = super.telescope-z-nvim.overrideAttrs (old: {
     dependencies = with self; [ telescope-nvim ];
   });
@@ -1088,7 +1096,7 @@ self: super: {
             libiconv
           ];
 
-          cargoSha256 = "sha256-jpO26OXaYcWirQ5tTKIwlva7dHIfdmnruF4WdwSq0nI=";
+          cargoSha256 = "sha256-MR9n2+B2TUNnWxZhBbXZCBereLxYntBxLfx9g14vDUw=";
         };
       in
       ''
@@ -1338,6 +1346,15 @@ self: super: {
 
   vimshell-vim = super.vimshell-vim.overrideAttrs (old: {
     dependencies = with self; [ vimproc-vim ];
+  });
+
+  vim-trailing-whitespace = super.vim-trailing-whitespace.overrideAttrs (old: {
+    patches = [(fetchpatch {
+      # https://github.com/bronson/vim-trailing-whitespace/pull/30
+      name = "fix-add-dynamic-TerminalOpen-for-both-vim-and-nvim.patch";
+      url = "https://github.com/bronson/vim-trailing-whitespace/commit/99ef803ebdc01d62b418a3e9386d5f10797bfac3.patch";
+      hash = "sha256-cyanHUKxhbY8c6EkAbpUq7QcEBQABCwZ6NoEUOpd2F8=";
+    })];
   });
 
   vim-zettel = super.vim-zettel.overrideAttrs (old: {

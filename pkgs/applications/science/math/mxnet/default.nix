@@ -54,6 +54,12 @@ stdenv.mkDerivation rec {
     ] else [ "-DUSE_CUDA=OFF" ])
     ++ lib.optional (!cudnnSupport) "-DUSE_CUDNN=OFF";
 
+  env.NIX_CFLAGS_COMPILE = toString [
+    # Needed with GCC 12
+    "-Wno-error=maybe-uninitialized"
+    "-Wno-error=uninitialized"
+  ];
+
   postPatch = ''
     substituteInPlace 3rdparty/mkldnn/tests/CMakeLists.txt \
       --replace "/bin/bash" "${bash}/bin/bash"

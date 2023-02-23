@@ -22,8 +22,8 @@ let
     channel=${toString cfg.channel}
     ieee80211n=1
     ieee80211ac=1
-    ${optionalString (cfg.countryCode != null) ''country_code=${cfg.countryCode}''}
-    ${optionalString (cfg.countryCode != null) ''ieee80211d=1''}
+    ${optionalString (cfg.countryCode != null) "country_code=${cfg.countryCode}"}
+    ${optionalString (cfg.countryCode != null) "ieee80211d=1"}
 
     # logging (debug level)
     logger_syslog=-1

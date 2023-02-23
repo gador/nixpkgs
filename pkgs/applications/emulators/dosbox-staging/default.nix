@@ -28,7 +28,7 @@
 , stdenv
 }:
 
-stdenv.mkDerivation (self: {
+stdenv.mkDerivation rec {
   pname = "dosbox-staging";
   version = "0.80.1";
 
@@ -91,17 +91,17 @@ stdenv.mkDerivation (self: {
     # original dosbox. Doing it this way allows us to work with frontends and
     # launchers that expect the binary to be named dosbox, but get out of the
     # way of vanilla dosbox if the user desires to install that as well.
-    mv $out/bin/dosbox $out/bin/${self.pname}
+    mv $out/bin/dosbox $out/bin/${pname}
     makeWrapper $out/bin/dosbox-staging $out/bin/dosbox
 
     # Create a symlink to dosbox manual instead of merely copying it
     pushd $out/share/man/man1/
-    mv dosbox.1.gz ${self.pname}.1.gz
-    ln -s ${self.pname}.1.gz dosbox.1.gz
+    mv dosbox.1.gz ${pname}.1.gz
+    ln -s ${pname}.1.gz dosbox.1.gz
     popd
   '';
 
-  meta = {
+  meta = with lib; {
     homepage = "https://dosbox-staging.github.io/";
     description = "A modernized DOS emulator";
     longDescription = ''
@@ -110,14 +110,10 @@ stdenv.mkDerivation (self: {
       existing DOSBox codebase while leveraging modern development tools and
       practices.
     '';
-    changelog = "https://github.com/dosbox-staging/dosbox-staging/releases/tag/v${self.version}";
-    license = lib.licenses.gpl2Plus;
-    maintainers = [
-      lib.maintainers.joshuafern
-      lib.maintainers.AndersonTorres
-    ];
-    platforms = lib.platforms.unix;
+    license = licenses.gpl2Plus;
+    maintainers = with maintainers; [ joshuafern AndersonTorres ];
+    platforms = platforms.unix;
     priority = 101;
   };
-})
-# TODO: report upstream about not finding extra SDL2 libraries
+}
+# TODO: report upstream about not finding SDL2_net

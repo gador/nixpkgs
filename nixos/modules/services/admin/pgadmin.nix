@@ -31,7 +31,7 @@ in
     enable = mkEnableOption (lib.mdDoc "PostgreSQL Admin 4");
 
     port = mkOption {
-      description = lib.mdDoc "Port for pgadmin4 to run on.";
+      description = lib.mdDoc "Port for pgadmin4 to run on";
       type = types.port;
       default = 5050;
     };

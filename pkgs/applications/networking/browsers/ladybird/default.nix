@@ -55,7 +55,7 @@ stdenv.mkDerivation {
     # error: use of undeclared identifier 'aligned_alloc'
     "-include mm_malloc.h"
     "-Daligned_alloc=_mm_malloc"
-  ];
+  ]);
 
   # https://github.com/NixOS/nixpkgs/issues/201254
   NIX_LDFLAGS = lib.optionalString (stdenv.isLinux && stdenv.isAarch64 && stdenv.cc.isGNU) "-lgcc";

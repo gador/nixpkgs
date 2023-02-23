@@ -9,6 +9,7 @@
 , deprecation
 , lxml
 , mupdf
+, packaging
 , pillow
 , psutil
 , pybind11
@@ -82,6 +83,7 @@ buildPythonPackage rec {
   propagatedBuildInputs = [
     deprecation
     lxml
+    packaging
     pillow
   ] ++ lib.optionals (pythonOlder "3.8") [
     importlib-metadata

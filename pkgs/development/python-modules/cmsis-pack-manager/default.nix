@@ -54,6 +54,5 @@ buildPythonPackage rec {
     homepage = "https://github.com/pyocd/cmsis-pack-manager";
     license = licenses.asl20;
     maintainers = with maintainers; [ frogamic sbruder ];
-    broken = stdenv.isDarwin;
   };
 }

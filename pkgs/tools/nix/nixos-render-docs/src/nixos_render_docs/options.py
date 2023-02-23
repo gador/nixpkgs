@@ -611,18 +611,6 @@ def _run_cli_asciidoc(args: argparse.Namespace) -> None:
         with open(args.outfile, 'w') as f:
             f.write(md.finalize())
 
-def _run_cli_manpage(args: argparse.Namespace) -> None:
-    md = ManpageConverter(
-        revision = args.revision,
-        # manpage rendering only works if there's no docbook, so we can
-        # also set markdown_by_default with no ill effects.
-        markdown_by_default = True)
-
-    with open(args.infile, 'r') as f:
-        md.add_options(json.load(f))
-    with open(args.outfile, 'w') as f:
-        f.write(md.finalize())
-
 def build_cli(p: argparse.ArgumentParser) -> None:
     formats = p.add_subparsers(dest='format', required=True)
     _build_cli_db(formats.add_parser('docbook'))

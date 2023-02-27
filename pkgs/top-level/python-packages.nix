@@ -532,6 +532,8 @@ self: super: with self; {
 
   aplpy = callPackage ../development/python-modules/aplpy { };
 
+  app-model = callPackage ../development/python-modules/app-model { };
+
   appdirs = callPackage ../development/python-modules/appdirs { };
 
   applicationinsights = callPackage ../development/python-modules/applicationinsights { };
@@ -600,6 +602,8 @@ self: super: with self; {
 
   ariadne = callPackage ../development/python-modules/ariadne { };
 
+  arpy = callPackage ../development/python-modules/arpy { };
+
   arnparse = callPackage ../development/python-modules/arnparse { };
 
   arrayqueues = callPackage ../development/python-modules/arrayqueues { };
@@ -649,6 +653,8 @@ self: super: with self; {
   asn1crypto = callPackage ../development/python-modules/asn1crypto { };
 
   asn1tools = callPackage ../development/python-modules/asn1tools { };
+
+  aspectlib = callPackage ../development/python-modules/aspectlib { };
 
   aspell-python = callPackage ../development/python-modules/aspell-python { };
 
@@ -2122,6 +2128,8 @@ self: super: with self; {
 
   cssutils = callPackage ../development/python-modules/cssutils { };
 
+  cstruct = callPackage ../development/python-modules/cstruct { };
+
   csvw = callPackage ../development/python-modules/csvw { };
 
   cu2qu = callPackage ../development/python-modules/cu2qu { };
@@ -3474,8 +3482,6 @@ self: super: with self; {
 
   flask-restful = callPackage ../development/python-modules/flask-restful { };
 
-  flask-restplus = callPackage ../development/python-modules/flask-restplus { };
-
   flask-restx = callPackage ../development/python-modules/flask-restx { };
 
   flask-reverse-proxy-fix = callPackage ../development/python-modules/flask-reverse-proxy-fix { };
@@ -3862,8 +3868,6 @@ self: super: with self; {
 
   glances-api = callPackage ../development/python-modules/glances-api { };
 
-  glasgow = callPackage ../development/python-modules/glasgow { };
-
   glcontext = callPackage ../development/python-modules/glcontext { };
 
   glean-parser = callPackage ../development/python-modules/glean-parser { };
@@ -3905,8 +3909,6 @@ self: super: with self; {
   google-api-core = callPackage ../development/python-modules/google-api-core { };
 
   google-api-python-client = callPackage ../development/python-modules/google-api-python-client { };
-
-  google-apitools = callPackage ../development/python-modules/google-apitools { };
 
   googleapis-common-protos = callPackage ../development/python-modules/googleapis-common-protos { };
 
@@ -4378,6 +4380,8 @@ self: super: with self; {
 
   homeassistant-pyozw = callPackage ../development/python-modules/homeassistant-pyozw { };
 
+  homeassistant-stubs = callPackage ../servers/home-assistant/stubs.nix { };
+
   homeconnect = callPackage ../development/python-modules/homeconnect { };
 
   homematicip = callPackage ../development/python-modules/homematicip { };
@@ -4635,6 +4639,8 @@ self: super: with self; {
   };
 
   imutils = callPackage ../development/python-modules/imutils { };
+
+  in-n-out = callPackage ../development/python-modules/in-n-out { };
 
   in-place = callPackage ../development/python-modules/in-place { };
 
@@ -5810,7 +5816,7 @@ self: super: with self; {
 
   mdutils = callPackage ../development/python-modules/mdutils { };
 
-  MDP = callPackage ../development/python-modules/mdp { };
+  mdp = callPackage ../development/python-modules/mdp { };
 
   measurement = callPackage ../development/python-modules/measurement { };
 
@@ -6023,8 +6029,6 @@ self: super: with self; {
 
   mohawk = callPackage ../development/python-modules/mohawk { };
 
-  moku = callPackage ../development/python-modules/moku { };
-
   monai = callPackage ../development/python-modules/monai { };
 
   monero = callPackage ../development/python-modules/monero { };
@@ -6049,6 +6053,8 @@ self: super: with self; {
   monty = callPackage ../development/python-modules/monty { };
 
   moonraker-api = callPackage ../development/python-modules/moonraker-api { };
+
+  mopeka-iot-ble = callPackage ../development/python-modules/mopeka-iot-ble { };
 
   more-itertools = callPackage ../development/python-modules/more-itertools { };
 
@@ -8598,6 +8604,8 @@ self: super: with self; {
 
   pypiserver = callPackage ../development/python-modules/pypiserver { };
 
+  pypitoken = callPackage ../development/python-modules/pypitoken { };
+
   pyplaato  = callPackage ../development/python-modules/pyplaato { };
 
   pyplatec = callPackage ../development/python-modules/pyplatec { };
@@ -8692,8 +8700,6 @@ self: super: with self; {
   pyramid_chameleon = callPackage ../development/python-modules/pyramid_chameleon { };
 
   pyramid_exclog = callPackage ../development/python-modules/pyramid_exclog { };
-
-  pyramid_hawkauth = callPackage ../development/python-modules/pyramid_hawkauth { };
 
   pyramid_jinja2 = callPackage ../development/python-modules/pyramid_jinja2 { };
 
@@ -10063,6 +10069,8 @@ self: super: with self; {
 
   retrying = callPackage ../development/python-modules/retrying { };
 
+  returns = callPackage ../development/python-modules/returns { };
+
   retworkx = callPackage ../development/python-modules/retworkx { };
 
   rfc3339 = callPackage ../development/python-modules/rfc3339 { };
@@ -11196,6 +11204,8 @@ self: super: with self; {
 
   sunwatcher = callPackage ../development/python-modules/sunwatcher { };
 
+  sunweg = callPackage ../development/python-modules/sunweg { };
+
   supervise_api = callPackage ../development/python-modules/supervise_api { };
 
   supervisor = callPackage ../development/python-modules/supervisor { };
@@ -11237,6 +11247,8 @@ self: super: with self; {
   };
 
   sympy = callPackage ../development/python-modules/sympy { };
+
+  syncedlyrics = callPackage ../development/python-modules/syncedlyrics { };
 
   syncer = callPackage ../development/python-modules/syncer { };
 
@@ -12180,6 +12192,8 @@ self: super: with self; {
   voluptuous = callPackage ../development/python-modules/voluptuous { };
 
   voluptuous-serialize = callPackage ../development/python-modules/voluptuous-serialize { };
+
+  voluptuous-stubs = callPackage ../development/python-modules/voluptuous-stubs { };
 
   volvooncall = callPackage ../development/python-modules/volvooncall { };
 

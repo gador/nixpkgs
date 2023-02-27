@@ -4023,6 +4023,11 @@
     githubId = 1931963;
     name = "David Sferruzza";
   };
+  dsymbol = {
+    name = "dsymbol";
+    github = "dsymbol";
+    githubId = 88138099;
+  };
   dtzWill = {
     email = "w@wdtz.org";
     github = "dtzWill";
@@ -6903,6 +6908,12 @@
     githubId = 10786794;
     name = "Markus Hihn";
   };
+  jessemoore = {
+    email = "jesse@jessemoore.dev";
+    github = "jesseDMoore1994";
+    githubId = 30251156;
+    name = "Jesse Moore";
+  };
   jethro = {
     email = "jethrokuan95@gmail.com";
     github = "jethrokuan";
@@ -9669,6 +9680,12 @@
     github = "michaelBelsanti";
     githubId = 62124625;
   };
+  michaelgrahamevans = {
+    email = "michaelgrahamevans@gmail.com";
+    name = "Michael Evans";
+    github = "michaelgrahamevans";
+    githubId = 5932424;
+  };
   michaelpj = {
     email = "michaelpj@gmail.com";
     github = "michaelpj";
@@ -12193,6 +12210,7 @@
     github = "alyssais";
     githubId = 2768870;
     name = "Alyssa Ross";
+    matrix = "@qyliss:fairydust.space";
     keys = [{
       fingerprint = "7573 56D7 79BB B888 773E  415E 736C CDF9 EF51 BD97";
     }];
@@ -12881,6 +12899,12 @@
     github = "rtreffer";
     githubId = 61306;
     name = "Rene Treffer";
+  };
+  rubyowo = {
+    name = "Rei Star";
+    email = "perhaps-you-know@what-is.ml";
+    github = "rubyowo";
+    githubId = 105302757;
   };
   rumpelsepp = {
     name = "Stefan Tatschner";
@@ -15342,6 +15366,11 @@
     email = "konrad.root.klawikowski@gmail.com";
     github = "unrooted";
     githubId = 30440603;
+  };
+  unsolvedcypher = {
+    name = "Matthew M";
+    github = "UnsolvedCypher";
+    githubId = 3170853;
   };
   uralbash = {
     email = "root@uralbash.ru";

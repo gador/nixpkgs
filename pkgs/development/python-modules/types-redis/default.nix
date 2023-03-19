@@ -1,6 +1,7 @@
 { lib
 , buildPythonPackage
 , fetchPypi
+, types-pyopenssl
 }:
 
 buildPythonPackage rec {
@@ -12,6 +13,10 @@ buildPythonPackage rec {
     inherit pname version;
     hash = "sha256-dmAXh1TWCkz6z1sz7gY6oGJTEXkcYgdc2TYTZiej978=";
   };
+
+  propagatedBuildInputs = [
+    types-pyopenssl
+  ];
 
   # Module doesn't have tests
   doCheck = false;

@@ -205,6 +205,7 @@
   ./programs/nbd.nix
   ./programs/neovim.nix
   ./programs/nethoscope.nix
+  ./programs/nexttrace.nix
   ./programs/nix-index.nix
   ./programs/nix-ld.nix
   ./programs/nm-applet.nix
@@ -376,6 +377,8 @@
   ./services/continuous-integration/jenkins/default.nix
   ./services/continuous-integration/jenkins/job-builder.nix
   ./services/continuous-integration/jenkins/slave.nix
+  ./services/continuous-integration/woodpecker/agent.nix
+  ./services/continuous-integration/woodpecker/server.nix
   ./services/databases/aerospike.nix
   ./services/databases/cassandra.nix
   ./services/databases/clickhouse.nix
@@ -439,6 +442,7 @@
   ./services/development/blackfire.nix
   ./services/development/bloop.nix
   ./services/development/distccd.nix
+  ./services/development/gemstash.nix
   ./services/development/hoogle.nix
   ./services/development/jupyter/default.nix
   ./services/development/jupyterhub/default.nix
@@ -623,6 +627,7 @@
   ./services/misc/irkerd.nix
   ./services/misc/jackett.nix
   ./services/misc/jellyfin.nix
+  ./services/misc/jellyseerr.nix
   ./services/misc/klipper.nix
   ./services/misc/languagetool.nix
   ./services/misc/leaps.nix
@@ -662,6 +667,7 @@
   ./services/misc/prowlarr.nix
   ./services/misc/pykms.nix
   ./services/misc/radarr.nix
+  ./services/misc/readarr.nix
   ./services/misc/redmine.nix
   ./services/misc/ripple-data-api.nix
   ./services/misc/rippled.nix
@@ -800,6 +806,7 @@
   ./services/networking/bitlbee.nix
   ./services/networking/blockbook-frontend.nix
   ./services/networking/blocky.nix
+  ./services/networking/cgit.nix
   ./services/networking/charybdis.nix
   ./services/networking/chisel-server.nix
   ./services/networking/cjdns.nix
@@ -943,6 +950,7 @@
   ./services/networking/owamp.nix
   ./services/networking/pdns-recursor.nix
   ./services/networking/pdnsd.nix
+  ./services/networking/peroxide.nix
   ./services/networking/pixiecore.nix
   ./services/networking/pleroma.nix
   ./services/networking/polipo.nix
@@ -1054,7 +1062,6 @@
   ./services/search/meilisearch.nix
   ./services/search/opensearch.nix
   ./services/search/qdrant.nix
-  ./services/search/solr.nix
   ./services/security/aesmd.nix
   ./services/security/certmgr.nix
   ./services/security/cfssl.nix
@@ -1128,6 +1135,7 @@
   ./services/web-apps/baget.nix
   ./services/web-apps/bookstack.nix
   ./services/web-apps/calibre-web.nix
+  ./services/web-apps/coder.nix
   ./services/web-apps/changedetection-io.nix
   ./services/web-apps/cloudlog.nix
   ./services/web-apps/code-server.nix
@@ -1267,6 +1275,7 @@
   ./services/x11/window-managers/bspwm.nix
   ./services/x11/window-managers/katriawm.nix
   ./services/x11/window-managers/metacity.nix
+  ./services/x11/window-managers/nimdow.nix
   ./services/x11/window-managers/none.nix
   ./services/x11/window-managers/twm.nix
   ./services/x11/window-managers/windowlab.nix

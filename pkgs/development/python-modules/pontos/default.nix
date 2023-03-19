@@ -9,6 +9,7 @@
 , pytestCheckHook
 , python-dateutil
 , pythonOlder
+, semver
 , rich
 , tomlkit
 , typing-extensions
@@ -16,7 +17,7 @@
 
 buildPythonPackage rec {
   pname = "pontos";
-  version = "23.2.10";
+  version = "23.3.5";
   format = "pyproject";
 
   disabled = pythonOlder "3.7";
@@ -25,7 +26,7 @@ buildPythonPackage rec {
     owner = "greenbone";
     repo = pname;
     rev = "refs/tags/v${version}";
-    hash = "sha256-sXCBuN6H5/7cyOW7LuP5cJ5NixN3KWHJyJudT24rpYg=";
+    hash = "sha256-Eb9mX04ws+FhiRw5j1XsEhjm5ZdYFCbA5pntgb4z//M=";
   };
 
   nativeBuildInputs = [
@@ -37,6 +38,7 @@ buildPythonPackage rec {
     httpx
     packaging
     python-dateutil
+    semver
     rich
     typing-extensions
     tomlkit

@@ -31,13 +31,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "sysdig";
-  version = "0.31.3";
+  version = "0.31.4";
 
   src = fetchFromGitHub {
     owner = "draios";
     repo = "sysdig";
     rev = version;
-    sha256 = "sha256-TMh2gw/vw6DbhKGwbqU2+c0DTpRaMZqUM83KE18NDmI=";
+    sha256 = "sha256-9WzvO17Q4fLwJNoDLk8xN8mqIcrBhcMyxfRhUXkQ5vI=";
   };
 
   nativeBuildInputs = [ cmake perl installShellFiles pkg-config ];
@@ -115,7 +115,7 @@ stdenv.mkDerivation rec {
     + lib.optionalString (kernel != null) ''
       make install_driver
       kernel_dev=${kernel.dev}
-      kernel_dev=''${kernel_dev#/nix/store/}
+      kernel_dev=''${kernel_dev#${builtins.storeDir}/}
       kernel_dev=''${kernel_dev%%-linux*dev*}
       if test -f "$out/lib/modules/${kernel.modDirVersion}/extra/scap.ko"; then
           sed -i "s#$kernel_dev#................................#g" $out/lib/modules/${kernel.modDirVersion}/extra/scap.ko

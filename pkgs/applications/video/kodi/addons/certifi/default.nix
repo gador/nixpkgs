@@ -17,7 +17,7 @@ buildKodiAddon rec {
   postPatch = ''
     # Use our system-wide ca-bundle instead of the bundled one
     rm -v "lib/certifi/cacert.pem"
-    ln -snvf "${cacert}/etc/ssl/certs/ca-bundle.crt" "lib/certifi/cacert.pem"
+    ln -svf /etc/ssl/certs/ca-bundle.crt "lib/certifi/cacert.pem"
   '';
 
   propagatedNativeBuildInputs = [

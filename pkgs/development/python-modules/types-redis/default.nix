@@ -1,6 +1,7 @@
 { lib
 , buildPythonPackage
 , fetchPypi
+, cryptography
 , types-pyopenssl
 }:
 
@@ -15,6 +16,7 @@ buildPythonPackage rec {
   };
 
   propagatedBuildInputs = [
+    cryptography
     types-pyopenssl
   ];
 

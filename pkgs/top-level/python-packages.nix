@@ -258,6 +258,8 @@ self: super: with self; {
 
   aiomisc = callPackage ../development/python-modules/aiomisc { };
 
+  aiomisc-pytest = callPackage ../development/python-modules/aiomisc-pytest { };
+
   aiomodernforms = callPackage ../development/python-modules/aiomodernforms { };
 
   aiomultiprocess = callPackage ../development/python-modules/aiomultiprocess { };
@@ -1512,18 +1514,6 @@ self: super: with self; {
   bugzilla = callPackage ../development/python-modules/bugzilla { };
 
   buienradar = callPackage ../development/python-modules/buienradar { };
-
-  buildbot = callPackage ../development/python-modules/buildbot { };
-
-  buildbot-ui = self.buildbot.withPlugins (with self.buildbot-plugins; [ www ]);
-
-  buildbot-full = self.buildbot.withPlugins (with self.buildbot-plugins; [ www console-view waterfall-view grid-view wsgi-dashboards badges ]);
-
-  buildbot-pkg = callPackage ../development/python-modules/buildbot/pkg.nix { };
-
-  buildbot-plugins = pkgs.recurseIntoAttrs (callPackage ../development/python-modules/buildbot/plugins.nix { });
-
-  buildbot-worker = callPackage ../development/python-modules/buildbot/worker.nix { };
 
   build = callPackage ../development/python-modules/build { };
 
@@ -2861,6 +2851,8 @@ self: super: with self; {
 
   dogpile-cache = callPackage ../development/python-modules/dogpile-cache { };
 
+  dogtag-pki = callPackage ../development/python-modules/dogtag-pki { };
+
   dogtail = callPackage ../development/python-modules/dogtail { };
 
   doit = callPackage ../development/python-modules/doit { };
@@ -2942,6 +2934,8 @@ self: super: with self; {
   };
 
   duckdb-engine = callPackage ../development/python-modules/duckdb-engine { };
+
+  duckduckgo-search = callPackage ../development/python-modules/duckduckgo-search { };
 
   duecredit = callPackage ../development/python-modules/duecredit { };
 
@@ -3258,6 +3252,8 @@ self: super: with self; {
   expects = callPackage ../development/python-modules/expects { };
 
   expecttest = callPackage ../development/python-modules/expecttest { };
+
+  expiring-dict = callPackage ../development/python-modules/expiring-dict { };
 
   expiringdict = callPackage ../development/python-modules/expiringdict { };
 
@@ -4802,8 +4798,6 @@ self: super: with self; {
 
   into-dbus-python = callPackage ../development/python-modules/into-dbus-python { };
 
-  intreehooks = callPackage ../development/python-modules/intreehooks { };
-
   invisible-watermark = callPackage ../development/python-modules/invisible-watermark { };
 
   invocations = callPackage ../development/python-modules/invocations { };
@@ -5880,6 +5874,8 @@ self: super: with self; {
 
   mat2 = callPackage ../development/python-modules/mat2 { };
 
+  material-color-utilities = callPackage ../development/python-modules/material-color-utilities { };
+
   matchpy = callPackage ../development/python-modules/matchpy { };
 
   mathlibtools = callPackage ../development/python-modules/mathlibtools { };
@@ -6619,6 +6615,8 @@ self: super: with self; {
 
   notedown = callPackage ../development/python-modules/notedown { };
 
+  notifications-android-tv = callPackage ../development/python-modules/notifications-android-tv { };
+
   notifications-python-client = callPackage ../development/python-modules/notifications-python-client { };
 
   notify-events = callPackage ../development/python-modules/notify-events { };
@@ -6811,7 +6809,9 @@ self: super: with self; {
 
   openai-triton = callPackage ../development/python-modules/openai-triton { llvmPackages = pkgs.llvmPackages_rocm; };
 
-  openai-whisper = callPackage ../development/python-modules/openai-whisper { };
+  openai-whisper = callPackage ../development/python-modules/openai-whisper {
+    cudaSupport = pkgs.config.cudaSupport or false;
+  };
 
   openant = callPackage ../development/python-modules/openant { };
 
@@ -9748,8 +9748,6 @@ self: super: with self; {
 
   pytmx = callPackage ../development/python-modules/pytmx { };
 
-  pytoml = callPackage ../development/python-modules/pytoml { };
-
   pytomlpp = callPackage ../development/python-modules/pytomlpp { };
 
   pytoolconfig = callPackage ../development/python-modules/pytoolconfig { };
@@ -10824,6 +10822,10 @@ self: super: with self; {
 
   simplehound = callPackage ../development/python-modules/simplehound { };
 
+  simpleitk = callPackage ../development/python-modules/simpleitk {
+    inherit (pkgs) simpleitk;
+  };
+
   simplejson = callPackage ../development/python-modules/simplejson { };
 
   simplekml = callPackage ../development/python-modules/simplekml { };
@@ -11101,6 +11103,8 @@ self: super: with self; {
   sphinx-fortran = callPackage ../development/python-modules/sphinx-fortran { };
 
   sphinx-hoverxref = callPackage ../development/python-modules/sphinx-hoverxref { };
+
+  sphinx-intl = callPackage ../development/python-modules/sphinx-intl { };
 
   sphinx-jupyterbook-latex = callPackage ../development/python-modules/sphinx-jupyterbook-latex { };
 
@@ -11961,6 +11965,8 @@ self: super: with self; {
 
   trectools = callPackage ../development/python-modules/trectools { };
 
+  tree-sitter = callPackage ../development/python-modules/tree-sitter { };
+
   treelog = callPackage ../development/python-modules/treelog { };
 
   treeo = callPackage ../development/python-modules/treeo { };
@@ -12233,6 +12239,8 @@ self: super: with self; {
   unicorn = callPackage ../development/python-modules/unicorn {
     unicorn-emu = pkgs.unicorn;
   };
+
+  unicurses = callPackage ../development/python-modules/unicurses { };
 
   unicrypto = callPackage ../development/python-modules/unicrypto { };
 
@@ -12919,6 +12927,8 @@ self: super: with self; {
   yte = callPackage ../development/python-modules/yte { };
 
   ytmusicapi = callPackage ../development/python-modules/ytmusicapi { };
+
+  yubico = callPackage ../development/python-modules/yubico { };
 
   yubico-client = callPackage ../development/python-modules/yubico-client { };
 

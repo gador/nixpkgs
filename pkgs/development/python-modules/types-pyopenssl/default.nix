@@ -5,12 +5,13 @@
 }:
 
 buildPythonPackage rec {
-  pname = "types-pyOpenSSL";
+  pname = "types-pyopenssl";
   version = "23.0.0.4";
   format = "setuptools";
 
   src = fetchPypi {
-    inherit pname version;
+    pname = "types-pyOpenSSL";
+    inherit version;
     hash = "sha256-izVQtuGdUc54qr1ySw2OvZYggaX86V5/haWS3828Fr8=";
   };
 

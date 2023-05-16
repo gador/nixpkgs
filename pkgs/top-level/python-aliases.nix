@@ -36,6 +36,9 @@ mapAliases ({
   abodepy = jaraco-abode; # added 2023-02-01
   aioh2 = throw "aioh2 has been removed because it is abandoned and broken."; # Added 2022-03-30
   ansible-base = throw "ansible-base has been removed, because it is end of life"; # added 2022-03-30
+  ansible-doctor = throw "ansible-doctor has been promoted to a top-level attribute"; # Added 2023-05-16
+  ansible-later = throw "ansible-later has been promoted to a top-level attribute"; # Added 2023-05-16
+  ansible-lint = throw "ansible-lint has been promoted to a top-level attribute"; # Added 2023-05-16
   anyjson = throw "anyjson has been removed, it was using setuptools 2to3 translation feature, which has been removed in setuptools 58"; # added 2022-01-18
   argon2_cffi = argon2-cffi; # added 2022-05-09
   APScheduler = apscheduler; # added 2023-02-19
@@ -251,6 +254,7 @@ mapAliases ({
   Quandl = quandl; # added 2023-02-19
   qiskit-aqua = throw "qiskit-aqua has been removed due to deprecation, with its functionality moved to different qiskit packages";
   rdflib-jsonld = throw "rdflib-jsonld is not compatible with rdflib 6"; # added 2021-11-05
+  retworkx = rustworkx; # added 2023-05-14
   repeated_test = repeated-test; # added 2022-11-15
   requests_oauthlib = requests-oauthlib; # added 2022-02-12
   requests_toolbelt = requests-toolbelt; # added 2017-09-26
@@ -264,6 +268,7 @@ mapAliases ({
   ruamel_yaml_clib = ruamel-yaml-clib; # added 2021-11-01
   runway-python = throw "SDK has been deprecated and was archived by upstream"; # added 2023-05-03
   sapi-python-client = kbcstorage; # added 2022-04-20
+  scikitimage = scikit-image; # added 2023-05-14
   scikitlearn = scikit-learn; # added 2021-07-21
   selectors34 = throw "selectors34 has been removed: functionality provided by Python itself; archived by upstream."; # added 2021-06-10
   setuptools_scm = setuptools-scm; # added 2021-06-03

@@ -12101,6 +12101,8 @@ with pkgs;
 
   scriptaculous = callPackage ../development/libraries/scriptaculous { };
 
+  script-directory = callPackage ../tools/misc/script-directory { };
+
   scrot = callPackage ../tools/graphics/scrot { };
 
   scrypt = callPackage ../tools/security/scrypt { };
@@ -33422,7 +33424,7 @@ with pkgs;
 
   polar-bookshelf1 = callPackage ../applications/misc/polar-bookshelf1 { };
 
-  poezio = python3Packages.poezio;
+  poezio = callPackage ../applications/networking/instant-messengers/poezio { };
 
   pommed_light = callPackage ../os-specific/linux/pommed-light { };
 

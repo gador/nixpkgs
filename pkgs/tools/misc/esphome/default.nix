@@ -16,14 +16,14 @@ let
 in
 python.pkgs.buildPythonApplication rec {
   pname = "esphome";
-  version = "2023.4.4";
+  version = "2023.5.2";
   format = "setuptools";
 
   src = fetchFromGitHub {
     owner = pname;
     repo = pname;
     rev = "refs/tags/${version}";
-    hash = "sha256-zRzojc2cmBTpvP3yOADWTTK0MOsgCvUcr6idGiRovXo=";
+    hash = "sha256-vxmrb4Myj9B0JO3g0kY8cX82xd9YGaSJ3q23o1VTYKU=";
   };
 
   postPatch = ''
@@ -49,12 +49,12 @@ python.pkgs.buildPythonApplication rec {
     colorama
     cryptography
     esphome-dashboard
-    ifaddr
     kconfiglib
     paho-mqtt
     pillow
     platformio
     protobuf
+    pyparsing
     pyserial
     pyyaml
     requests

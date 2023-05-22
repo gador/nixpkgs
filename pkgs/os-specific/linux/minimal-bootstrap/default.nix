@@ -11,9 +11,18 @@ lib.makeScope
   (extra: lib.callPackageWith ({ inherit lib config buildPlatform hostPlatform; } // extra))
   (self: with self; {
 
-    gnupatch = callPackage ./gnupatch { tinycc = tinycc-mes; };
+    bash_2_05 = callPackage ./bash/2.nix { tinycc = tinycc-mes; };
+
+    coreutils = callPackage ./coreutils { tinycc = tinycc-mes; };
 
     gnumake = callPackage ./gnumake { tinycc = tinycc-mes; };
+
+    gnupatch = callPackage ./gnupatch { tinycc = tinycc-mes; };
+
+    gnused = callPackage ./gnused {
+      bash = bash_2_05;
+      tinycc = tinycc-mes;
+    };
 
     ln-boot = callPackage ./ln-boot { };
 
@@ -30,6 +39,8 @@ lib.makeScope
     inherit (callPackage ./utils.nix { }) fetchurl derivationWithMeta writeTextFile writeText;
 
     test = kaem.runCommand "minimal-bootstrap-test" {} ''
+      echo ${bash_2_05.tests.get-version}
+      echo ${gnused.tests.get-version}
       echo ${mes.compiler.tests.get-version}
       echo ${tinycc-mes.compiler.tests.chain}
       mkdir ''${out}

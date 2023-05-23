@@ -6299,6 +6299,8 @@ self: super: with self; {
 
   mmcv = callPackage ../development/python-modules/mmcv { };
 
+  mmengine = callPackage ../development/python-modules/mmengine { };
+
   mmh3 = callPackage ../development/python-modules/mmh3 { };
 
   mmpython = callPackage ../development/python-modules/mmpython { };
@@ -13218,7 +13220,9 @@ self: super: with self; {
 
   yoyo-migrations = callPackage ../development/python-modules/yoyo-migrations { };
 
-  yt-dlp = callPackage ../tools/misc/yt-dlp { };
+  yt-dlp = callPackage ../tools/misc/yt-dlp {
+    ffmpeg = pkgs.ffmpeg-headless;
+  };
 
   yt-dlp-light = callPackage ../tools/misc/yt-dlp {
     atomicparsleySupport = false;

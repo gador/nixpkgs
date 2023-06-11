@@ -204,7 +204,7 @@ in lib.makeExtensible (self: {
     else
       nix;
 
-  stable = self.nix_2_15;
+  stable = self.nix_2_13;
 
   unstable = self.nix_2_16;
 })

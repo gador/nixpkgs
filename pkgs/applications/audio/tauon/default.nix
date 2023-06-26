@@ -10,6 +10,7 @@
 , gobject-introspection
 , gtk3
 , kissfft
+, libappindicator
 , libnotify
 , libsamplerate
 , libvorbis
@@ -25,13 +26,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "tauon";
-  version = "7.6.5";
+  version = "7.6.6";
 
   src = fetchFromGitHub {
     owner = "Taiko2k";
     repo = "TauonMusicBox";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-+K+sX6JbVB7qCRlwlIHMHFR76GwZZrHFh6Jjn8xlMmg=";
+    hash = "sha256-yt5sMvYau43WwVerQlaOrvzJ4HnBOEVQqbql9UH8jnM=";
   };
 
   postUnpack = ''
@@ -75,6 +76,7 @@ stdenv.mkDerivation (finalAttrs: {
     flac
     gobject-introspection
     gtk3
+    libappindicator
     libnotify
     libopenmpt
     librsvg

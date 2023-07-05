@@ -9,17 +9,19 @@
 , sphinx-autodoc-typehints
 , sphinx-rtd-theme
 , glibcLocales
+, mypy
 }:
 
 buildPythonPackage rec {
   pname = "typeguard";
-  version = "2.13.3";
-  disabled = pythonOlder "3.5";
+  version = "3.0.2";
+  disabled = pythonOlder "3.7";
   outputs = [ "out" "doc" ];
+  format = "pyproject";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "00edaa8da3a133674796cf5ea87d9f4b4c367d77476e185e80251cc13dfbb8c4";
+    hash = "sha256-/uUpf9so+Onvy4FCte4hngI3VQnNd+qdJwta+CY1jVo=";
   };
 
   nativeBuildInputs = [
@@ -32,21 +34,7 @@ buildPythonPackage rec {
 
   LC_ALL = "en_US.utf-8";
 
-  postPatch = ''
-    substituteInPlace setup.cfg --replace " --cov" ""
-  '';
-
-  nativeCheckInputs = [ pytestCheckHook typing-extensions ];
-
-  disabledTestPaths = [
-    # mypy tests aren't passing with latest mypy
-    "tests/mypy"
-  ];
-
-  disabledTests = [
-    # not compatible with python3.10
-    "test_typed_dict"
-  ];
+  nativeCheckInputs = [ pytestCheckHook typing-extensions mypy ];
 
   meta = with lib; {
     description = "This library provides run-time type checking for functions defined with argument type annotations";

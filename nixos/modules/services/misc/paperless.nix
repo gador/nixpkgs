@@ -7,6 +7,7 @@ let
 
   defaultUser = "paperless";
   nltkDir = "/var/cache/paperless/nltk";
+  defaultFont = "${pkgs.liberation_ttf}/share/fonts/truetype/LiberationSerif-Regular.ttf";
 
   # Don't start a redis instance if the user sets a custom redis connection
   enableRedis = !hasAttr "PAPERLESS_REDIS" cfg.extraConfig;
@@ -17,6 +18,7 @@ let
     PAPERLESS_MEDIA_ROOT = cfg.mediaDir;
     PAPERLESS_CONSUMPTION_DIR = cfg.consumptionDir;
     PAPERLESS_NLTK_DIR = nltkDir;
+    PAPERLESS_THUMBNAIL_FONT_NAME = defaultFont;
     GUNICORN_CMD_ARGS = "--bind=${cfg.address}:${toString cfg.port}";
   } // optionalAttrs (config.time.timeZone != null) {
     PAPERLESS_TIME_ZONE = config.time.timeZone;
@@ -176,7 +178,7 @@ in
       description = lib.mdDoc ''
         Extra paperless config options.
 
-        See [the documentation](https://paperless-ngx.readthedocs.io/en/latest/configuration.html)
+        See [the documentation](https://docs.paperless-ngx.com/configuration/)
         for available options.
 
         Note that some options such as `PAPERLESS_CONSUMER_IGNORE_PATTERN` expect JSON values. Use `builtins.toJSON` to ensure proper quoting.

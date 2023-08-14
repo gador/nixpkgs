@@ -372,6 +372,8 @@ in {
 
     lenovo-legion-module = callPackage ../os-specific/linux/lenovo-legion { };
 
+    linux-gpib = callPackage ../applications/science/electronics/linux-gpib/kernel.nix { };
+
     liquidtux = callPackage ../os-specific/linux/liquidtux {};
 
     lkrg = callPackage ../os-specific/linux/lkrg {};
@@ -447,6 +449,8 @@ in {
     openafs_1_8 = callPackage ../servers/openafs/1.8/module.nix { };
     # Current stable release; don't backport release updates!
     openafs = openafs_1_8;
+
+    opensnitch-ebpf = if lib.versionAtLeast kernel.version "5.10" then callPackage ../os-specific/linux/opensnitch-ebpf { } else null;
 
     facetimehd = callPackage ../os-specific/linux/facetimehd { };
 

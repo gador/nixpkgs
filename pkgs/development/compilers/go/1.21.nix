@@ -17,8 +17,8 @@
 }:
 
 let
-  useGccGoBootstrap = stdenv.buildPlatform.isMusl || stdenv.buildPlatform.isRiscV;
-  goBootstrap = if useGccGoBootstrap then buildPackages.gccgo12 else buildPackages.callPackage ./bootstrap117.nix { };
+  useGccGoBootstrap = stdenv.buildPlatform.isMusl;
+  goBootstrap = if useGccGoBootstrap then buildPackages.gccgo12 else buildPackages.callPackage ./bootstrap121.nix { };
 
   skopeoTest = skopeo.override { buildGoModule = buildGo121Module; };
 
@@ -46,11 +46,11 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "go";
-  version = "1.21.0";
+  version = "1.21.1";
 
   src = fetchurl {
     url = "https://go.dev/dl/go${version}.src.tar.gz";
-    hash = "sha256-gY1G7ehWgt1VGtN47zek0kcAbxLsWbW3VWAdLOEUNpo=";
+    hash = "sha256-v6Nr916aHpy725q8+dFwfkeb06B4gKiuNWTK7lcRy5k=";
   };
 
   strictDeps = true;

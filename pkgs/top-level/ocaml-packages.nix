@@ -337,6 +337,10 @@ let
 
     dolmen =  callPackage ../development/ocaml-modules/dolmen { };
 
+    dolmen_loop =  callPackage ../development/ocaml-modules/dolmen/loop.nix { };
+
+    dolmen_type =  callPackage ../development/ocaml-modules/dolmen/type.nix { };
+
     dolog = callPackage ../development/ocaml-modules/dolog { };
 
     domain-local-await = callPackage ../development/ocaml-modules/domain-local-await { };
@@ -1290,6 +1294,8 @@ let
 
     ocf_ppx = callPackage ../development/ocaml-modules/ocf/ppx.nix { };
 
+    ocolor = callPackage ../development/ocaml-modules/ocolor { };
+
     ocp-build = callPackage ../development/tools/ocaml/ocp-build { };
 
     ocp-indent = callPackage ../development/tools/ocaml/ocp-indent { };
@@ -1396,6 +1402,8 @@ let
 
     pbkdf = callPackage ../development/ocaml-modules/pbkdf { };
 
+    pbrt = callPackage ../development/ocaml-modules/pbrt { };
+
     pcap-format = callPackage ../development/ocaml-modules/pcap-format { };
 
     pecu = callPackage ../development/ocaml-modules/pecu { };
@@ -1437,6 +1445,8 @@ let
     };
 
     pp = callPackage ../development/ocaml-modules/pp { };
+
+    pp_loc = callPackage ../development/ocaml-modules/pp_loc { };
 
     pprint = callPackage ../development/ocaml-modules/pprint { };
 
@@ -1511,10 +1521,7 @@ let
 
     psq = callPackage ../development/ocaml-modules/psq { };
 
-    ptime =
-      if lib.versionAtLeast ocaml.version "4.08"
-      then callPackage ../development/ocaml-modules/ptime { }
-      else null;
+    ptime = callPackage ../development/ocaml-modules/ptime { };
 
     ptmap = callPackage ../development/ocaml-modules/ptmap { };
 
@@ -1693,7 +1700,9 @@ let
 
     tar = callPackage ../development/ocaml-modules/tar { };
 
-    tar-unix = callPackage ../development/ocaml-modules/tar/unix.nix { };
+    tar-unix = callPackage ../development/ocaml-modules/tar/unix.nix {
+      inherit (pkgs) git;
+    };
 
     tcpip = callPackage ../development/ocaml-modules/tcpip { };
 
@@ -1927,7 +1936,9 @@ in let inherit (pkgs) callPackage; in rec
 
   ocamlPackages_5_0 = mkOcamlPackages (callPackage ../development/compilers/ocaml/5.0.nix { });
 
-  ocamlPackages_latest = ocamlPackages_5_0;
+  ocamlPackages_5_1 = mkOcamlPackages (callPackage ../development/compilers/ocaml/5.1.nix { });
+
+  ocamlPackages_latest = ocamlPackages_5_1;
 
   ocamlPackages = ocamlPackages_4_14;
 

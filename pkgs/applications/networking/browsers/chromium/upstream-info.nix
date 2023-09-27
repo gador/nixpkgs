@@ -27,39 +27,39 @@
   };
   stable = {
     chromedriver = {
-      sha256_darwin = "0gzx3zka8i2ngsdiqp8sr0v6ir978vywa1pj7j08vsf8kmb93iiy";
+      sha256_darwin = "138mw5p6r0n0531fs6322yxsjgj9hia5plw4mj0b3mclykzy5l37";
       sha256_darwin_aarch64 =
-        "18iyapwjg0yha8qgbw7f605n0j54nd36shv3497bd84lc9k74b14";
-      sha256_linux = "0d8mqzjc11g1bvxvffk0xyhxfls2ycl7ym4ssyjq752g2apjblhp";
-      version = "116.0.5845.96";
+        "1cym94av2gw2zwj3rdqbjcqkigpzf0zk2bam2hw9n2hiabb4rm0p";
+      sha256_linux = "1q1vyhmcx6b5criz5bn1c3x3z2dzqdgsmwcvlb0rzqlzpla9q26m";
+      version = "117.0.5938.92";
     };
     deps = {
       gn = {
-        rev = "4bd1a77e67958fb7f6739bd4542641646f264e5d";
-        sha256 = "14h9jqspb86sl5lhh6q0kk2rwa9zcak63f8drp7kb3r4dx08vzsw";
+        rev = "811d332bd90551342c5cbd39e133aa276022d7f8";
+        sha256 = "0jlg3d31p346na6a3yk0x29pm6b7q03ck423n5n6mi8nv4ybwajq";
         url = "https://gn.googlesource.com/gn";
-        version = "2023-06-09";
+        version = "2023-08-01";
       };
     };
-    sha256 = "0v3i688wszchyfs10zgax6yyig2wrdb38fhlzmlsbfh5vawpg5pq";
-    sha256bin64 = "1y442x3n76x9ahsw45m8yw65854h7b5zpmp4ipyvlwm5fx15zn6d";
-    version = "116.0.5845.140";
+    sha256 = "0b1l8gjhqbsyqi30rsn8dyq2hdvwasdqfk1qzk55f9ch4wclkjk5";
+    sha256bin64 = "047w7y4c8k076yzrjc50lvwncbk8b3lyqnd1si9nrsl7c66j2h0q";
+    version = "117.0.5938.92";
   };
   ungoogled-chromium = {
     deps = {
       gn = {
-        rev = "4bd1a77e67958fb7f6739bd4542641646f264e5d";
-        sha256 = "14h9jqspb86sl5lhh6q0kk2rwa9zcak63f8drp7kb3r4dx08vzsw";
+        rev = "811d332bd90551342c5cbd39e133aa276022d7f8";
+        sha256 = "0jlg3d31p346na6a3yk0x29pm6b7q03ck423n5n6mi8nv4ybwajq";
         url = "https://gn.googlesource.com/gn";
-        version = "2023-06-09";
+        version = "2023-08-01";
       };
       ungoogled-patches = {
-        rev = "116.0.5845.140-1";
-        sha256 = "1ydki4hmrx01q39jprv2drln934b589lgy0j7g0y1df7lp02h95n";
+        rev = "117.0.5938.92-1";
+        sha256 = "0ix0vaki9r305js61qraiah3vqjaj3dyycabi6grfavdgjpjkasb";
       };
     };
-    sha256 = "0v3i688wszchyfs10zgax6yyig2wrdb38fhlzmlsbfh5vawpg5pq";
-    sha256bin64 = "1y442x3n76x9ahsw45m8yw65854h7b5zpmp4ipyvlwm5fx15zn6d";
-    version = "116.0.5845.140";
+    sha256 = "0b1l8gjhqbsyqi30rsn8dyq2hdvwasdqfk1qzk55f9ch4wclkjk5";
+    sha256bin64 = "047w7y4c8k076yzrjc50lvwncbk8b3lyqnd1si9nrsl7c66j2h0q";
+    version = "117.0.5938.92";
   };
 }

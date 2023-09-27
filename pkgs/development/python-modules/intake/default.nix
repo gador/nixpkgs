@@ -11,7 +11,6 @@
 , jinja2
 , msgpack
 , msgpack-numpy
-, numpy
 , pandas
 , panel
 , pyarrow
@@ -29,13 +28,13 @@ buildPythonPackage rec {
   version = "0.7.0";
   format = "setuptools";
 
-  disabled = pythonOlder "3.7";
+  disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
-    owner = pname;
-    repo = pname;
+    owner = "intake";
+    repo = "intake";
     rev = "refs/tags/${version}";
-    hash = "sha256-2LUblA8eVCOfVJ6BJayralNiv6EFt6MzR5ptKksVNA4=";
+    hash = "sha256-LK4abwPViEFJZ10bbRofF2aw2Mj0dliKwX6dFy93RVQ=";
   };
 
   propagatedBuildInputs = [
@@ -79,6 +78,8 @@ buildPythonPackage rec {
       --replace "'pytest-runner'" ""
   '';
 
+  __darwinAllowLocalNetworking = true;
+
   preCheck = ''
     export HOME=$(mktemp -d);
     export PATH="$PATH:$out/bin";
@@ -87,12 +88,14 @@ buildPythonPackage rec {
   disabledTests = [
     # Disable tests which touch network
     "http"
+    "test_address_flag"
     "test_dir"
     "test_discover"
     "test_filtered_compressed_cache"
     "test_flatten_flag"
     "test_get_dir"
     "test_pagination"
+    "test_port_flag"
     "test_read_part_compressed"
     "test_read_partition"
     "test_read_pattern"
@@ -106,7 +109,7 @@ buildPythonPackage rec {
     "test_ndarray"
     "test_python"
     # Timing-based, flaky on darwin and possibly others
-    "TestServerV1Source.test_idle_timer"
+    "test_idle_timer"
     # arrow-cpp-13 related
     "test_read"
     "test_pickle"

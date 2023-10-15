@@ -420,6 +420,8 @@ self: super: with self; {
 
   aiowinreg = callPackage ../development/python-modules/aiowinreg { };
 
+  aiowithings = callPackage ../development/python-modules/aiowithings { };
+
   aioxmpp = callPackage ../development/python-modules/aioxmpp { };
 
   aioymaps = callPackage ../development/python-modules/aioymaps { };
@@ -1299,6 +1301,8 @@ self: super: with self; {
     inherit (pkgs.ocaml-ng.ocamlPackages) bap;
   };
 
+  barectf = callPackage ../development/python-modules/barectf { };
+
   baron = callPackage ../development/python-modules/baron { };
 
   base36 = callPackage ../development/python-modules/base36 { };
@@ -1366,7 +1370,7 @@ self: super: with self; {
 
   beancount-parser = callPackage ../development/python-modules/beancount-parser { };
 
-  beancount_docverif = callPackage ../development/python-modules/beancount_docverif { };
+  beancount-docverif = callPackage ../development/python-modules/beancount-docverif { };
 
   beanstalkc = callPackage ../development/python-modules/beanstalkc { };
 
@@ -1436,7 +1440,7 @@ self: super: with self; {
 
   biplist = callPackage ../development/python-modules/biplist { };
 
-  bip_utils = callPackage ../development/python-modules/bip_utils { };
+  bip-utils = callPackage ../development/python-modules/bip-utils { };
 
   bitarray = callPackage ../development/python-modules/bitarray { };
 
@@ -2148,8 +2152,6 @@ self: super: with self; {
   cmsis-pack-manager = callPackage ../development/python-modules/cmsis-pack-manager { };
 
   cmsis-svd = callPackage ../development/python-modules/cmsis-svd { };
-
-  cntk = callPackage ../development/python-modules/cntk { };
 
   cnvkit = callPackage ../development/python-modules/cnvkit { };
 
@@ -3114,6 +3116,8 @@ self: super: with self; {
 
   django-webpack-loader = callPackage ../development/python-modules/django-webpack-loader { };
 
+  django-webpush = callPackage ../development/python-modules/django-webpush { };
+
   django-widget-tweaks = callPackage ../development/python-modules/django-widget-tweaks { };
 
   dj-database-url = callPackage ../development/python-modules/dj-database-url { };
@@ -3716,7 +3720,7 @@ self: super: with self; {
 
   face-recognition-models = callPackage ../development/python-modules/face-recognition/models.nix { };
 
-  factory_boy = callPackage ../development/python-modules/factory_boy { };
+  factory-boy = callPackage ../development/python-modules/factory-boy { };
 
   fairscale = callPackage ../development/python-modules/fairscale { };
 
@@ -4691,7 +4695,7 @@ self: super: with self; {
     inherit (pkgs) graphviz;
   };
 
-  grappelli_safe = callPackage ../development/python-modules/grappelli_safe { };
+  grappelli-safe = callPackage ../development/python-modules/grappelli-safe { };
 
   graspologic = callPackage ../development/python-modules/graspologic { };
 
@@ -4895,6 +4899,8 @@ self: super: with self; {
 
   heatzypy = callPackage ../development/python-modules/heatzypy { };
 
+  help2man = callPackage ../development/python-modules/help2man { };
+
   helpdev = callPackage ../development/python-modules/helpdev { };
 
   helper = callPackage ../development/python-modules/helper { };
@@ -4926,8 +4932,6 @@ self: super: with self; {
   hg-evolve = callPackage ../development/python-modules/hg-evolve { };
 
   hg-git = callPackage ../development/python-modules/hg-git { };
-
-  hglib = callPackage ../development/python-modules/hglib { };
 
   hickle = callPackage ../development/python-modules/hickle { };
 
@@ -5412,7 +5416,7 @@ self: super: with self; {
 
   ipytablewidgets = callPackage ../development/python-modules/ipytablewidgets { };
 
-  ipython_genutils = callPackage ../development/python-modules/ipython_genutils { };
+  ipython-genutils = callPackage ../development/python-modules/ipython-genutils { };
 
   ipython = callPackage ../development/python-modules/ipython { };
 
@@ -6660,7 +6664,7 @@ self: super: with self; {
 
   memory-allocator = callPackage ../development/python-modules/memory-allocator { };
 
-  memory_profiler = callPackage ../development/python-modules/memory_profiler { };
+  memory-profiler = callPackage ../development/python-modules/memory-profiler { };
 
   meraki = callPackage ../development/python-modules/meraki { };
 
@@ -8351,7 +8355,7 @@ self: super: with self; {
 
   open-meteo = callPackage ../development/python-modules/open-meteo { };
 
-  openai-triton = callPackage ../development/python-modules/openai-triton { llvmPackages = pkgs.llvmPackages_rocm; };
+  openai-triton = callPackage ../development/python-modules/openai-triton { cudaPackages = pkgs.cudaPackages_12_0; };
 
   openai-triton-bin = callPackage ../development/python-modules/openai-triton/bin.nix { };
 
@@ -10678,19 +10682,19 @@ self: super: with self; {
 
   pyrainbird = callPackage ../development/python-modules/pyrainbird { };
 
-  pyramid_beaker = callPackage ../development/python-modules/pyramid_beaker { };
+  pyramid-beaker = callPackage ../development/python-modules/pyramid-beaker { };
 
   pyramid = callPackage ../development/python-modules/pyramid { };
 
-  pyramid_chameleon = callPackage ../development/python-modules/pyramid_chameleon { };
+  pyramid-chameleon = callPackage ../development/python-modules/pyramid-chameleon { };
 
-  pyramid_exclog = callPackage ../development/python-modules/pyramid_exclog { };
+  pyramid-exclog = callPackage ../development/python-modules/pyramid-exclog { };
 
   pyramid-jinja2 = callPackage ../development/python-modules/pyramid-jinja2 { };
 
-  pyramid_mako = callPackage ../development/python-modules/pyramid_mako { };
+  pyramid-mako = callPackage ../development/python-modules/pyramid-mako { };
 
-  pyramid_multiauth = callPackage ../development/python-modules/pyramid_multiauth { };
+  pyramid-multiauth = callPackage ../development/python-modules/pyramid-multiauth { };
 
   pyrate-limiter = callPackage ../development/python-modules/pyrate-limiter { };
 
@@ -12115,6 +12119,8 @@ self: super: with self; {
 
   requests-pkcs12 = callPackage ../development/python-modules/requests-pkcs12 { };
 
+  requests-ratelimiter = callPackage ../development/python-modules/requests-ratelimiter { };
+
   requests-toolbelt = callPackage ../development/python-modules/requests-toolbelt { };
 
   requests-unixsocket = callPackage ../development/python-modules/requests-unixsocket { };
@@ -12642,6 +12648,8 @@ self: super: with self; {
   setupmeta = callPackage ../development/python-modules/setupmeta { };
 
   setuptools-declarative-requirements = callPackage ../development/python-modules/setuptools-declarative-requirements { };
+
+  setuptools-generate = callPackage ../development/python-modules/setuptools-generate { };
 
   setuptools-gettext = callPackage ../development/python-modules/setuptools-gettext { };
 
@@ -13413,6 +13421,8 @@ self: super: with self; {
 
   subzerod = callPackage ../development/python-modules/subzerod { };
 
+  succulent = callPackage ../development/python-modules/succulent { };
+
   sumo = callPackage ../development/python-modules/sumo { };
 
   sumtypes = callPackage ../development/python-modules/sumtypes { };
@@ -13904,7 +13914,6 @@ self: super: with self; {
       else pkgs.magma;
     inherit (pkgs.darwin.apple_sdk.frameworks) Accelerate CoreServices;
     inherit (pkgs.darwin) libobjc;
-    inherit (pkgs.llvmPackages_rocm) openmp;
   };
 
   torch-bin = callPackage ../development/python-modules/torch/bin.nix {
@@ -15899,7 +15908,7 @@ self: super: with self; {
 
   zope-deferredimport = callPackage ../development/python-modules/zope-deferredimport { };
 
-  zope_deprecation = callPackage ../development/python-modules/zope_deprecation { };
+  zope-deprecation = callPackage ../development/python-modules/zope-deprecation { };
 
   zope_dottedname = callPackage ../development/python-modules/zope_dottedname { };
 
@@ -15919,7 +15928,7 @@ self: super: with self; {
 
   zope_location = callPackage ../development/python-modules/zope_location { };
 
-  zope_proxy = callPackage ../development/python-modules/zope_proxy { };
+  zope-proxy = callPackage ../development/python-modules/zope-proxy { };
 
   zope_schema = callPackage ../development/python-modules/zope_schema { };
 

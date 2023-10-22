@@ -19515,10 +19515,6 @@ with pkgs;
 
   kcc = libsForQt5.callPackage ../applications/graphics/kcc { };
 
-  kconfig-frontends = callPackage ../development/tools/misc/kconfig-frontends {
-    gperf = gperf_3_0;
-  };
-
   kcgi = callPackage ../development/web/kcgi { };
 
   kcov = callPackage ../development/tools/analysis/kcov { };

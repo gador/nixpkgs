@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2023.10.1";
+  version = "2023.10.4";
   components = {
     "3_day_blinds" = ps: with ps; [
     ];
@@ -2485,7 +2485,6 @@
       maxcube-api
     ];
     "mazda" = ps: with ps; [
-      pymazda
     ];
     "meater" = ps: with ps; [
       meater-python
@@ -2772,7 +2771,8 @@
       sqlalchemy
     ];
     "myq" = ps: with ps; [
-    ]; # missing inputs: python-myq
+      python-myq
+    ];
     "mysensors" = ps: with ps; [
       aiohttp-cors
       janus
@@ -5406,6 +5406,7 @@
     "mullvad"
     "mutesync"
     "my"
+    "myq"
     "mysensors"
     "mystrom"
     "mythicbeastsdns"

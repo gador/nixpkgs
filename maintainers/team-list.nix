@@ -407,7 +407,6 @@ with lib.maintainers; {
   home-assistant = {
     members = [
       fab
-      globin
       hexa
       mic92
     ];
@@ -431,6 +430,7 @@ with lib.maintainers; {
     members = [
       cleeyv
       ryantm
+      lassulus
     ];
     scope = "Maintain Jitsi.";
     shortName = "Jitsi";
@@ -742,7 +742,6 @@ with lib.maintainers; {
       aanderse
       drupol
       etu
-      globin
       ma27
       talyz
     ];
@@ -933,7 +932,6 @@ with lib.maintainers; {
   wdz = {
     members = [
       n0emis
-      netali
       vidister
       johannwagner
       yuka

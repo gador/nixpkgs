@@ -268,6 +268,7 @@
   ./programs/usbtop.nix
   ./programs/vim.nix
   ./programs/wavemon.nix
+  ./programs/wayland/cardboard.nix
   ./programs/wayland/river.nix
   ./programs/wayland/sway.nix
   ./programs/wayland/waybar.nix
@@ -520,6 +521,7 @@
   ./services/hardware/hddfancontrol.nix
   ./services/hardware/illum.nix
   ./services/hardware/interception-tools.nix
+  ./services/hardware/iptsd.nix
   ./services/hardware/irqbalance.nix
   ./services/hardware/joycond.nix
   ./services/hardware/kanata.nix
@@ -624,6 +626,7 @@
   ./services/matrix/matrix-sliding-sync.nix
   ./services/matrix/synapse.nix
   ./services/misc/airsonic.nix
+  ./services/misc/amazon-ssm-agent.nix
   ./services/misc/ananicy.nix
   ./services/misc/ankisyncd.nix
   ./services/misc/apache-kafka.nix
@@ -737,9 +740,9 @@
   ./services/misc/soft-serve.nix
   ./services/misc/sonarr.nix
   ./services/misc/sourcehut
+  ./services/misc/spice-autorandr.nix
   ./services/misc/spice-vdagentd.nix
   ./services/misc/spice-webdavd.nix
-  ./services/misc/ssm-agent.nix
   ./services/misc/sssd.nix
   ./services/misc/subsonic.nix
   ./services/misc/sundtek.nix
@@ -770,6 +773,7 @@
   ./services/monitoring/datadog-agent.nix
   ./services/monitoring/do-agent.nix
   ./services/monitoring/fusion-inventory.nix
+  ./services/monitoring/goss.nix
   ./services/monitoring/grafana-agent.nix
   ./services/monitoring/grafana-image-renderer.nix
   ./services/monitoring/grafana-reporter.nix
@@ -905,6 +909,7 @@
   ./services/networking/eternal-terminal.nix
   ./services/networking/expressvpn.nix
   ./services/networking/fakeroute.nix
+  ./services/networking/fastnetmon-advanced.nix
   ./services/networking/ferm.nix
   ./services/networking/firefox-syncserver.nix
   ./services/networking/fireqos.nix
@@ -1045,6 +1050,7 @@
   ./services/networking/redsocks.nix
   ./services/networking/resilio.nix
   ./services/networking/robustirc-bridge.nix
+  ./services/networking/rosenpass.nix
   ./services/networking/routedns.nix
   ./services/networking/rpcbind.nix
   ./services/networking/rxe.nix
@@ -1227,6 +1233,7 @@
   ./services/web-apps/atlassian/jira.nix
   ./services/web-apps/audiobookshelf.nix
   ./services/web-apps/bookstack.nix
+  ./services/web-apps/c2fmzq-server.nix
   ./services/web-apps/calibre-web.nix
   ./services/web-apps/coder.nix
   ./services/web-apps/changedetection-io.nix
@@ -1266,6 +1273,7 @@
   ./services/web-apps/kavita.nix
   ./services/web-apps/keycloak.nix
   ./services/web-apps/komga.nix
+  ./services/web-apps/lanraragi.nix
   ./services/web-apps/lemmy.nix
   ./services/web-apps/limesurvey.nix
   ./services/web-apps/mainsail.nix

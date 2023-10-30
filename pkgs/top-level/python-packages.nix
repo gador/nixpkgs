@@ -2238,6 +2238,8 @@ self: super: with self; {
 
   compiledb = callPackage ../development/python-modules/compiledb { };
 
+  complycube = callPackage ../development/python-modules/complycube { };
+
   compreffor = callPackage ../development/python-modules/compreffor { };
 
   compressai = callPackage ../development/python-modules/compressai { };
@@ -3532,8 +3534,6 @@ self: super: with self; {
   energyflow = callPackage ../development/python-modules/energyflow { };
 
   energyzero =  callPackage ../development/python-modules/energyzero { };
-
-  enhancements = callPackage ../development/python-modules/enhancements { };
 
   enlighten = callPackage ../development/python-modules/enlighten { };
 
@@ -11504,6 +11504,8 @@ self: super: with self; {
 
   python-olm = callPackage ../development/python-modules/python-olm { };
 
+  python-on-whales = callPackage ../development/python-modules/python-on-whales { };
+
   python-opendata-transport = callPackage ../development/python-modules/python-opendata-transport { };
 
   python-openstackclient = callPackage ../development/python-modules/python-openstackclient { };
@@ -15663,6 +15665,8 @@ self: super: with self; {
   winsspi = callPackage ../development/python-modules/winsspi { };
 
   withings-api = callPackage ../development/python-modules/withings-api { };
+
+  withings-sync = callPackage ../development/python-modules/withings-sync { };
 
   wktutils = callPackage ../development/python-modules/wktutils { };
 

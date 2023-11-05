@@ -18,8 +18,7 @@ let
     packageOverrides = lib.foldr lib.composeExtensions (self: super: { }) (
       [
         (
-          # with version 3 of flask-limiter octoprint 1.8.7 fails to start with
-          #  TypeError: Limiter.__init__() got multiple values for argument 'key_func'
+          # Due to flask > 2.3 the login will not work
           self: super: {
             werkzeug = super.werkzeug.overridePythonAttrs (oldAttrs: rec {
               version = "2.2.3";

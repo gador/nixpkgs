@@ -1,6 +1,7 @@
 { lib
 , stdenv
 , fetchFromGitHub
+, fetchpatch
 , Security
 , autoreconfHook
 , util-linux
@@ -21,6 +22,14 @@ stdenv.mkDerivation (finalAttrs: {
     rev = "refs/tags/v${finalAttrs.version}-stable";
     hash = "sha256-UN4zs+Rxh/bsLD1BQA+f1YN/UOJ6OB2HduhoetEp10Y=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "fix-expected-test-response.patch";
+      url = "https://github.com/wolfSSL/wolfssl/commit/ca694938fd053a8557f9f08b1b4265292d8bef65.patch";
+      hash = "sha256-ETxszjjEMk0WdYgXHWTxTaWZPpyDs9jdko0jtkjzgwI=";
+    })
+  ];
 
   postPatch = ''
     patchShebangs ./scripts
@@ -46,7 +55,7 @@ stdenv.mkDerivation (finalAttrs: {
     "--enable-bigcache"
 
     # Use WolfSSL's Single Precision Math with timing-resistant cryptography.
-    "--enable-sp=yes${lib.optionalString (!stdenv.isx86_32) ",asm"}"
+    "--enable-sp=yes${lib.optionalString (stdenv.hostPlatform.isx86_64 || stdenv.hostPlatform.isAarch) ",asm"}"
     "--enable-sp-math-all"
     "--enable-harden"
   ] ++ lib.optionals (stdenv.hostPlatform.isx86_64) [

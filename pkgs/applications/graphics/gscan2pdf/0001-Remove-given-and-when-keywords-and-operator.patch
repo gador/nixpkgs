@@ -1,0 +1,4318 @@
+From ee41187c5f02dbd51a7fd8439eb8eb20962286d2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 27 Jul 2023 16:42:01 +0200
+Subject: [PATCH] Remove given and when keywords and ~~ operator
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Perl 5.38.0 deprecated smart match and Perl 5.42 will remove it. With
+perl 5.38.0 tests print:
+
+given is deprecated at /builddir/build/BUILD/gscan2pdf-2.13.2/blib/lib/Gscan2pdf/Scanner/Options.pm line 241.
+when is deprecated at /builddir/build/BUILD/gscan2pdf-2.13.2/blib/lib/Gscan2pdf/Scanner/Options.pm line 242.
+when is deprecated at /builddir/build/BUILD/gscan2pdf-2.13.2/blib/lib/Gscan2pdf/Scanner/Options.pm line 249.
+when is deprecated at /builddir/build/BUILD/gscan2pdf-2.13.2/blib/lib/Gscan2pdf/Scanner/Options.pm line 252.
+
+This patch rewrites given/when expressions to a plain if/elsif/else
+conditions.
+
+https://sourceforge.net/p/gscan2pdf/bugs/421/
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ bin/gscan2pdf                           |  454 ++++----
+ lib/Gscan2pdf/Bboxtree.pm               |  278 +++--
+ lib/Gscan2pdf/Canvas.pm                 |   44 +-
+ lib/Gscan2pdf/Canvas/Bbox.pm            |   84 +-
+ lib/Gscan2pdf/Dialog/Save.pm            |  115 +-
+ lib/Gscan2pdf/Dialog/Scan.pm            |  365 +++---
+ lib/Gscan2pdf/Dialog/Scan/CLI.pm        |    2 -
+ lib/Gscan2pdf/Dialog/Scan/Image_Sane.pm |    2 -
+ lib/Gscan2pdf/Document.pm               | 1422 +++++++++++------------
+ lib/Gscan2pdf/Frontend/CLI.pm           |  281 +++--
+ lib/Gscan2pdf/Frontend/Image_Sane.pm    |   66 +-
+ lib/Gscan2pdf/Page.pm                   |    2 -
+ lib/Gscan2pdf/Scanner/Options.pm        |  116 +-
+ lib/Gscan2pdf/Scanner/Profile.pm        |  110 +-
+ lib/Gscan2pdf/Unpaper.pm                |  279 +++--
+ 15 files changed, 1765 insertions(+), 1855 deletions(-)
+
+diff --git a/bin/gscan2pdf b/bin/gscan2pdf
+index e075b0f2..e8b75b29 100755
+--- a/bin/gscan2pdf
++++ b/bin/gscan2pdf
+@@ -54,8 +54,6 @@
+ 
+ use warnings;
+ use strict;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ 
+ use Gscan2pdf::Dialog::MultipleMessage;
+ use Gscan2pdf::Dialog::Renumber;
+@@ -3047,85 +3045,30 @@ sub save_button_clicked_callback {
+         $SETTING{current_psh} = $windowi->{comboboxpsh}->get_active_text;
+     }
+ 
+-    given ( $SETTING{'image type'} ) {
+-        when (/pdf/xsm) {
++    if ( $SETTING{'image type'} =~ /pdf/xsm ) {
+ 
+-            # dig out the compression
+-            $SETTING{downsample}        = $windowi->get('downsample');
+-            $SETTING{'downsample dpi'}  = $windowi->get('downsample-dpi');
+-            $SETTING{'pdf compression'} = $windowi->get('pdf-compression');
+-            $SETTING{quality}           = $windowi->get('jpeg-quality');
++        # dig out the compression
++        $SETTING{downsample}        = $windowi->get('downsample');
++        $SETTING{'downsample dpi'}  = $windowi->get('downsample-dpi');
++        $SETTING{'pdf compression'} = $windowi->get('pdf-compression');
++        $SETTING{quality}           = $windowi->get('jpeg-quality');
+ 
+-            $SETTING{text_position} = $windowi->get('text_position');
+-            $SETTING{'pdf font'}    = $windowi->get('pdf-font');
++        $SETTING{text_position} = $windowi->get('text_position');
++        $SETTING{'pdf font'}    = $windowi->get('pdf-font');
+ 
+-            # cd back to cwd to save
+-            chdir $SETTING{cwd};
+-
+-            my $file_chooser;
+-            if ( $_ eq 'pdf' ) {
+-                if ( not update_metadata_settings($windowi) ) {
+-                    save_dialog();
+-                    return;
+-                }
+-
+-                # Set up file selector
+-                $file_chooser = Gtk3::FileChooserDialog->new(
+-                    __('PDF filename'),
+-                    $windowi, 'save',
+-                    'gtk-cancel' => 'cancel',
+-                    'gtk-save'   => 'ok'
+-                );
+-
+-                my $filename = Gscan2pdf::Document::expand_metadata_pattern(
+-                    template           => $SETTING{'default filename'},
+-                    convert_whitespace =>
+-                      $SETTING{'convert whitespace to underscores'},
+-                    author        => $SETTING{author},
+-                    title         => $SETTING{title},
+-                    docdate       => $windowi->get('meta-datetime'),
+-                    today_and_now => [ Today_and_Now() ],
+-                    extension     => 'pdf',
+-                    subject       => $SETTING{subject},
+-                    keywords      => $SETTING{keywords},
+-                );
+-
+-                $file_chooser->set_current_name($filename);
+-                $file_chooser->set_do_overwrite_confirmation(TRUE);
+-            }
+-            else {
+-                $file_chooser = Gtk3::FileChooserDialog->new(
+-                    __('PDF filename'),
+-                    $windowi, 'open',
+-                    'gtk-cancel' => 'cancel',
+-                    'gtk-open'   => 'ok'
+-                );
+-            }
+-            add_filter( $file_chooser, __('PDF files'), 'pdf' );
+-            $file_chooser->set_current_folder( $SETTING{cwd} );
+-            $file_chooser->set_default_response('ok');
+-            $file_chooser->signal_connect(
+-                response => \&file_chooser_response_callback,
+-                [ $_, $list_of_pages ]
+-            );
+-            $file_chooser->show;
+-
+-            # cd back to tempdir
+-            chdir $session;
+-        }
+-        when ('djvu') {
++        # cd back to cwd to save
++        chdir $SETTING{cwd};
+ 
++        my $file_chooser;
++        if ( $SETTING{'image type'} eq 'pdf' ) {
+             if ( not update_metadata_settings($windowi) ) {
+                 save_dialog();
+                 return;
+             }
+ 
+-            # cd back to cwd to save
+-            chdir $SETTING{cwd};
+-
+             # Set up file selector
+-            my $file_chooser = Gtk3::FileChooserDialog->new(
+-                __('DjVu filename'),
++            $file_chooser = Gtk3::FileChooserDialog->new(
++                __('PDF filename'),
+                 $windowi, 'save',
+                 'gtk-cancel' => 'cancel',
+                 'gtk-save'   => 'ok'
+@@ -3139,162 +3082,215 @@ sub save_button_clicked_callback {
+                 title         => $SETTING{title},
+                 docdate       => $windowi->get('meta-datetime'),
+                 today_and_now => [ Today_and_Now() ],
+-                extension     => 'djvu',
++                extension     => 'pdf',
+                 subject       => $SETTING{subject},
+                 keywords      => $SETTING{keywords},
+             );
+ 
+             $file_chooser->set_current_name($filename);
+-            $file_chooser->set_default_response('ok');
+-            $file_chooser->set_current_folder( $SETTING{cwd} );
+-            add_filter( $file_chooser, __('DjVu files'), 'djvu' );
+             $file_chooser->set_do_overwrite_confirmation(TRUE);
+-            $file_chooser->signal_connect(
+-                response => \&file_chooser_response_callback,
+-                [ 'djvu', $list_of_pages ]
++        }
++        else {
++            $file_chooser = Gtk3::FileChooserDialog->new(
++                __('PDF filename'),
++                $windowi, 'open',
++                'gtk-cancel' => 'cancel',
++                'gtk-open'   => 'ok'
+             );
+-            $file_chooser->show;
++        }
++        add_filter( $file_chooser, __('PDF files'), 'pdf' );
++        $file_chooser->set_current_folder( $SETTING{cwd} );
++        $file_chooser->set_default_response('ok');
++        $file_chooser->signal_connect(
++            response => \&file_chooser_response_callback,
++            [ $SETTING{'image type'}, $list_of_pages ]
++        );
++        $file_chooser->show;
++
++        # cd back to tempdir
++        chdir $session;
++    }
++    elsif ( $SETTING{'image type'} eq 'djvu' ) {
+ 
+-            # cd back to tempdir
+-            chdir $session;
++        if ( not update_metadata_settings($windowi) ) {
++            save_dialog();
++            return;
+         }
+-        when ('tif') {
+-            $SETTING{'tiff compression'} = $windowi->get('tiff-compression');
+-            $SETTING{quality}            = $windowi->get('jpeg-quality');
+ 
+-            # cd back to cwd to save
+-            chdir $SETTING{cwd};
++        # cd back to cwd to save
++        chdir $SETTING{cwd};
+ 
+-            # Set up file selector
+-            my $file_chooser = Gtk3::FileChooserDialog->new(
+-                __('TIFF filename'),
+-                $windowi, 'save',
+-                'gtk-cancel' => 'cancel',
+-                'gtk-save'   => 'ok'
+-            );
+-            $file_chooser->set_default_response('ok');
+-            $file_chooser->set_current_folder( $SETTING{cwd} );
+-            add_filter( $file_chooser, __('Image files'),
+-                $SETTING{'image type'} );
+-            $file_chooser->set_do_overwrite_confirmation(TRUE);
+-            $file_chooser->signal_connect(
+-                response => \&file_chooser_response_callback,
+-                [ 'tif', $list_of_pages ]
+-            );
+-            $file_chooser->show;
++        # Set up file selector
++        my $file_chooser = Gtk3::FileChooserDialog->new(
++            __('DjVu filename'),
++            $windowi, 'save',
++            'gtk-cancel' => 'cancel',
++            'gtk-save'   => 'ok'
++        );
+ 
+-            # cd back to tempdir
+-            chdir $session;
+-        }
+-        when ('txt') {
++        my $filename = Gscan2pdf::Document::expand_metadata_pattern(
++            template           => $SETTING{'default filename'},
++            convert_whitespace =>
++              $SETTING{'convert whitespace to underscores'},
++            author        => $SETTING{author},
++            title         => $SETTING{title},
++            docdate       => $windowi->get('meta-datetime'),
++            today_and_now => [ Today_and_Now() ],
++            extension     => 'djvu',
++            subject       => $SETTING{subject},
++            keywords      => $SETTING{keywords},
++        );
+ 
+-            # cd back to cwd to save
+-            chdir $SETTING{cwd};
++        $file_chooser->set_current_name($filename);
++        $file_chooser->set_default_response('ok');
++        $file_chooser->set_current_folder( $SETTING{cwd} );
++        add_filter( $file_chooser, __('DjVu files'), 'djvu' );
++        $file_chooser->set_do_overwrite_confirmation(TRUE);
++        $file_chooser->signal_connect(
++            response => \&file_chooser_response_callback,
++            [ 'djvu', $list_of_pages ]
++        );
++        $file_chooser->show;
+ 
+-            # Set up file selector
+-            my $file_chooser = Gtk3::FileChooserDialog->new(
+-                __('Text filename'),
+-                $windowi, 'save',
+-                'gtk-cancel' => 'cancel',
+-                'gtk-save'   => 'ok'
+-            );
+-            $file_chooser->set_default_response('ok');
+-            $file_chooser->set_current_folder( $SETTING{cwd} );
+-            $file_chooser->set_do_overwrite_confirmation(TRUE);
+-            add_filter( $file_chooser, __('Text files'), 'txt' );
+-            $file_chooser->signal_connect(
+-                response => \&file_chooser_response_callback,
+-                [ 'txt', $list_of_pages ]
+-            );
+-            $file_chooser->show;
++        # cd back to tempdir
++        chdir $session;
++    }
++    elsif ( $SETTING{'image type'} eq 'tif' ) {
++        $SETTING{'tiff compression'} = $windowi->get('tiff-compression');
++        $SETTING{quality}            = $windowi->get('jpeg-quality');
+ 
+-            # cd back to tempdir
+-            chdir $session;
+-        }
+-        when ('hocr') {
++        # cd back to cwd to save
++        chdir $SETTING{cwd};
+ 
+-            # cd back to cwd to save
+-            chdir $SETTING{cwd};
++        # Set up file selector
++        my $file_chooser = Gtk3::FileChooserDialog->new(
++            __('TIFF filename'),
++            $windowi, 'save',
++            'gtk-cancel' => 'cancel',
++            'gtk-save'   => 'ok'
++        );
++        $file_chooser->set_default_response('ok');
++        $file_chooser->set_current_folder( $SETTING{cwd} );
++        add_filter( $file_chooser, __('Image files'),
++            $SETTING{'image type'} );
++        $file_chooser->set_do_overwrite_confirmation(TRUE);
++        $file_chooser->signal_connect(
++            response => \&file_chooser_response_callback,
++            [ 'tif', $list_of_pages ]
++        );
++        $file_chooser->show;
+ 
+-            # Set up file selector
+-            my $file_chooser = Gtk3::FileChooserDialog->new(
+-                __('hOCR filename'),
+-                $windowi, 'save',
+-                'gtk-cancel' => 'cancel',
+-                'gtk-save'   => 'ok'
+-            );
+-            $file_chooser->set_default_response('ok');
+-            $file_chooser->set_current_folder( $SETTING{cwd} );
+-            $file_chooser->set_do_overwrite_confirmation(TRUE);
+-            add_filter( $file_chooser, __('hOCR files'), 'hocr' );
+-            $file_chooser->signal_connect(
+-                response => \&file_chooser_response_callback,
+-                [ 'hocr', $list_of_pages ]
+-            );
+-            $file_chooser->show;
++        # cd back to tempdir
++        chdir $session;
++    }
++    elsif ( $SETTING{'image type'} eq 'txt' ) {
+ 
+-            # cd back to tempdir
+-            chdir $session;
+-        }
+-        when ('ps') {
+-            $SETTING{ps_backend} = $windowi->get('ps-backend');
+-            $logger->info("Selected '$SETTING{ps_backend}' as ps backend");
++        # cd back to cwd to save
++        chdir $SETTING{cwd};
+ 
+-            # cd back to cwd to save
+-            chdir $SETTING{cwd};
++        # Set up file selector
++        my $file_chooser = Gtk3::FileChooserDialog->new(
++            __('Text filename'),
++            $windowi, 'save',
++            'gtk-cancel' => 'cancel',
++            'gtk-save'   => 'ok'
++        );
++        $file_chooser->set_default_response('ok');
++        $file_chooser->set_current_folder( $SETTING{cwd} );
++        $file_chooser->set_do_overwrite_confirmation(TRUE);
++        add_filter( $file_chooser, __('Text files'), 'txt' );
++        $file_chooser->signal_connect(
++            response => \&file_chooser_response_callback,
++            [ 'txt', $list_of_pages ]
++        );
++        $file_chooser->show;
+ 
+-            # Set up file selector
+-            my $file_chooser = Gtk3::FileChooserDialog->new(
+-                __('PS filename'),
+-                $windowi, 'save',
+-                'gtk-cancel' => 'cancel',
+-                'gtk-save'   => 'ok'
+-            );
+-            $file_chooser->set_default_response('ok');
+-            $file_chooser->set_current_folder( $SETTING{cwd} );
+-            add_filter( $file_chooser, __('Postscript files'), 'ps' );
+-            $file_chooser->set_do_overwrite_confirmation(TRUE);
+-            $file_chooser->signal_connect(
+-                response => \&file_chooser_response_callback,
+-                [ 'ps', $list_of_pages ]
+-            );
+-            $file_chooser->show;
++        # cd back to tempdir
++        chdir $session;
++    }
++    elsif ( $SETTING{'image type'} eq 'hocr' ) {
+ 
+-            # cd back to tempdir
+-            chdir $session;
+-        }
+-        when ('session') {
++        # cd back to cwd to save
++        chdir $SETTING{cwd};
+ 
+-            # cd back to cwd to save
+-            chdir $SETTING{cwd};
++        # Set up file selector
++        my $file_chooser = Gtk3::FileChooserDialog->new(
++            __('hOCR filename'),
++            $windowi, 'save',
++            'gtk-cancel' => 'cancel',
++            'gtk-save'   => 'ok'
++        );
++        $file_chooser->set_default_response('ok');
++        $file_chooser->set_current_folder( $SETTING{cwd} );
++        $file_chooser->set_do_overwrite_confirmation(TRUE);
++        add_filter( $file_chooser, __('hOCR files'), 'hocr' );
++        $file_chooser->signal_connect(
++            response => \&file_chooser_response_callback,
++            [ 'hocr', $list_of_pages ]
++        );
++        $file_chooser->show;
+ 
+-            # Set up file selector
+-            my $file_chooser = Gtk3::FileChooserDialog->new(
+-                __('gscan2pdf session filename'),
+-                $windowi, 'save',
+-                'gtk-cancel' => 'cancel',
+-                'gtk-save'   => 'ok'
+-            );
+-            $file_chooser->set_default_response('ok');
+-            $file_chooser->set_current_folder( $SETTING{cwd} );
+-            add_filter( $file_chooser, __('gscan2pdf session files'), 'gs2p' );
+-            $file_chooser->set_do_overwrite_confirmation(TRUE);
+-            $file_chooser->signal_connect(
+-                response => \&file_chooser_response_callback,
+-                ['gs2p']
+-            );
+-            $file_chooser->show;
++        # cd back to tempdir
++        chdir $session;
++    }
++    elsif ( $SETTING{'image type'} eq 'ps' ) {
++        $SETTING{ps_backend} = $windowi->get('ps-backend');
++        $logger->info("Selected '$SETTING{ps_backend}' as ps backend");
+ 
+-            # cd back to tempdir
+-            chdir $session;
+-        }
+-        when ('jpg') {
+-            $SETTING{quality} = $windowi->get('jpeg-quality');
+-            save_image($list_of_pages);
+-        }
+-        default {
+-            save_image($list_of_pages);
+-        }
++        # cd back to cwd to save
++        chdir $SETTING{cwd};
++
++        # Set up file selector
++        my $file_chooser = Gtk3::FileChooserDialog->new(
++            __('PS filename'),
++            $windowi, 'save',
++            'gtk-cancel' => 'cancel',
++            'gtk-save'   => 'ok'
++        );
++        $file_chooser->set_default_response('ok');
++        $file_chooser->set_current_folder( $SETTING{cwd} );
++        add_filter( $file_chooser, __('Postscript files'), 'ps' );
++        $file_chooser->set_do_overwrite_confirmation(TRUE);
++        $file_chooser->signal_connect(
++            response => \&file_chooser_response_callback,
++            [ 'ps', $list_of_pages ]
++        );
++        $file_chooser->show;
++
++        # cd back to tempdir
++        chdir $session;
++    }
++    elsif ( $SETTING{'image type'} eq 'session') {
++
++        # cd back to cwd to save
++        chdir $SETTING{cwd};
++
++        # Set up file selector
++        my $file_chooser = Gtk3::FileChooserDialog->new(
++            __('gscan2pdf session filename'),
++            $windowi, 'save',
++            'gtk-cancel' => 'cancel',
++            'gtk-save'   => 'ok'
++        );
++        $file_chooser->set_default_response('ok');
++        $file_chooser->set_current_folder( $SETTING{cwd} );
++        add_filter( $file_chooser, __('gscan2pdf session files'), 'gs2p' );
++        $file_chooser->set_do_overwrite_confirmation(TRUE);
++        $file_chooser->signal_connect(
++            response => \&file_chooser_response_callback,
++            ['gs2p']
++        );
++        $file_chooser->show;
++
++        # cd back to tempdir
++        chdir $session;
++    }
++    elsif ( $SETTING{'image type'} eq 'jpg' ) {
++        $SETTING{quality} = $windowi->get('jpeg-quality');
++        save_image($list_of_pages);
++    }
++    else {
++        save_image($list_of_pages);
+     }
+     return;
+ }
+@@ -3326,36 +3322,34 @@ sub file_chooser_response_callback {
+         # Update cwd
+         $SETTING{cwd} = dirname($filename);
+ 
+-        given ($type) {
+-            when (/pdf/xsm) {
+-                save_pdf( $filename, $_, $list_of_pages );
+-            }
+-            when ('djvu') {
+-                save_djvu( $filename, $list_of_pages );
+-            }
+-            when ('tif') {
+-                save_tiff( $filename, undef, $list_of_pages );
+-            }
+-            when ('txt') {
+-                save_text( $filename, $list_of_pages );
+-            }
+-            when ('hocr') {
+-                save_hocr( $filename, $list_of_pages );
+-            }
+-            when ('ps') {
+-                if ( $SETTING{ps_backend} eq 'libtiff' ) {
+-                    my $tif =
+-                      File::Temp->new( DIR => $session, SUFFIX => '.tif' );
+-                    save_tiff( $tif->filename, $filename, $list_of_pages );
+-                }
+-                else {
+-                    save_pdf( $filename, 'ps', $list_of_pages );
+-                }
++        if ( $type =~ /pdf/xsm ) {
++            save_pdf( $filename, $type, $list_of_pages );
++        }
++        elsif ( $type eq 'djvu' ) {
++            save_djvu( $filename, $list_of_pages );
++        }
++        elsif ( $type eq 'tif' ) {
++            save_tiff( $filename, undef, $list_of_pages );
++        }
++        elsif ( $type eq 'txt' ) {
++            save_text( $filename, $list_of_pages );
++        }
++        elsif ( $type eq 'hocr' ) {
++            save_hocr( $filename, $list_of_pages );
++        }
++        elsif ( $type eq 'ps' ) {
++            if ( $SETTING{ps_backend} eq 'libtiff' ) {
++                my $tif =
++                  File::Temp->new( DIR => $session, SUFFIX => '.tif' );
++                save_tiff( $tif->filename, $filename, $list_of_pages );
+             }
+-            when ('gs2p') {
+-                $slist->save_session( $filename, $VERSION );
++            else {
++                save_pdf( $filename, 'ps', $list_of_pages );
+             }
+         }
++        elsif ( $type eq 'gs2p' ) {
++            $slist->save_session( $filename, $VERSION );
++        }
+         if ( defined $windowi and $SETTING{close_dialog_on_save} ) {
+             $windowi->hide;
+         }
+diff --git a/lib/Gscan2pdf/Bboxtree.pm b/lib/Gscan2pdf/Bboxtree.pm
+index d510b08b..5eae4d5c 100644
+--- a/lib/Gscan2pdf/Bboxtree.pm
++++ b/lib/Gscan2pdf/Bboxtree.pm
+@@ -2,8 +2,6 @@ package Gscan2pdf::Bboxtree;
+ 
+ use strict;
+ use warnings;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use HTML::TokeParser;
+ use Encode qw(decode_utf8 encode_utf8);
+ use Glib qw(TRUE FALSE);    # To get TRUE and FALSE
+@@ -120,102 +118,98 @@ sub _hocr2boxes {
+     my $p = HTML::TokeParser->new( \$hocr );
+     my ( $data, @stack, $boxes );
+     while ( my $token = $p->get_token ) {
+-        given ( $token->[0] ) {
+-            when ('S') {
+-                my ( $tag, %attrs ) = ( $token->[1], %{ $token->[2] } );
+-
+-                # new data point
+-                $data = {};
+-
+-                if ( defined $attrs{class} and defined $attrs{title} ) {
+-                    _parse_tag_data( $attrs{title}, $data );
+-                    given ( $attrs{class} ) {
+-                        when (/_page$/xsm) {
+-                            $data->{type} = 'page';
+-                            push @{$boxes}, $data;
+-                        }
+-                        when (/_carea$/xsm) {
+-                            $data->{type} = 'column';
+-                        }
+-                        when (/_par$/xsm) {
+-                            $data->{type} = 'para';
+-                        }
+-                        when (/_header$/xsm) {
+-                            $data->{type} = 'header';
+-                        }
+-                        when (/_footer$/xsm) {
+-                            $data->{type} = 'footer';
+-                        }
+-                        when (/_caption$/xsm) {
+-                            $data->{type} = 'caption';
+-                        }
+-                        when (/_line$/xsm) {
+-                            $data->{type} = 'line';
+-                        }
+-                        when (/_word$/xsm) {
+-                            $data->{type} = 'word';
+-                        }
+-                    }
++        if ( $token->[0] eq 'S' ) {
++            my ( $tag, %attrs ) = ( $token->[1], %{ $token->[2] } );
+ 
+-                    # pick up previous pointer to add style
+-                    if ( not defined $data->{type} ) {
+-                        $data = $stack[-1];
+-                    }
++            # new data point
++            $data = {};
+ 
+-                    # put information xocr_word information in parent ocr_word
+-                    if (    $data->{type} eq 'word'
+-                        and $stack[-1]{type} eq 'word' )
+-                    {
+-                        for ( keys %{$data} ) {
+-                            if ( not defined $stack[-1]{$_} ) {
+-                                $stack[-1]{$_} = $data->{$_};
+-                            }
+-                        }
++            if ( defined $attrs{class} and defined $attrs{title} ) {
++                _parse_tag_data( $attrs{title}, $data );
++                if ( $attrs{class} =~ /_page$/xsm ) {
++                    $data->{type} = 'page';
++                    push @{$boxes}, $data;
++                }
++                elsif ( $attrs{class} =~ /_carea$/xsm ) {
++                    $data->{type} = 'column';
++                }
++                elsif ( $attrs{class} =~ /_par$/xsm ) {
++                    $data->{type} = 'para';
++                }
++                elsif ( $attrs{class} =~ /_header$/xsm ) {
++                    $data->{type} = 'header';
++                }
++                elsif ( $attrs{class} =~ /_footer$/xsm ) {
++                    $data->{type} = 'footer';
++                }
++                elsif ( $attrs{class} =~ /_caption$/xsm ) {
++                    $data->{type} = 'caption';
++                }
++                elsif ( $attrs{class} =~ /_line$/xsm ) {
++                    $data->{type} = 'line';
++                }
++                elsif ( $attrs{class} =~ /_word$/xsm ) {
++                    $data->{type} = 'word';
++                }
+ 
+-                        # pick up previous pointer to add any later text
+-                        $data = $stack[-1];
+-                    }
+-                    else {
+-                        if ( defined $attrs{id} ) {
+-                            $data->{id} = $attrs{id};
+-                        }
++                # pick up previous pointer to add style
++                if ( not defined $data->{type} ) {
++                    $data = $stack[-1];
++                }
+ 
+-                        # if we have previous data, add the new data to the
+-                        # contents of the previous data point
+-                        if (    defined $stack[-1]
+-                            and $data != $stack[-1]
+-                            and defined $data->{bbox} )
+-                        {
+-                            push @{ $stack[-1]{contents} }, $data;
++                # put information xocr_word information in parent ocr_word
++                if (    $data->{type} eq 'word'
++                    and $stack[-1]{type} eq 'word' )
++                {
++                    for ( keys %{$data} ) {
++                        if ( not defined $stack[-1]{$_} ) {
++                            $stack[-1]{$_} = $data->{$_};
+                         }
+                     }
+-                }
+ 
+-                # pick up previous pointer
+-                # so that unknown tags don't break the chain
+-                else {
++                    # pick up previous pointer to add any later text
+                     $data = $stack[-1];
+                 }
+-                if ( defined $data ) {
+-                    if ( $tag eq 'strong' ) { push @{ $data->{style} }, 'Bold' }
+-                    if ( $tag eq 'em' ) { push @{ $data->{style} }, 'Italic' }
++                else {
++                    if ( defined $attrs{id} ) {
++                        $data->{id} = $attrs{id};
++                    }
++
++                    # if we have previous data, add the new data to the
++                    # contents of the previous data point
++                    if (    defined $stack[-1]
++                        and $data != $stack[-1]
++                        and defined $data->{bbox} )
++                    {
++                        push @{ $stack[-1]{contents} }, $data;
++                    }
+                 }
++            }
+ 
+-                # put the new data point on the stack
+-                push @stack, $data;
++            # pick up previous pointer
++            # so that unknown tags don't break the chain
++            else {
++                $data = $stack[-1];
+             }
+-            when ('T') {
+-                if ( $token->[1] !~ /^\s*$/xsm ) {
+-                    $data->{text} = _decode_hocr( $token->[1] );
+-                    chomp $data->{text};
+-                }
++            if ( defined $data ) {
++                if ( $tag eq 'strong' ) { push @{ $data->{style} }, 'Bold' }
++                if ( $tag eq 'em' ) { push @{ $data->{style} }, 'Italic' }
+             }
+-            when ('E') {
+ 
+-                # up a level
+-                $data = pop @stack;
++            # put the new data point on the stack
++            push @stack, $data;
++        }
++        elsif ( $token->[0] eq 'T' ) {
++            if ( $token->[1] !~ /^\s*$/xsm ) {
++                $data->{text} = _decode_hocr( $token->[1] );
++                chomp $data->{text};
+             }
+         }
++        elsif ( $token->[0] eq 'E') {
++
++            # up a level
++            $data = pop @stack;
++        }
+ 
+     }
+     return $boxes;
+@@ -442,65 +436,63 @@ sub _pdftotext2boxes {
+     my ( $data, @stack, $boxes );
+     my $offset = 0;
+     while ( my $token = $p->get_token ) {
+-        given ( $token->[0] ) {
+-            when ('S') {
+-                my ( $tag, %attrs ) = ( $token->[1], %{ $token->[2] } );
+-
+-                # new data point
+-                $data = {};
+-
+-                if ( $tag eq 'page' ) {
+-                    $data->{type} = $tag;
+-                    if ( defined $attrs{width} and defined $attrs{height} ) {
+-                        my $width  = scale( $attrs{width},  $xresolution );
+-                        my $height = scale( $attrs{height}, $yresolution );
+-                        if ( $width == 2 * $imagew && $height == $imageh ) {
+-                            $offset = $imagew;
+-                        }
+-                        $data->{bbox} = [ 0, 0, $width - $offset, $height ];
+-                    }
+-                    push @{$boxes}, $data;
+-                }
+-                elsif ( $tag eq 'word' ) {
+-                    $data->{type} = $tag;
+-                    if (    defined $attrs{xmin}
+-                        and defined $attrs{ymin}
+-                        and defined $attrs{xmax}
+-                        and defined $attrs{ymax} )
+-                    {
+-                        $data->{bbox} = [
+-                            scale( $attrs{xmin}, $xresolution ) - $offset,
+-                            scale( $attrs{ymin}, $yresolution ),
+-                            scale( $attrs{xmax}, $xresolution ) - $offset,
+-                            scale( $attrs{ymax}, $yresolution )
+-                        ];
++        if ( $token->[0] eq 'S' ) {
++            my ( $tag, %attrs ) = ( $token->[1], %{ $token->[2] } );
++
++            # new data point
++            $data = {};
++
++            if ( $tag eq 'page' ) {
++                $data->{type} = $tag;
++                if ( defined $attrs{width} and defined $attrs{height} ) {
++                    my $width  = scale( $attrs{width},  $xresolution );
++                    my $height = scale( $attrs{height}, $yresolution );
++                    if ( $width == 2 * $imagew && $height == $imageh ) {
++                        $offset = $imagew;
+                     }
++                    $data->{bbox} = [ 0, 0, $width - $offset, $height ];
+                 }
+-
+-                # if we have previous data, add the new data to the
+-                # contents of the previous data point
+-                if (    defined $stack[-1]
+-                    and $data != $stack[-1]
+-                    and defined $data->{bbox} )
++                push @{$boxes}, $data;
++            }
++            elsif ( $tag eq 'word' ) {
++                $data->{type} = $tag;
++                if (    defined $attrs{xmin}
++                    and defined $attrs{ymin}
++                    and defined $attrs{xmax}
++                    and defined $attrs{ymax} )
+                 {
+-                    push @{ $stack[-1]{contents} }, $data;
++                    $data->{bbox} = [
++                        scale( $attrs{xmin}, $xresolution ) - $offset,
++                        scale( $attrs{ymin}, $yresolution ),
++                        scale( $attrs{xmax}, $xresolution ) - $offset,
++                        scale( $attrs{ymax}, $yresolution )
++                    ];
+                 }
+-
+-                # put the new data point on the stack
+-                if ( defined $data->{bbox} ) { push @stack, $data }
+             }
+-            when ('T') {
+-                if ( $token->[1] !~ /^\s*$/xsm ) {
+-                    $data->{text} = _decode_hocr( $token->[1] );
+-                    chomp $data->{text};
+-                }
++
++            # if we have previous data, add the new data to the
++            # contents of the previous data point
++            if (    defined $stack[-1]
++                and $data != $stack[-1]
++                and defined $data->{bbox} )
++            {
++                push @{ $stack[-1]{contents} }, $data;
+             }
+-            when ('E') {
+ 
+-                # up a level
+-                $data = pop @stack;
++            # put the new data point on the stack
++            if ( defined $data->{bbox} ) { push @stack, $data }
++        }
++        elsif ( $token->[0] eq 'T' ) {
++            if ( $token->[1] !~ /^\s*$/xsm ) {
++                $data->{text} = _decode_hocr( $token->[1] );
++                chomp $data->{text};
+             }
+         }
++        elsif ( $token->[0] eq 'E' ) {
++
++            # up a level
++            $data = pop @stack;
++        }
+ 
+     }
+     return $boxes;
+@@ -583,18 +575,16 @@ sub _bbox_to_hocr {
+     my ( $x1, $y1, $x2, $y2 ) = @{ $bbox->{bbox} };
+     my $type = 'ocr_' . $bbox->{type};
+     my $tag  = 'span';
+-    given ( $bbox->{type} ) {
+-        when ('page') {
+-            $tag = 'div';
+-        }
+-        when (/^(?:carea|column)$/xsm) {
+-            $type = 'ocr_carea';
+-            $tag  = 'div';
+-        }
+-        when ('para') {
+-            $type = 'ocr_par';
+-            $tag  = 'p';
+-        }
++    if ( $bbox->{type} eq 'page' ) {
++        $tag = 'div';
++    }
++    elsif ( $bbox->{type} =~ /^(?:carea|column)$/xsm ) {
++        $type = 'ocr_carea';
++        $tag  = 'div';
++    }
++    elsif ( $bbox->{type} eq 'para' ) {
++        $type = 'ocr_par';
++        $tag  = 'p';
+     }
+     $string .= $SPACE x ( 2 + $bbox->{depth} ) . "<$tag class='$type'";
+     if ( defined $bbox->{id} ) { $string .= " id='$bbox->{id}'" }
+diff --git a/lib/Gscan2pdf/Canvas.pm b/lib/Gscan2pdf/Canvas.pm
+index f20e8e69..0feba7b6 100644
+--- a/lib/Gscan2pdf/Canvas.pm
++++ b/lib/Gscan2pdf/Canvas.pm
+@@ -2,8 +2,6 @@ package Gscan2pdf::Canvas;
+ 
+ use strict;
+ use warnings;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use GooCanvas2;
+ use Gscan2pdf::Canvas::Bbox;
+ use Gscan2pdf::Canvas::ListIter;
+@@ -149,31 +147,29 @@ sub SET_PROPERTY {
+     if (   ( defined $newval and defined $oldval and $newval ne $oldval )
+         or ( defined $newval xor defined $oldval ) )
+     {
+-        given ($name) {
+-            when ('offset') {
+-                if (   ( defined $newval xor defined $oldval )
+-                    or $oldval->{x} != $newval->{x}
+-                    or $oldval->{y} != $newval->{y} )
+-                {
+-                    $self->{$name} = $newval;
+-                    $self->scroll_to( -$newval->{x}, -$newval->{y} );
+-                    $self->signal_emit( 'offset-changed', $newval->{x},
+-                        $newval->{y} );
+-                }
+-            }
+-            when ('max_color') {
++        if ( $name eq 'offset' ) {
++            if (   ( defined $newval xor defined $oldval )
++                or $oldval->{x} != $newval->{x}
++                or $oldval->{y} != $newval->{y} )
++            {
+                 $self->{$name} = $newval;
+-                $self->{max_color_hsv} = string2hsv($newval);
++                $self->scroll_to( -$newval->{x}, -$newval->{y} );
++                $self->signal_emit( 'offset-changed', $newval->{x},
++                    $newval->{y} );
+             }
+-            when ('min_color') {
+-                $self->{$name} = $newval;
+-                $self->{min_color_hsv} = string2hsv($newval);
+-            }
+-            default {
+-                $self->{$name} = $newval;
++        }
++        elsif ( $name eq 'max_color' ) {
++            $self->{$name} = $newval;
++            $self->{max_color_hsv} = string2hsv($newval);
++        }
++        elsif ( $name eq 'min_color' ) {
++            $self->{$name} = $newval;
++            $self->{min_color_hsv} = string2hsv($newval);
++        }
++        else {
++            $self->{$name} = $newval;
+ 
+-                #                $self->SUPER::SET_PROPERTY( $pspec, $newval );
+-            }
++            #                $self->SUPER::SET_PROPERTY( $pspec, $newval );
+         }
+     }
+     return;
+diff --git a/lib/Gscan2pdf/Canvas/Bbox.pm b/lib/Gscan2pdf/Canvas/Bbox.pm
+index 725645a8..c009ad9b 100644
+--- a/lib/Gscan2pdf/Canvas/Bbox.pm
++++ b/lib/Gscan2pdf/Canvas/Bbox.pm
+@@ -2,8 +2,6 @@ package Gscan2pdf::Canvas::Bbox;
+ 
+ use strict;
+ use warnings;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use GooCanvas2;
+ use Glib ':constants';
+ use HTML::Entities;
+@@ -312,37 +310,35 @@ sub hsv2rgb {
+     my $q  = $in{v} * ( 1.0 - ( $in{s} * $ff ) );
+     my $t  = $in{v} * ( 1.0 - ( $in{s} * ( 1.0 - $ff ) ) );
+ 
+-    given ($i) {
+-        when (0) {
+-            $out{r} = $in{v};
+-            $out{g} = $t;
+-            $out{b} = $p;
+-        }
+-        when (1) {
+-            $out{r} = $q;
+-            $out{g} = $in{v};
+-            $out{b} = $p;
+-        }
+-        when ($COLOR_GREEN) {
+-            $out{r} = $p;
+-            $out{g} = $in{v};
+-            $out{b} = $t;
+-        }
+-        when ($COLOR_CYAN) {
+-            $out{r} = $p;
+-            $out{g} = $q;
+-            $out{b} = $in{v};
+-        }
+-        when ($COLOR_BLUE) {
+-            $out{r} = $t;
+-            $out{g} = $p;
+-            $out{b} = $in{v};
+-        }
+-        default {
+-            $out{r} = $in{v};
+-            $out{g} = $p;
+-            $out{b} = $q;
+-        }
++    if ( $i == 0 ) {
++        $out{r} = $in{v};
++        $out{g} = $t;
++        $out{b} = $p;
++    }
++    elsif ( $i == 1 ) {
++        $out{r} = $q;
++        $out{g} = $in{v};
++        $out{b} = $p;
++    }
++    elsif ( $i == $COLOR_GREEN ) {
++        $out{r} = $p;
++        $out{g} = $in{v};
++        $out{b} = $t;
++    }
++    elsif ( $i == $COLOR_CYAN ) {
++        $out{r} = $p;
++        $out{g} = $q;
++        $out{b} = $in{v};
++    }
++    elsif ( $i == $COLOR_BLUE ) {
++        $out{r} = $t;
++        $out{g} = $p;
++        $out{b} = $in{v};
++    }
++    else {
++        $out{r} = $in{v};
++        $out{g} = $p;
++        $out{b} = $q;
+     }
+     ( $out{r}, $out{g}, $out{b}, ) = (
+         $out{r} * $MAX_COLOR_INT,
+@@ -554,18 +550,16 @@ sub to_hocr {
+         # determine hOCR element types & mapping to HTML tags
+         my $type = 'ocr_' . $self->{type};
+         my $tag  = 'span';
+-        given ( $self->{type} ) {
+-            when ('page') {
+-                $tag = 'div';
+-            }
+-            when (/^(?:carea|column)$/xsm) {
+-                $type = 'ocr_carea';
+-                $tag  = 'div';
+-            }
+-            when ('para') {
+-                $type = 'ocr_par';
+-                $tag  = 'p';
+-            }
++        if ( $self->{type} eq 'page' ) {
++            $tag = 'div';
++        }
++        elsif ( $self->{type} =~ /^(?:carea|column)$/xsm ) {
++            $type = 'ocr_carea';
++            $tag  = 'div';
++        }
++        elsif ( $self->{type} eq 'para' ) {
++            $type = 'ocr_par';
++            $tag  = 'p';
+         }
+ 
+         # build properties of hOCR elements
+diff --git a/lib/Gscan2pdf/Dialog/Save.pm b/lib/Gscan2pdf/Dialog/Save.pm
+index 847b7ffd..fbc218a0 100644
+--- a/lib/Gscan2pdf/Dialog/Save.pm
++++ b/lib/Gscan2pdf/Dialog/Save.pm
+@@ -2,7 +2,6 @@ package Gscan2pdf::Dialog::Save;
+ 
+ use warnings;
+ use strict;
+-use feature 'switch';
+ use Glib 1.220 qw(TRUE FALSE);    # To get TRUE and FALSE
+ use Gscan2pdf::ComboBoxText;
+ use Gscan2pdf::Dialog;
+@@ -10,7 +9,6 @@ use Gscan2pdf::Document;
+ use Gscan2pdf::EntryCompletion;
+ use Gscan2pdf::Translation '__';    # easier to extract strings with xgettext
+ use Date::Calc qw(Today Today_and_Now Add_Delta_DHMS);
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use Encode;
+ use Readonly;
+ Readonly my $ENTRY_WIDTH_DATE     => 10;
+@@ -667,70 +665,68 @@ sub image_type_changed_callback {
+     my ( $self, $vboxp, $hboxpq, $hboxc, $hboxtq, $hboxps, ) = @{$data};
+     my $image_type = $widget->get_active_index;
+     $self->set( 'image-type', $image_type );
+-    given ($image_type) {
+-        when (/pdf/xsm) {
+-            $vboxp->show;
+-            $hboxc->hide;
+-            $hboxtq->hide;
+-            $hboxps->hide;
+-            if ( $_ eq 'pdf' ) {
+-                $self->{'meta-box-widget'}->show;
+-            }
+-            else {    # don't show metadata for pre-/append to pdf
+-                $self->{'meta-box-widget'}->hide;
+-            }
+-            if ( $self->get('pdf-compression') eq 'jpg' ) {
+-                $hboxpq->show;
+-            }
+-            else {
+-                $hboxpq->hide;
+-            }
+-        }
+-        when ('djvu') {
++    if ( $image_type =~ /pdf/xsm ) {
++        $vboxp->show;
++        $hboxc->hide;
++        $hboxtq->hide;
++        $hboxps->hide;
++        if ( $image_type eq 'pdf' ) {
+             $self->{'meta-box-widget'}->show;
+-            $hboxc->hide;
+-            $vboxp->hide;
+-            $hboxpq->hide;
+-            $hboxtq->hide;
+-            $hboxps->hide;
+         }
+-        when ('tif') {
+-            $hboxc->show;
++        else {    # don't show metadata for pre-/append to pdf
+             $self->{'meta-box-widget'}->hide;
+-            $vboxp->hide;
+-            $hboxpq->hide;
+-            if ( $self->get('tiff-compression') eq 'jpeg' ) {
+-                $hboxtq->show;
+-            }
+-            else {
+-                $hboxtq->hide;
+-            }
+-            $hboxps->hide;
+         }
+-        when ('ps') {
+-            $hboxc->hide;
+-            $self->{'meta-box-widget'}->hide;
+-            $vboxp->hide;
+-            $hboxpq->hide;
+-            $hboxtq->hide;
+-            $hboxps->show;
++        if ( $self->get('pdf-compression') eq 'jpg' ) {
++            $hboxpq->show;
+         }
+-        when ('jpg') {
+-            $self->{'meta-box-widget'}->hide;
+-            $hboxc->hide;
+-            $vboxp->hide;
++        else {
+             $hboxpq->hide;
++        }
++    }
++    elsif ( $image_type =~ 'djvu' ) {
++        $self->{'meta-box-widget'}->show;
++        $hboxc->hide;
++        $vboxp->hide;
++        $hboxpq->hide;
++        $hboxtq->hide;
++        $hboxps->hide;
++    }
++    elsif ( $image_type =~ 'tif' ) {
++        $hboxc->show;
++        $self->{'meta-box-widget'}->hide;
++        $vboxp->hide;
++        $hboxpq->hide;
++        if ( $self->get('tiff-compression') eq 'jpeg' ) {
+             $hboxtq->show;
+-            $hboxps->hide;
+         }
+-        default {
+-            $self->{'meta-box-widget'}->hide;
+-            $vboxp->hide;
+-            $hboxc->hide;
+-            $hboxpq->hide;
++        else {
+             $hboxtq->hide;
+-            $hboxps->hide;
+         }
++        $hboxps->hide;
++    }
++    elsif ( $image_type eq 'ps' ) {
++        $hboxc->hide;
++        $self->{'meta-box-widget'}->hide;
++        $vboxp->hide;
++        $hboxpq->hide;
++        $hboxtq->hide;
++        $hboxps->show;
++    }
++    elsif ( $image_type eq 'jpg' ) {
++        $self->{'meta-box-widget'}->hide;
++        $hboxc->hide;
++        $vboxp->hide;
++        $hboxpq->hide;
++        $hboxtq->show;
++        $hboxps->hide;
++    }
++    else {
++        $self->{'meta-box-widget'}->hide;
++        $vboxp->hide;
++        $hboxc->hide;
++        $hboxpq->hide;
++        $hboxtq->hide;
++        $hboxps->hide;
+     }
+     $self->resize( 1, 1 );
+     return;
+@@ -740,7 +736,12 @@ sub filter_table {
+     my ( $table, @filter ) = @_;
+     my @sub_table;
+     for my $row ( @{$table} ) {
+-        if ( $row->[0] ~~ @filter ) { push @sub_table, $row }
++        for (@filter) {
++            if ( $row->[0] eq $_ ) {
++                push @sub_table, $row;
++                last;
++            }
++        }
+     }
+     return \@sub_table;
+ }
+diff --git a/lib/Gscan2pdf/Dialog/Scan.pm b/lib/Gscan2pdf/Dialog/Scan.pm
+index 9bd93f08..d6f839e2 100644
+--- a/lib/Gscan2pdf/Dialog/Scan.pm
++++ b/lib/Gscan2pdf/Dialog/Scan.pm
+@@ -2,13 +2,11 @@ package Gscan2pdf::Dialog::Scan;
+ 
+ use warnings;
+ use strict;
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use Glib qw(TRUE FALSE);   # To get TRUE and FALSE
+ use Image::Sane ':all';    # To get SANE_NAME_PAGE_WIDTH & SANE_NAME_PAGE_HEIGHT
+ use Data::Dumper;
+ $Data::Dumper::Sortkeys = 1;
+ use Storable qw(dclone);
+-use feature 'switch';
+ use GooCanvas2;
+ use Gscan2pdf::ComboBoxText;
+ use Gscan2pdf::Dialog;
+@@ -900,123 +898,121 @@ sub SET_PROPERTY {
+             $logger->debug("Started$msg");
+         }
+         my $callback = FALSE;
+-        given ($name) {
+-            when ('allow_batch_flatbed') {
+-                $self->_set_allow_batch_flatbed( $name, $newval );
+-            }
+-            when ('available_scan_options') {
+-                $self->_set_available_scan_options( $name, $newval );
+-            }
+-            when ('cursor') {
+-                $self->{$name} = $newval;
+-                $self->set_cursor($newval);
+-            }
+-            when ('device') {
+-                $self->{$name} = $newval;
+-                $self->set_device($newval);
+-                $self->signal_emit( 'changed-device', $newval )
+-            }
+-            when ('device_list') {
+-                $self->{$name} = $newval;
+-                $self->set_device_list($newval);
+-                $self->signal_emit( 'changed-device-list', $newval )
+-            }
+-            when ('document') {
+-                $self->{$name} = $newval;
+-
+-                # Update the start spinbutton if the page number is been edited.
+-                my $slist = $self->get('document');
+-                if ( defined $slist ) {
+-                    $slist->get_model->signal_connect(
+-                        'row-changed' => sub { $self->update_start_page } );
+-                }
+-            }
+-            when ('ignore_duplex_capabilities') {
+-                $self->{$name} = $newval;
+-                $self->_flatbed_or_duplex_callback;
+-            }
+-            when ('num_pages') {
+-                $self->_set_num_pages( $name, $newval );
+-            }
+-            when ('page_number_start') {
+-                $self->{$name} = $newval;
+-                $self->signal_emit( 'changed-page-number-start', $newval )
+-            }
+-            when ('page_number_increment') {
+-                $self->{$name} = $newval;
+-                $self->signal_emit( 'changed-page-number-increment', $newval )
++        if ( $name eq 'allow_batch_flatbed' ) {
++            $self->_set_allow_batch_flatbed( $name, $newval );
++        }
++        elsif ( $name eq 'available_scan_options' ) {
++            $self->_set_available_scan_options( $name, $newval );
++        }
++        elsif ( $name eq 'cursor' ) {
++            $self->{$name} = $newval;
++            $self->set_cursor($newval);
++        }
++        elsif ( $name eq 'device' ) {
++            $self->{$name} = $newval;
++            $self->set_device($newval);
++            $self->signal_emit( 'changed-device', $newval )
++        }
++        elsif ( $name eq 'device_list' ) {
++            $self->{$name} = $newval;
++            $self->set_device_list($newval);
++            $self->signal_emit( 'changed-device-list', $newval )
++        }
++        elsif ( $name eq 'document' ) {
++            $self->{$name} = $newval;
++
++            # Update the start spinbutton if the page number is been edited.
++            my $slist = $self->get('document');
++            if ( defined $slist ) {
++                $slist->get_model->signal_connect(
++                    'row-changed' => sub { $self->update_start_page } );
+             }
+-            when ('side_to_scan') {
+-                $self->_set_side_to_scan( $name, $newval );
++        }
++        elsif ( $name eq 'ignore_duplex_capabilities' ) {
++            $self->{$name} = $newval;
++            $self->_flatbed_or_duplex_callback;
++        }
++        elsif ( $name eq 'num_pages' ) {
++            $self->_set_num_pages( $name, $newval );
++        }
++        elsif ( $name eq 'page_number_start' ) {
++            $self->{$name} = $newval;
++            $self->signal_emit( 'changed-page-number-start', $newval )
++        }
++        elsif ( $name eq 'page_number_increment' ) {
++            $self->{$name} = $newval;
++            $self->signal_emit( 'changed-page-number-increment', $newval )
++        }
++        elsif ( $name eq 'side_to_scan' ) {
++            $self->_set_side_to_scan( $name, $newval );
++        }
++        elsif ( $name eq 'sided' ) {
++            $self->{$name} = $newval;
++            my $widget = $self->{buttons};
++            if ( $newval eq 'double' ) {
++                $widget = $self->{buttond};
+             }
+-            when ('sided') {
+-                $self->{$name} = $newval;
+-                my $widget = $self->{buttons};
+-                if ( $newval eq 'double' ) {
+-                    $widget = $self->{buttond};
+-                }
+-                else {
+-                    # selecting single-sided also selects facing page.
+-                    $self->set( 'side-to-scan', 'facing' );
+-                }
+-                $widget->set_active(TRUE);
++            else {
++                # selecting single-sided also selects facing page.
++                $self->set( 'side-to-scan', 'facing' );
+             }
+-            when ('paper') {
+-                if ( defined $newval ) {
+-                    for ( @{ $self->{ignored_paper_formats} } ) {
+-                        if ( $_ eq $newval ) {
+-                            if ( defined $logger ) {
+-                                $logger->info(
+-                                    "Ignoring unsupported paper $newval");
+-                                $logger->debug("Finished$msg");
+-                            }
+-                            return;
+-                        }
+-                    }
+-                }
+-                $callback = TRUE;
+-                my $signal;
+-                $signal = $self->signal_connect(
+-                    'changed-paper' => sub {
+-                        $self->signal_handler_disconnect($signal);
+-                        my $paper = defined $newval ? $newval : __('Manual');
+-                        my $retval =
+-                          $self->{combobp}->set_active_by_text($paper);
+-                        $logger->debug(
+-                            "Widget update to $paper returned $retval");
++            $widget->set_active(TRUE);
++        }
++        elsif ( $name eq 'paper' ) {
++            if ( defined $newval ) {
++                for ( @{ $self->{ignored_paper_formats} } ) {
++                    if ( $_ eq $newval ) {
+                         if ( defined $logger ) {
++                            $logger->info(
++                                "Ignoring unsupported paper $newval");
+                             $logger->debug("Finished$msg");
+                         }
++                        return;
+                     }
+-                );
+-                $self->set_paper($newval);
+-            }
+-            when ('paper_formats') {
+-                $self->{$name} = $newval;
+-                $self->set_paper_formats($newval);
+-                $self->signal_emit( 'changed-paper-formats', $newval )
++                }
+             }
+-            when ('profile') {
+-                $callback = TRUE;
+-                my $signal;
+-                $signal = $self->signal_connect(
+-                    'changed-profile' => sub {
+-                        $self->signal_handler_disconnect($signal);
+-                        $self->{combobsp}->set_active_by_text($newval);
+-                        if ( defined $logger ) {
+-                            $logger->debug("Finished$msg");
+-                        }
++            $callback = TRUE;
++            my $signal;
++            $signal = $self->signal_connect(
++                'changed-paper' => sub {
++                    $self->signal_handler_disconnect($signal);
++                    my $paper = defined $newval ? $newval : __('Manual');
++                    my $retval =
++                      $self->{combobp}->set_active_by_text($paper);
++                    $logger->debug(
++                        "Widget update to $paper returned $retval");
++                    if ( defined $logger ) {
++                        $logger->debug("Finished$msg");
+                     }
+-                );
+-                $self->set_profile($newval);
+-            }
+-            when ('visible_scan_options') {
+-                $self->{$name} = $newval;
+-                $self->signal_emit( 'changed-option-visibility', $newval );
+-            }
+-            default {
+-                $self->{$name} = $newval;
+-            }
++                }
++            );
++            $self->set_paper($newval);
++        }
++        elsif ( $name eq 'paper_formats' ) {
++            $self->{$name} = $newval;
++            $self->set_paper_formats($newval);
++            $self->signal_emit( 'changed-paper-formats', $newval )
++        }
++        elsif ( $name eq 'profile' ) {
++            $callback = TRUE;
++            my $signal;
++            $signal = $self->signal_connect(
++                'changed-profile' => sub {
++                    $self->signal_handler_disconnect($signal);
++                    $self->{combobsp}->set_active_by_text($newval);
++                    if ( defined $logger ) {
++                        $logger->debug("Finished$msg");
++                    }
++                }
++            );
++            $self->set_profile($newval);
++        }
++        elsif ( $name eq 'visible_scan_options' ) {
++            $self->{$name} = $newval;
++            $self->signal_emit( 'changed-option-visibility', $newval );
++        }
++        else {
++            $self->{$name} = $newval;
+         }
+         if ( defined $logger and not $callback ) {
+             $logger->debug("Finished$msg");
+@@ -1239,25 +1235,23 @@ sub pack_widget {
+         # Add label for units
+         if ( $opt->{unit} != SANE_UNIT_NONE ) {
+             my $text;
+-            given ( $opt->{unit} ) {
+-                when (SANE_UNIT_PIXEL) {
+-                    $text = __('pel')
+-                }
+-                when (SANE_UNIT_BIT) {
+-                    $text = __('bit')
+-                }
+-                when (SANE_UNIT_MM) {
+-                    $text = __('mm')
+-                }
+-                when (SANE_UNIT_DPI) {
+-                    $text = __('ppi')
+-                }
+-                when (SANE_UNIT_PERCENT) {
+-                    $text = __(q{%})
+-                }
+-                when (SANE_UNIT_MICROSECOND) {
+-                    $text = __('μs')
+-                }
++            if ( $opt->{unit} == SANE_UNIT_PIXEL ) {
++                $text = __('pel')
++            }
++            elsif ( $opt->{unit} == SANE_UNIT_BIT ) {
++                $text = __('bit')
++            }
++            elsif ( $opt->{unit} == SANE_UNIT_MM ) {
++                $text = __('mm')
++            }
++            elsif ( $opt->{unit} == SANE_UNIT_DPI ) {
++                $text = __('ppi')
++            }
++            elsif ( $opt->{unit} == SANE_UNIT_PERCENT ) {
++                $text = __(q{%})
++            }
++            elsif ( $opt->{unit} == SANE_UNIT_MICROSECOND ) {
++                $text = __('μs')
+             }
+             my $label = Gtk3::Label->new($text);
+             $hbox->pack_end( $label, FALSE, FALSE, 0 );
+@@ -1541,46 +1535,43 @@ sub _update_option {
+             }
+         }
+         else {
+-            given ( $opt->{constraint_type} ) {
+-
+-                # SpinButton
+-                when (SANE_CONSTRAINT_RANGE) {
+-                    my ( $step, $page ) = $widget->get_increments;
+-                    $step = 1;
+-                    if ( $opt->{constraint}{quant} ) {
+-                        $step = $opt->{constraint}{quant};
+-                    }
+-                    $widget->set_range( $opt->{constraint}{min},
+-                        $opt->{constraint}{max} );
+-                    $widget->set_increments( $step, $page );
+-                    if ( $self->value_for_active_option( $value, $opt ) ) {
+-                        $widget->set_value($value);
+-                    }
++            # SpinButton
++            if ( $opt->{constraint_type} == SANE_CONSTRAINT_RANGE ) {
++                my ( $step, $page ) = $widget->get_increments;
++                $step = 1;
++                if ( $opt->{constraint}{quant} ) {
++                    $step = $opt->{constraint}{quant};
++                }
++                $widget->set_range( $opt->{constraint}{min},
++                    $opt->{constraint}{max} );
++                $widget->set_increments( $step, $page );
++                if ( $self->value_for_active_option( $value, $opt ) ) {
++                    $widget->set_value($value);
+                 }
++            }
+ 
+-                # ComboBox
+-                when (
+-                    [ SANE_CONSTRAINT_STRING_LIST, SANE_CONSTRAINT_WORD_LIST ] )
+-                {
+-                    $widget->get_model->clear;
+-                    my $index = 0;
+-                    for ( 0 .. $#{ $opt->{constraint} } ) {
+-                        $widget->append_text(
+-                            $d_sane->get( $opt->{constraint}[$_] ) );
+-                        if ( defined $value
+-                            and $opt->{constraint}[$_] eq $value )
+-                        {
+-                            $index = $_;
+-                        }
++            # ComboBox
++            elsif ( $opt->{constraint_type} == SANE_CONSTRAINT_STRING_LIST or
++                $opt->{constraint_type} == SANE_CONSTRAINT_WORD_LIST )
++            {
++                $widget->get_model->clear;
++                my $index = 0;
++                for ( 0 .. $#{ $opt->{constraint} } ) {
++                    $widget->append_text(
++                        $d_sane->get( $opt->{constraint}[$_] ) );
++                    if ( defined $value
++                        and $opt->{constraint}[$_] eq $value )
++                    {
++                        $index = $_;
+                     }
+-                    if ( defined $index ) { $widget->set_active($index) }
+                 }
++                if ( defined $index ) { $widget->set_active($index) }
++            }
+ 
+-                # Entry
+-                when (SANE_CONSTRAINT_NONE) {
+-                    if ( $self->value_for_active_option( $value, $opt ) ) {
+-                        $widget->set_text($value);
+-                    }
++            # Entry
++            elsif ( $opt->{constraint_type} == SANE_CONSTRAINT_NONE ) {
++                if ( $self->value_for_active_option( $value, $opt ) ) {
++                    $widget->set_text($value);
+                 }
+             }
+         }
+@@ -2486,33 +2477,31 @@ sub update_widget_value {
+         $logger->debug( "Setting widget '$opt->{name}'"
+               . ( $opt->{type} == SANE_TYPE_BUTTON ? $EMPTY : " to '$val'." ) );
+         $widget->signal_handler_block( $widget->{signal} );
+-        given ($widget) {
+-            when (
+-                     $widget->isa('Gtk3::CheckButton')
+-                  or $widget->isa('Gtk3::Switch')
+-              )
+-            {
+-                if ( $val eq $EMPTY ) { $val = 0 }
+-                if ( $widget->get_active != $val ) {
+-                    $widget->set_active($val);
+-                }
++        if (
++                 $widget->isa('Gtk3::CheckButton')
++              or $widget->isa('Gtk3::Switch')
++          )
++        {
++            if ( $val eq $EMPTY ) { $val = 0 }
++            if ( $widget->get_active != $val ) {
++                $widget->set_active($val);
+             }
+-            when ( $widget->isa('Gtk3::SpinButton') ) {
+-                if ( $widget->get_value != $val ) {
+-                    $widget->set_value($val);
+-                }
++        }
++        elsif ( $widget->isa('Gtk3::SpinButton') ) {
++            if ( $widget->get_value != $val ) {
++                $widget->set_value($val);
+             }
+-            when ( $widget->isa('Gtk3::ComboBox') ) {
+-                if ( $opt->{constraint}[ $widget->get_active ] ne $val ) {
+-                    my $index =
+-                      first_index { $_ eq $val } @{ $opt->{constraint} };
+-                    if ( $index > $NO_INDEX ) { $widget->set_active($index) }
+-                }
++        }
++        elsif ( $widget->isa('Gtk3::ComboBox') ) {
++            if ( $opt->{constraint}[ $widget->get_active ] ne $val ) {
++                my $index =
++                  first_index { $_ eq $val } @{ $opt->{constraint} };
++                if ( $index > $NO_INDEX ) { $widget->set_active($index) }
+             }
+-            when ( $widget->isa('Gtk3::Entry') ) {
+-                if ( $widget->get_text ne $val ) {
+-                    $widget->set_text($val);
+-                }
++        }
++        elsif ( $widget->isa('Gtk3::Entry') ) {
++            if ( $widget->get_text ne $val ) {
++                $widget->set_text($val);
+             }
+         }
+         $widget->signal_handler_unblock( $widget->{signal} );
+diff --git a/lib/Gscan2pdf/Dialog/Scan/CLI.pm b/lib/Gscan2pdf/Dialog/Scan/CLI.pm
+index e41aa21a..a6645d97 100644
+--- a/lib/Gscan2pdf/Dialog/Scan/CLI.pm
++++ b/lib/Gscan2pdf/Dialog/Scan/CLI.pm
+@@ -2,7 +2,6 @@ package Gscan2pdf::Dialog::Scan::CLI;
+ 
+ use warnings;
+ use strict;
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use Glib qw(TRUE FALSE);   # To get TRUE and FALSE
+ use Image::Sane ':all';    # To get SANE_NAME_PAGE_WIDTH & SANE_NAME_PAGE_HEIGHT
+ use Gscan2pdf::Dialog::Scan;
+@@ -10,7 +9,6 @@ use Gscan2pdf::Frontend::CLI;
+ use Gscan2pdf::Translation '__';    # easier to extract strings with xgettext
+ use Storable qw(dclone);            # For cloning the options cache
+ use Locale::gettext 1.05;           # For translations
+-use feature 'switch';
+ use List::MoreUtils qw{any};
+ use Data::Dumper;
+ $Data::Dumper::Sortkeys = 1;
+diff --git a/lib/Gscan2pdf/Dialog/Scan/Image_Sane.pm b/lib/Gscan2pdf/Dialog/Scan/Image_Sane.pm
+index c2c23331..8e4ec3fe 100644
+--- a/lib/Gscan2pdf/Dialog/Scan/Image_Sane.pm
++++ b/lib/Gscan2pdf/Dialog/Scan/Image_Sane.pm
+@@ -2,14 +2,12 @@ package Gscan2pdf::Dialog::Scan::Image_Sane;
+ 
+ use warnings;
+ use strict;
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use Glib qw(TRUE FALSE);   # To get TRUE and FALSE
+ use Image::Sane ':all';    # To get SANE_NAME_PAGE_WIDTH & SANE_NAME_PAGE_HEIGHT
+ use Gscan2pdf::Dialog::Scan;
+ use Gscan2pdf::Frontend::Image_Sane;
+ use Gscan2pdf::Translation '__';    # easier to extract strings with xgettext
+ use Locale::gettext 1.05;           # For translations
+-use feature 'switch';
+ use Data::Dumper;
+ $Data::Dumper::Sortkeys = 1;
+ use Readonly;
+diff --git a/lib/Gscan2pdf/Document.pm b/lib/Gscan2pdf/Document.pm
+index d14769ed..a2acb63c 100644
+--- a/lib/Gscan2pdf/Document.pm
++++ b/lib/Gscan2pdf/Document.pm
+@@ -2,8 +2,6 @@ package Gscan2pdf::Document;
+ 
+ use strict;
+ use warnings;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ 
+ use threads;
+ use threads::shared;
+@@ -813,74 +811,72 @@ sub check_return_queue {
+             $logger->error('Bad uuid in return queue.');
+             next;
+         }
+-        given ( $data->{type} ) {
+-            when ('file-info') {
+-                if ( not defined $data->{info} ) {
+-                    $logger->error('Bad file info in return queue.');
+-                    next;
+-                }
+-                if ( defined $callback{ $data->{uuid} }{finished} ) {
+-                    $callback{ $data->{uuid} }{finished}->( $data->{info} );
+-                    delete $callback{ $data->{uuid} };
+-                }
++        if ( $data->{type} eq 'file-info' ) {
++            if ( not defined $data->{info} ) {
++                $logger->error('Bad file info in return queue.');
++                next;
+             }
+-            when ('page request') {
+-                my $i = $self->find_page_by_uuid( $data->{uuid} );
+-                if ( defined $i ) {
+-                    $_self->{pages}->enqueue(
+-                        {
+-                            # sharing File::Temp objects causes problems,
+-                            # so freeze
+-                            page => $self->{data}[$i][2]->freeze,
+-                        }
+-                    );
+-                }
+-                else {
+-                    $logger->error("No page with UUID $data->{uuid}");
+-                    $_self->{pages}->enqueue( { page => 'cancel' } );
+-                }
+-                return Glib::SOURCE_CONTINUE;
++            if ( defined $callback{ $data->{uuid} }{finished} ) {
++                $callback{ $data->{uuid} }{finished}->( $data->{info} );
++                delete $callback{ $data->{uuid} };
+             }
+-            when ('page') {
+-                if ( defined $data->{page} ) {
+-                    delete $data->{page}{saved};    # Remove saved tag
+-                    $self->add_page( $data->{uuid}, $data->{page},
+-                        $data->{info} );
+-                }
+-                else {
+-                    $logger->error('Bad page in return queue.');
+-                }
++        }
++        elsif ( $data->{type} eq 'page request' ) {
++            my $i = $self->find_page_by_uuid( $data->{uuid} );
++            if ( defined $i ) {
++                $_self->{pages}->enqueue(
++                    {
++                        # sharing File::Temp objects causes problems,
++                        # so freeze
++                        page => $self->{data}[$i][2]->freeze,
++                    }
++                );
++            }
++            else {
++                $logger->error("No page with UUID $data->{uuid}");
++                $_self->{pages}->enqueue( { page => 'cancel' } );
++            }
++            return Glib::SOURCE_CONTINUE;
++        }
++        elsif ( $data->{type} eq 'page' ) {
++            if ( defined $data->{page} ) {
++                delete $data->{page}{saved};    # Remove saved tag
++                $self->add_page( $data->{uuid}, $data->{page},
++                    $data->{info} );
++            }
++            else {
++                $logger->error('Bad page in return queue.');
+             }
+-            when ('error') {
+-                _throw_error(
+-                    $data->{uuid},    $data->{page},
+-                    $data->{process}, $data->{message}
++        }
++        elsif ( $data->{type} eq 'error' ) {
++            _throw_error(
++                $data->{uuid},    $data->{page},
++                $data->{process}, $data->{message}
++            );
++        }
++        elsif ( $data->{type} eq 'finished' ) {
++            if ( defined $callback{ $data->{uuid} }{started} ) {
++                $callback{ $data->{uuid} }{started}->(
++                    undef, $_self->{process_name},
++                    $jobs_completed, $jobs_total, $data->{message},
++                    $_self->{progress}
+                 );
++                delete $callback{ $data->{uuid} }{started};
+             }
+-            when ('finished') {
+-                if ( defined $callback{ $data->{uuid} }{started} ) {
+-                    $callback{ $data->{uuid} }{started}->(
+-                        undef, $_self->{process_name},
+-                        $jobs_completed, $jobs_total, $data->{message},
+-                        $_self->{progress}
+-                    );
+-                    delete $callback{ $data->{uuid} }{started};
+-                }
+-                if ( defined $callback{ $data->{uuid} }{mark_saved} ) {
+-                    $callback{ $data->{uuid} }{mark_saved}->();
+-                    delete $callback{ $data->{uuid} }{mark_saved};
+-                }
+-                if ( defined $callback{ $data->{uuid} }{finished} ) {
+-                    $callback{ $data->{uuid} }{finished}->( $data->{message} );
+-                    delete $callback{ $data->{uuid} };
+-                }
+-                if ( $_self->{requests}->pending == 0 ) {
+-                    $jobs_completed = 0;
+-                    $jobs_total     = 0;
+-                }
+-                else {
+-                    $jobs_completed++;
+-                }
++            if ( defined $callback{ $data->{uuid} }{mark_saved} ) {
++                $callback{ $data->{uuid} }{mark_saved}->();
++                delete $callback{ $data->{uuid} }{mark_saved};
++            }
++            if ( defined $callback{ $data->{uuid} }{finished} ) {
++                $callback{ $data->{uuid} }{finished}->( $data->{message} );
++                delete $callback{ $data->{uuid} };
++            }
++            if ( $_self->{requests}->pending == 0 ) {
++                $jobs_completed = 0;
++                $jobs_total     = 0;
++            }
++            else {
++                $jobs_completed++;
+             }
+         }
+     }
+@@ -2182,19 +2178,17 @@ sub _program_version {
+     if ( not defined $out ) { $out = q{} }
+     if ( not defined $err ) { $err = q{} }
+     my $output;
+-    given ($stream) {
+-        when ('stdout') {
+-            $output = $out
+-        }
+-        when ('stderr') {
+-            $output = $err
+-        }
+-        when ('both') {
+-            $output = $out . $err
+-        }
+-        default {
+-            $logger->error("Unknown stream: '$stream'");
+-        }
++    if ( $stream eq 'stdout' ) {
++        $output = $out
++    }
++    elsif ( $stream eq 'stderr' ) {
++        $output = $err
++    }
++    elsif ( $stream eq 'both' ) {
++        $output = $out . $err
++    }
++    else {
++        $logger->error("Unknown stream: '$stream'");
+     }
+     if ( $output =~ $regex ) { return $1 }
+     if ( $status == $PROCESS_FAILED ) {
+@@ -2536,244 +2530,242 @@ sub _thread_main {
+             if ($cancel) { next }
+         }
+ 
+-        given ( $request->{action} ) {
+-            when ('analyse') {
+-                _thread_analyse( $self, $request->{list_of_pages},
+-                    $request->{uuid} );
+-            }
++        if ( $request->{action} eq 'analyse' ) {
++            _thread_analyse( $self, $request->{list_of_pages},
++                $request->{uuid} );
++        }
+ 
+-            when ('brightness-contrast') {
+-                _thread_brightness_contrast(
+-                    $self,
+-                    page       => $request->{page},
+-                    brightness => $request->{brightness},
+-                    contrast   => $request->{contrast},
+-                    dir        => $request->{dir},
+-                    uuid       => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'brightness-contrast' ) {
++            _thread_brightness_contrast(
++                $self,
++                page       => $request->{page},
++                brightness => $request->{brightness},
++                contrast   => $request->{contrast},
++                dir        => $request->{dir},
++                uuid       => $request->{uuid}
++            );
++        }
+ 
+-            when ('cancel') {
+-                lock( $_self->{pages} )
+-                  ;    # unlocks automatically when out of scope
++        elsif ( $request->{action} eq 'cancel' ) {
++            lock( $_self->{pages} )
++              ;    # unlocks automatically when out of scope
+ 
+-                # Empty pages queue
+-                while ( $_self->{pages}->pending ) {
+-                    $_self->{pages}->dequeue;
+-                }
+-                $self->{return}->enqueue(
+-                    { type => 'cancelled', uuid => $request->{uuid} } );
++            # Empty pages queue
++            while ( $_self->{pages}->pending ) {
++                $_self->{pages}->dequeue;
+             }
++            $self->{return}->enqueue(
++                { type => 'cancelled', uuid => $request->{uuid} } );
++        }
+ 
+-            when ('crop') {
+-                _thread_crop(
+-                    $self,
+-                    page => $request->{page},
+-                    x    => $request->{x},
+-                    y    => $request->{y},
+-                    w    => $request->{w},
+-                    h    => $request->{h},
+-                    dir  => $request->{dir},
+-                    uuid => $request->{uuid},
+-                );
+-            }
++        elsif ( $request->{action} eq 'crop' ) {
++            _thread_crop(
++                $self,
++                page => $request->{page},
++                x    => $request->{x},
++                y    => $request->{y},
++                w    => $request->{w},
++                h    => $request->{h},
++                dir  => $request->{dir},
++                uuid => $request->{uuid},
++            );
++        }
+ 
+-            when ('split') {
+-                _thread_split(
+-                    $self,
+-                    page      => $request->{page},
+-                    direction => $request->{direction},
+-                    position  => $request->{position},
+-                    dir       => $request->{dir},
+-                    uuid      => $request->{uuid},
+-                );
+-            }
++        elsif ( $request->{action} eq 'split' ) {
++            _thread_split(
++                $self,
++                page      => $request->{page},
++                direction => $request->{direction},
++                position  => $request->{position},
++                dir       => $request->{dir},
++                uuid      => $request->{uuid},
++            );
++        }
+ 
+-            when ('cuneiform') {
+-                _thread_cuneiform(
+-                    $self,
+-                    page      => $request->{page},
+-                    language  => $request->{language},
+-                    threshold => $request->{threshold},
+-                    pidfile   => $request->{pidfile},
+-                    uuid      => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'cuneiform' ) {
++            _thread_cuneiform(
++                $self,
++                page      => $request->{page},
++                language  => $request->{language},
++                threshold => $request->{threshold},
++                pidfile   => $request->{pidfile},
++                uuid      => $request->{uuid}
++            );
++        }
+ 
+-            when ('get-file-info') {
+-                _thread_get_file_info(
+-                    $self,
+-                    filename => $request->{path},
+-                    password => $request->{password},
+-                    pidfile  => $request->{pidfile},
+-                    uuid     => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'get-file-info' ) {
++            _thread_get_file_info(
++                $self,
++                filename => $request->{path},
++                password => $request->{password},
++                pidfile  => $request->{pidfile},
++                uuid     => $request->{uuid}
++            );
++        }
+ 
+-            when ('gocr') {
+-                _thread_gocr( $self, $request->{page}, $request->{threshold},
+-                    $request->{pidfile}, $request->{uuid} );
+-            }
++        elsif ( $request->{action} eq 'gocr' ) {
++            _thread_gocr( $self, $request->{page}, $request->{threshold},
++                $request->{pidfile}, $request->{uuid} );
++        }
+ 
+-            when ('import-file') {
+-                _thread_import_file(
+-                    $self,
+-                    info     => $request->{info},
+-                    password => $request->{password},
+-                    first    => $request->{first},
+-                    last     => $request->{last},
+-                    dir      => $request->{dir},
+-                    pidfile  => $request->{pidfile},
+-                    uuid     => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'import-file' ) {
++            _thread_import_file(
++                $self,
++                info     => $request->{info},
++                password => $request->{password},
++                first    => $request->{first},
++                last     => $request->{last},
++                dir      => $request->{dir},
++                pidfile  => $request->{pidfile},
++                uuid     => $request->{uuid}
++            );
++        }
+ 
+-            when ('negate') {
+-                _thread_negate(
+-                    $self,           $request->{page},
+-                    $request->{dir}, $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'negate' ) {
++            _thread_negate(
++                $self,           $request->{page},
++                $request->{dir}, $request->{uuid}
++            );
++        }
+ 
+-            when ('paper_sizes') {
+-                _thread_paper_sizes( $self, $request->{paper_sizes} );
+-            }
++        elsif ( $request->{action} eq 'paper_sizes' ) {
++            _thread_paper_sizes( $self, $request->{paper_sizes} );
++        }
+ 
+-            when ('quit') {
+-                last;
+-            }
++        elsif ( $request->{action} eq 'quit' ) {
++            last;
++        }
+ 
+-            when ('rotate') {
+-                _thread_rotate(
+-                    $self, $request->{angle}, $request->{page},
+-                    $request->{dir}, $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'rotate' ) {
++            _thread_rotate(
++                $self, $request->{angle}, $request->{page},
++                $request->{dir}, $request->{uuid}
++            );
++        }
+ 
+-            when ('save-djvu') {
+-                _thread_save_djvu(
+-                    $self,
+-                    path          => $request->{path},
+-                    list_of_pages => $request->{list_of_pages},
+-                    metadata      => $request->{metadata},
+-                    options       => $request->{options},
+-                    dir           => $request->{dir},
+-                    pidfile       => $request->{pidfile},
+-                    uuid          => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'save-djvu' ) {
++            _thread_save_djvu(
++                $self,
++                path          => $request->{path},
++                list_of_pages => $request->{list_of_pages},
++                metadata      => $request->{metadata},
++                options       => $request->{options},
++                dir           => $request->{dir},
++                pidfile       => $request->{pidfile},
++                uuid          => $request->{uuid}
++            );
++        }
+ 
+-            when ('save-hocr') {
+-                _thread_save_hocr( $self, $request->{path},
+-                    $request->{list_of_pages},
+-                    $request->{options}, $request->{uuid} );
+-            }
++        elsif ( $request->{action} eq 'save-hocr' ) {
++            _thread_save_hocr( $self, $request->{path},
++                $request->{list_of_pages},
++                $request->{options}, $request->{uuid} );
++        }
+ 
+-            when ('save-image') {
+-                _thread_save_image(
+-                    $self,
+-                    path          => $request->{path},
+-                    list_of_pages => $request->{list_of_pages},
+-                    pidfile       => $request->{pidfile},
+-                    options       => $request->{options},
+-                    uuid          => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'save-image' ) {
++            _thread_save_image(
++                $self,
++                path          => $request->{path},
++                list_of_pages => $request->{list_of_pages},
++                pidfile       => $request->{pidfile},
++                options       => $request->{options},
++                uuid          => $request->{uuid}
++            );
++        }
+ 
+-            when ('save-pdf') {
+-                _thread_save_pdf(
+-                    $self,
+-                    path          => $request->{path},
+-                    list_of_pages => $request->{list_of_pages},
+-                    metadata      => $request->{metadata},
+-                    options       => $request->{options},
+-                    dir           => $request->{dir},
+-                    pidfile       => $request->{pidfile},
+-                    uuid          => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'save-pdf' ) {
++            _thread_save_pdf(
++                $self,
++                path          => $request->{path},
++                list_of_pages => $request->{list_of_pages},
++                metadata      => $request->{metadata},
++                options       => $request->{options},
++                dir           => $request->{dir},
++                pidfile       => $request->{pidfile},
++                uuid          => $request->{uuid}
++            );
++        }
+ 
+-            when ('save-text') {
+-                _thread_save_text( $self, $request->{path},
+-                    $request->{list_of_pages},
+-                    $request->{options}, $request->{uuid} );
+-            }
++        elsif ( $request->{action} eq 'save-text' ) {
++            _thread_save_text( $self, $request->{path},
++                $request->{list_of_pages},
++                $request->{options}, $request->{uuid} );
++        }
+ 
+-            when ('save-tiff') {
+-                _thread_save_tiff(
+-                    $self,
+-                    path          => $request->{path},
+-                    list_of_pages => $request->{list_of_pages},
+-                    options       => $request->{options},
+-                    dir           => $request->{dir},
+-                    pidfile       => $request->{pidfile},
+-                    uuid          => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'save-tiff' ) {
++            _thread_save_tiff(
++                $self,
++                path          => $request->{path},
++                list_of_pages => $request->{list_of_pages},
++                options       => $request->{options},
++                dir           => $request->{dir},
++                pidfile       => $request->{pidfile},
++                uuid          => $request->{uuid}
++            );
++        }
+ 
+-            when ('tesseract') {
+-                _thread_tesseract(
+-                    $self,
+-                    page      => $request->{page},
+-                    language  => $request->{language},
+-                    threshold => $request->{threshold},
+-                    pidfile   => $request->{pidfile},
+-                    uuid      => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'tesseract' ) {
++            _thread_tesseract(
++                $self,
++                page      => $request->{page},
++                language  => $request->{language},
++                threshold => $request->{threshold},
++                pidfile   => $request->{pidfile},
++                uuid      => $request->{uuid}
++            );
++        }
+ 
+-            when ('threshold') {
+-                _thread_threshold( $self, $request->{threshold},
+-                    $request->{page}, $request->{dir}, $request->{uuid} );
+-            }
++        elsif ( $request->{action} eq 'threshold' ) {
++            _thread_threshold( $self, $request->{threshold},
++                $request->{page}, $request->{dir}, $request->{uuid} );
++        }
+ 
+-            when ('to-png') {
+-                _thread_to_png(
+-                    $self,           $request->{page},
+-                    $request->{dir}, $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'to-png' ) {
++            _thread_to_png(
++                $self,           $request->{page},
++                $request->{dir}, $request->{uuid}
++            );
++        }
+ 
+-            when ('unpaper') {
+-                _thread_unpaper(
+-                    $self,
+-                    page    => $request->{page},
+-                    options => $request->{options},
+-                    pidfile => $request->{pidfile},
+-                    dir     => $request->{dir},
+-                    uuid    => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'unpaper' ) {
++            _thread_unpaper(
++                $self,
++                page    => $request->{page},
++                options => $request->{options},
++                pidfile => $request->{pidfile},
++                dir     => $request->{dir},
++                uuid    => $request->{uuid}
++            );
++        }
+ 
+-            when ('unsharp') {
+-                _thread_unsharp(
+-                    $self,
+-                    page      => $request->{page},
+-                    radius    => $request->{radius},
+-                    sigma     => $request->{sigma},
+-                    gain      => $request->{gain},
+-                    threshold => $request->{threshold},
+-                    dir       => $request->{dir},
+-                    uuid      => $request->{uuid},
+-                );
+-            }
++        elsif ( $request->{action} eq 'unsharp' ) {
++            _thread_unsharp(
++                $self,
++                page      => $request->{page},
++                radius    => $request->{radius},
++                sigma     => $request->{sigma},
++                gain      => $request->{gain},
++                threshold => $request->{threshold},
++                dir       => $request->{dir},
++                uuid      => $request->{uuid},
++            );
++        }
+ 
+-            when ('user-defined') {
+-                _thread_user_defined(
+-                    $self,
+-                    page    => $request->{page},
+-                    command => $request->{command},
+-                    dir     => $request->{dir},
+-                    pidfile => $request->{pidfile},
+-                    uuid    => $request->{uuid}
+-                );
+-            }
++        elsif ( $request->{action} eq 'user-defined' ) {
++            _thread_user_defined(
++                $self,
++                page    => $request->{page},
++                command => $request->{command},
++                dir     => $request->{dir},
++                pidfile => $request->{pidfile},
++                uuid    => $request->{uuid}
++            );
++        }
+ 
+-            default {
+-                $logger->info(
+-                    'Ignoring unknown request ' . $request->{action} );
+-                next;
+-            }
++        else {
++            $logger->info(
++                'Ignoring unknown request ' . $request->{action} );
++            next;
+         }
+ 
+         # Signal the sentinel that the request was completed.
+@@ -2816,212 +2808,210 @@ sub _thread_get_file_info {
+     chomp $format;
+     $logger->info("Format: '$format'");
+ 
+-    given ($format) {
+-        when ('very short file (no magic)') {
++    if ( $format eq 'very short file (no magic)' ) {
++        _thread_throw_error(
++            $self,
++            $options{uuid},
++            $options{page}{uuid},
++            'Open file',
++            sprintf __('Error importing zero-length file %s.'),
++            $options{filename}
++        );
++        return;
++    }
++    elsif ( $format =~ /gzip[ ]compressed[ ]data/xsm ) {
++        $options{info}{path}   = $options{filename};
++        $options{info}{format} = 'session file';
++        $self->{return}->enqueue(
++            {
++                type => 'file-info',
++                uuid => $options{uuid},
++                info => $options{info}
++            }
++        );
++        return;
++    }
++    elsif ( $format =~ /DjVu/xsm ) {
++
++        # Dig out the number of pages
++        ( undef, my $info, my $err ) =
++          exec_command( [ 'djvudump', $options{filename} ],
++            $options{pidfile} );
++        if ( $err =~ /command[ ]not[ ]found/xsm ) {
+             _thread_throw_error(
+                 $self,
+                 $options{uuid},
+                 $options{page}{uuid},
+                 'Open file',
+-                sprintf __('Error importing zero-length file %s.'),
+-                $options{filename}
++                __(
++'Please install djvulibre-bin in order to open DjVu files.'
++                )
+             );
+             return;
+         }
+-        when (/gzip[ ]compressed[ ]data/xsm) {
+-            $options{info}{path}   = $options{filename};
+-            $options{info}{format} = 'session file';
+-            $self->{return}->enqueue(
+-                {
+-                    type => 'file-info',
+-                    uuid => $options{uuid},
+-                    info => $options{info}
+-                }
++        $logger->info($info);
++        return if $_self->{cancel};
++
++        my $pages = 1;
++        if ( $info =~ /\s(\d+)\s+page/xsm ) {
++            $pages = $1;
++        }
++
++        # Dig out the size and resolution of each page
++        my ( @width, @height, @ppi );
++        $options{info}{format} = 'DJVU';
++        while ( $info =~ /DjVu\s(\d+)x(\d+).+?\s+(\d+)\s+dpi(.*)/xsm ) {
++            push @width,  $1;
++            push @height, $2;
++            push @ppi,    $3;
++            $info = $4;
++            $logger->info(
++"Page $#ppi is $width[$#width]x$height[$#height], $ppi[$#ppi] ppi"
++            );
++        }
++        if ( $pages != @ppi ) {
++            _thread_throw_error(
++                $self,
++                $options{uuid},
++                $options{page}{uuid},
++                'Open file',
++                __(
++'Unknown DjVu file structure. Please contact the author.'
++                )
+             );
+             return;
+         }
+-        when (/DjVu/xsm) {
++        $options{info}{width}  = \@width;
++        $options{info}{height} = \@height;
++        $options{info}{ppi}    = \@ppi;
++        $options{info}{pages}  = $pages;
++        $options{info}{path}   = $options{filename};
+ 
+-            # Dig out the number of pages
+-            ( undef, my $info, my $err ) =
+-              exec_command( [ 'djvudump', $options{filename} ],
+-                $options{pidfile} );
+-            if ( $err =~ /command[ ]not[ ]found/xsm ) {
+-                _thread_throw_error(
+-                    $self,
+-                    $options{uuid},
+-                    $options{page}{uuid},
+-                    'Open file',
+-                    __(
+-'Please install djvulibre-bin in order to open DjVu files.'
+-                    )
+-                );
+-                return;
+-            }
+-            $logger->info($info);
+-            return if $_self->{cancel};
++        # Dig out the metadata
++        ( undef, $info ) =
++          exec_command(
++            [ 'djvused', $options{filename}, '-e', 'print-meta' ],
++            $options{pidfile} );
++        $logger->info($info);
++        return if $_self->{cancel};
+ 
+-            my $pages = 1;
+-            if ( $info =~ /\s(\d+)\s+page/xsm ) {
+-                $pages = $1;
+-            }
++        # extract the metadata from the file
++        _add_metadata_to_info( $options{info}, $info, qr{\s+"([^"]+)}xsm );
+ 
+-            # Dig out the size and resolution of each page
+-            my ( @width, @height, @ppi );
+-            $options{info}{format} = 'DJVU';
+-            while ( $info =~ /DjVu\s(\d+)x(\d+).+?\s+(\d+)\s+dpi(.*)/xsm ) {
+-                push @width,  $1;
+-                push @height, $2;
+-                push @ppi,    $3;
+-                $info = $4;
+-                $logger->info(
+-"Page $#ppi is $width[$#width]x$height[$#height], $ppi[$#ppi] ppi"
+-                );
+-            }
+-            if ( $pages != @ppi ) {
+-                _thread_throw_error(
+-                    $self,
+-                    $options{uuid},
+-                    $options{page}{uuid},
+-                    'Open file',
+-                    __(
+-'Unknown DjVu file structure. Please contact the author.'
+-                    )
+-                );
+-                return;
++        $self->{return}->enqueue(
++            {
++                type => 'file-info',
++                uuid => $options{uuid},
++                info => $options{info}
+             }
+-            $options{info}{width}  = \@width;
+-            $options{info}{height} = \@height;
+-            $options{info}{ppi}    = \@ppi;
+-            $options{info}{pages}  = $pages;
+-            $options{info}{path}   = $options{filename};
+-
+-            # Dig out the metadata
+-            ( undef, $info ) =
+-              exec_command(
+-                [ 'djvused', $options{filename}, '-e', 'print-meta' ],
+-                $options{pidfile} );
+-            $logger->info($info);
+-            return if $_self->{cancel};
+-
+-            # extract the metadata from the file
+-            _add_metadata_to_info( $options{info}, $info, qr{\s+"([^"]+)}xsm );
+-
+-            $self->{return}->enqueue(
+-                {
+-                    type => 'file-info',
+-                    uuid => $options{uuid},
+-                    info => $options{info}
+-                }
+-            );
+-            return;
++        );
++        return;
++    }
++    elsif ( $format =~ /PDF[ ]document/xsm ) {
++        $format = 'Portable Document Format';
++        my $args = [ 'pdfinfo', '-isodates', $options{filename} ];
++        if ( defined $options{password} ) {
++            $args = [
++                'pdfinfo', '-isodates',
++                '-upw',    $options{password},
++                $options{filename}
++            ];
+         }
+-        when (/PDF[ ]document/xsm) {
+-            $format = 'Portable Document Format';
+-            my $args = [ 'pdfinfo', '-isodates', $options{filename} ];
+-            if ( defined $options{password} ) {
+-                $args = [
+-                    'pdfinfo', '-isodates',
+-                    '-upw',    $options{password},
+-                    $options{filename}
+-                ];
++        ( undef, my $info, my $error ) =
++          exec_command( $args, $options{pidfile} );
++        return if $_self->{cancel};
++        $logger->info("stdout: $info");
++        $logger->info("stderr: $error");
++        if ( defined $error and $error =~ /Incorrect[ ]password/xsm ) {
++            $options{info}{encrypted} = TRUE;
++        }
++        else {
++            $options{info}{pages} = 1;
++            if ( $info =~ /Pages:\s+(\d+)/xsm ) {
++                $options{info}{pages} = $1;
+             }
+-            ( undef, my $info, my $error ) =
+-              exec_command( $args, $options{pidfile} );
+-            return if $_self->{cancel};
+-            $logger->info("stdout: $info");
+-            $logger->info("stderr: $error");
+-            if ( defined $error and $error =~ /Incorrect[ ]password/xsm ) {
+-                $options{info}{encrypted} = TRUE;
++            $logger->info("$options{info}{pages} pages");
++            my $float = qr{\d+(?:[.]\d*)?}xsm;
++            if ( $info =~
++                /Page\ssize:\s+($float)\s+x\s+($float)\s+(\w+)/xsm )
++            {
++                $options{info}{page_size} = [ $1, $2, $3 ];
++                $logger->info("Page size: $1 x $2 $3");
+             }
+-            else {
+-                $options{info}{pages} = 1;
+-                if ( $info =~ /Pages:\s+(\d+)/xsm ) {
+-                    $options{info}{pages} = $1;
+-                }
+-                $logger->info("$options{info}{pages} pages");
+-                my $float = qr{\d+(?:[.]\d*)?}xsm;
+-                if ( $info =~
+-                    /Page\ssize:\s+($float)\s+x\s+($float)\s+(\w+)/xsm )
+-                {
+-                    $options{info}{page_size} = [ $1, $2, $3 ];
+-                    $logger->info("Page size: $1 x $2 $3");
+-                }
+ 
+-                # extract the metadata from the file
+-                _add_metadata_to_info( $options{info}, $info,
+-                    qr{:\s+([^\n]+)}xsm );
+-            }
++            # extract the metadata from the file
++            _add_metadata_to_info( $options{info}, $info,
++                qr{:\s+([^\n]+)}xsm );
+         }
++    }
+ 
+-        # A JPEG which I was unable to reproduce as a test case had what
+-        # seemed to be a TIFF thumbnail which file -b reported, and therefore
+-        # gscan2pdf attempted to import it as a TIFF. Therefore forcing the text
+-        # to appear at the beginning of the file -b output.
+-        when (/^TIFF[ ]image[ ]data/xsm) {
+-            $format = 'Tagged Image File Format';
+-            ( undef, my $info ) =
+-              exec_command( [ 'tiffinfo', $options{filename} ],
+-                $options{pidfile} );
+-            return if $_self->{cancel};
+-            $logger->info($info);
++    # A JPEG which I was unable to reproduce as a test case had what
++    # seemed to be a TIFF thumbnail which file -b reported, and therefore
++    # gscan2pdf attempted to import it as a TIFF. Therefore forcing the text
++    # to appear at the beginning of the file -b output.
++    elsif ( $format =~ /^TIFF[ ]image[ ]data/xsm) {
++        $format = 'Tagged Image File Format';
++        ( undef, my $info ) =
++          exec_command( [ 'tiffinfo', $options{filename} ],
++            $options{pidfile} );
++        return if $_self->{cancel};
++        $logger->info($info);
+ 
+-            # Count number of pages
+-            $options{info}{pages} = () =
+-              $info =~ /TIFF[ ]Directory[ ]at[ ]offset/xsmg;
+-            $logger->info("$options{info}{pages} pages");
++        # Count number of pages
++        $options{info}{pages} = () =
++          $info =~ /TIFF[ ]Directory[ ]at[ ]offset/xsmg;
++        $logger->info("$options{info}{pages} pages");
+ 
+-            # Dig out the size of each page
+-            my ( @width, @height );
+-            while (
+-                $info =~ /Image\sWidth:\s(\d+)\sImage\sLength:\s(\d+)(.*)/xsm )
+-            {
+-                push @width,  $1;
+-                push @height, $2;
+-                $info = $3;
+-                $logger->info(
+-                    "Page $#width is $width[$#width]x$height[$#height]");
+-            }
+-            $options{info}{width}  = \@width;
+-            $options{info}{height} = \@height;
++        # Dig out the size of each page
++        my ( @width, @height );
++        while (
++            $info =~ /Image\sWidth:\s(\d+)\sImage\sLength:\s(\d+)(.*)/xsm )
++        {
++            push @width,  $1;
++            push @height, $2;
++            $info = $3;
++            $logger->info(
++                "Page $#width is $width[$#width]x$height[$#height]");
+         }
+-        default {
++        $options{info}{width}  = \@width;
++        $options{info}{height} = \@height;
++    }
++    else {
+ 
+-            # Get file type
+-            my $image = Image::Magick->new;
+-            my $e     = $image->Read( $options{filename} );
+-            if ("$e") {
+-                $logger->error($e);
+-                _thread_throw_error(
+-                    $self,
+-                    $options{uuid},
+-                    $options{page}{uuid},
+-                    'Open file',
+-                    sprintf __('%s is not a recognised image type'),
+-                    $options{filename}
+-                );
+-                return;
+-            }
+-            return if $_self->{cancel};
+-            $format = $image->Get('format');
+-            if ( not defined $format ) {
+-                _thread_throw_error(
+-                    $self,
+-                    $options{uuid},
+-                    $options{page}{uuid},
+-                    'Open file',
+-                    sprintf __('%s is not a recognised image type'),
+-                    $options{filename}
+-                );
+-                return;
+-            }
+-            $logger->info("Format $format");
+-            $options{info}{width}       = $image->Get('width');
+-            $options{info}{height}      = $image->Get('height');
+-            $options{info}{xresolution} = $image->Get('xresolution');
+-            $options{info}{yresolution} = $image->Get('yresolution');
+-            $options{info}{pages}       = 1;
++        # Get file type
++        my $image = Image::Magick->new;
++        my $e     = $image->Read( $options{filename} );
++        if ("$e") {
++            $logger->error($e);
++            _thread_throw_error(
++                $self,
++                $options{uuid},
++                $options{page}{uuid},
++                'Open file',
++                sprintf __('%s is not a recognised image type'),
++                $options{filename}
++            );
++            return;
+         }
++        return if $_self->{cancel};
++        $format = $image->Get('format');
++        if ( not defined $format ) {
++            _thread_throw_error(
++                $self,
++                $options{uuid},
++                $options{page}{uuid},
++                'Open file',
++                sprintf __('%s is not a recognised image type'),
++                $options{filename}
++            );
++            return;
++        }
++        $logger->info("Format $format");
++        $options{info}{width}       = $image->Get('width');
++        $options{info}{height}      = $image->Get('height');
++        $options{info}{xresolution} = $image->Get('xresolution');
++        $options{info}{yresolution} = $image->Get('yresolution');
++        $options{info}{pages}       = 1;
+     }
+     $options{info}{format} = $format;
+     $options{info}{path}   = $options{filename};
+@@ -3056,131 +3046,103 @@ sub _thread_import_file {
+     my $JPG = qr/Joint[ ]Photographic[ ]Experts[ ]Group[ ]JFIF[ ]format/xsm;
+     my $GIF = qr/CompuServe[ ]graphics[ ]interchange[ ]format/xsm;
+ 
+-    given ( $options{info}{format} ) {
+-        when ('DJVU') {
+-
+-            # Extract images from DjVu
+-            if ( $options{last} >= $options{first} and $options{first} > 0 ) {
+-                for my $i ( $options{first} .. $options{last} ) {
+-                    $self->{progress} =
+-                      ( $i - 1 ) / ( $options{last} - $options{first} + 1 );
+-                    $self->{message} =
+-                      sprintf __('Importing page %i of %i'),
+-                      $i, $options{last} - $options{first} + 1;
+-
+-                    my ( $tif, $txt, $ann, $error );
+-                    try {
+-                        $tif = File::Temp->new(
+-                            DIR    => $options{dir},
+-                            SUFFIX => '.tif',
+-                            UNLINK => FALSE
+-                        );
+-                        exec_command(
+-                            [
+-                                'ddjvu',    '-format=tiff',
+-                                "-page=$i", $options{info}{path},
+-                                $tif
+-                            ],
+-                            $options{pidfile}
+-                        );
+-                        ( undef, $txt ) = exec_command(
+-                            [
+-                                'djvused', $options{info}{path},
+-                                '-e',      "select $i; print-txt"
+-                            ],
+-                            $options{pidfile}
+-                        );
+-                        ( undef, $ann ) = exec_command(
+-                            [
+-                                'djvused', $options{info}{path},
+-                                '-e',      "select $i; print-ant"
+-                            ],
+-                            $options{pidfile}
+-                        );
+-                    }
+-                    catch {
+-                        if ( defined $tif ) {
+-                            $logger->error("Caught error creating $tif: $_");
+-                            _thread_throw_error(
+-                                $self,
+-                                $options{uuid},
+-                                $options{page}{uuid},
+-                                'Open file',
+-                                "Error: unable to write to $tif."
+-                            );
+-                        }
+-                        else {
+-                            $logger->error(
+-                                "Caught error writing to $options{dir}: $_");
+-                            _thread_throw_error(
+-                                $self,
+-                                $options{uuid},
+-                                $options{page}{uuid},
+-                                'Open file',
+-                                "Error: unable to write to $options{dir}."
+-                            );
+-                        }
+-                        $error = TRUE;
+-                    };
+-                    return if ( $_self->{cancel} or $error );
+-                    my $page = Gscan2pdf::Page->new(
+-                        filename    => $tif,
+-                        dir         => $options{dir},
+-                        delete      => TRUE,
+-                        format      => 'Tagged Image File Format',
+-                        xresolution => $options{info}{ppi}[ $i - 1 ],
+-                        yresolution => $options{info}{ppi}[ $i - 1 ],
+-                        width       => $options{info}{width}[ $i - 1 ],
+-                        height      => $options{info}{height}[ $i - 1 ],
++    if ( $options{info}{format} eq 'DJVU' ) {
++
++        # Extract images from DjVu
++        if ( $options{last} >= $options{first} and $options{first} > 0 ) {
++            for my $i ( $options{first} .. $options{last} ) {
++                $self->{progress} =
++                  ( $i - 1 ) / ( $options{last} - $options{first} + 1 );
++                $self->{message} =
++                  sprintf __('Importing page %i of %i'),
++                  $i, $options{last} - $options{first} + 1;
++
++                my ( $tif, $txt, $ann, $error );
++                try {
++                    $tif = File::Temp->new(
++                        DIR    => $options{dir},
++                        SUFFIX => '.tif',
++                        UNLINK => FALSE
+                     );
+-                    try {
+-                        $page->import_djvu_txt($txt);
+-                    }
+-                    catch {
+-                        $logger->error(
+-                            "Caught error parsing DjVU text layer: $_");
+-                        _thread_throw_error( $self, $options{uuid},
++                    exec_command(
++                        [
++                            'ddjvu',    '-format=tiff',
++                            "-page=$i", $options{info}{path},
++                            $tif
++                        ],
++                        $options{pidfile}
++                    );
++                    ( undef, $txt ) = exec_command(
++                        [
++                            'djvused', $options{info}{path},
++                            '-e',      "select $i; print-txt"
++                        ],
++                        $options{pidfile}
++                    );
++                    ( undef, $ann ) = exec_command(
++                        [
++                            'djvused', $options{info}{path},
++                            '-e',      "select $i; print-ant"
++                        ],
++                        $options{pidfile}
++                    );
++                }
++                catch {
++                    if ( defined $tif ) {
++                        $logger->error("Caught error creating $tif: $_");
++                        _thread_throw_error(
++                            $self,
++                            $options{uuid},
+                             $options{page}{uuid},
+-                            'Open file', 'Error: parsing DjVU text layer' );
+-                    };
+-                    try {
+-                        $page->import_djvu_ann($ann);
++                            'Open file',
++                            "Error: unable to write to $tif."
++                        );
+                     }
+-                    catch {
++                    else {
+                         $logger->error(
+-                            "Caught error parsing DjVU annotation layer: $_");
+-                        _thread_throw_error( $self, $options{uuid},
++                            "Caught error writing to $options{dir}: $_");
++                        _thread_throw_error(
++                            $self,
++                            $options{uuid},
+                             $options{page}{uuid},
+                             'Open file',
+-                            'Error: parsing DjVU annotation layer' );
+-                    };
+-                    $self->{return}->enqueue(
+-                        {
+-                            type => 'page',
+-                            uuid => $options{uuid},
+-                            page => $page->freeze
+-                        }
+-                    );
+-                }
+-            }
+-        }
+-        when ('Portable Document Format') {
+-            _thread_import_pdf( $self, %options );
+-        }
+-        when ('Tagged Image File Format') {
+-
+-            # Only one page, so skip tiffcp in case it gives us problems
+-            if ( $options{last} == 1 ) {
+-                $self->{progress} = 1;
+-                $self->{message}  = sprintf __('Importing page %i of %i'), 1, 1;
++                            "Error: unable to write to $options{dir}."
++                        );
++                    }
++                    $error = TRUE;
++                };
++                return if ( $_self->{cancel} or $error );
+                 my $page = Gscan2pdf::Page->new(
+-                    filename => $options{info}{path},
+-                    dir      => $options{dir},
+-                    delete   => FALSE,
+-                    format   => $options{info}{format},
+-                    width    => $options{info}{width}[0],
+-                    height   => $options{info}{height}[0],
++                    filename    => $tif,
++                    dir         => $options{dir},
++                    delete      => TRUE,
++                    format      => 'Tagged Image File Format',
++                    xresolution => $options{info}{ppi}[ $i - 1 ],
++                    yresolution => $options{info}{ppi}[ $i - 1 ],
++                    width       => $options{info}{width}[ $i - 1 ],
++                    height      => $options{info}{height}[ $i - 1 ],
+                 );
++                try {
++                    $page->import_djvu_txt($txt);
++                }
++                catch {
++                    $logger->error(
++                        "Caught error parsing DjVU text layer: $_");
++                    _thread_throw_error( $self, $options{uuid},
++                        $options{page}{uuid},
++                        'Open file', 'Error: parsing DjVU text layer' );
++                };
++                try {
++                    $page->import_djvu_ann($ann);
++                }
++                catch {
++                    $logger->error(
++                        "Caught error parsing DjVU annotation layer: $_");
++                    _thread_throw_error( $self, $options{uuid},
++                        $options{page}{uuid},
++                        'Open file',
++                        'Error: parsing DjVU annotation layer' );
++                };
+                 $self->{return}->enqueue(
+                     {
+                         type => 'page',
+@@ -3189,138 +3151,164 @@ sub _thread_import_file {
+                     }
+                 );
+             }
++        }
++    }
++    elsif ( $options{info}{format} eq 'Portable Document Format' ) {
++        _thread_import_pdf( $self, %options );
++    }
++    elsif ( $options{info}{format} eq 'Tagged Image File Format') {
+ 
+-            # Split the tiff into its pages and import them individually
+-            elsif ( $options{last} >= $options{first} and $options{first} > 0 )
+-            {
+-                for my $i ( $options{first} - 1 .. $options{last} - 1 ) {
+-                    $self->{progress} =
+-                      $i / ( $options{last} - $options{first} + 1 );
+-                    $self->{message} =
+-                      sprintf __('Importing page %i of %i'),
+-                      $i, $options{last} - $options{first} + 1;
+-
+-                    my ( $tif, $error );
+-                    try {
+-                        $tif = File::Temp->new(
+-                            DIR    => $options{dir},
+-                            SUFFIX => '.tif',
+-                            UNLINK => FALSE
+-                        );
+-                        my ( $status, $out, $err ) =
+-                          exec_command(
+-                            [ 'tiffcp', "$options{info}{path},$i", $tif ],
+-                            $options{pidfile} );
+-                        if ( defined $err and $err ne $EMPTY ) {
+-                            $logger->error(
++        # Only one page, so skip tiffcp in case it gives us problems
++        if ( $options{last} == 1 ) {
++            $self->{progress} = 1;
++            $self->{message}  = sprintf __('Importing page %i of %i'), 1, 1;
++            my $page = Gscan2pdf::Page->new(
++                filename => $options{info}{path},
++                dir      => $options{dir},
++                delete   => FALSE,
++                format   => $options{info}{format},
++                width    => $options{info}{width}[0],
++                height   => $options{info}{height}[0],
++            );
++            $self->{return}->enqueue(
++                {
++                    type => 'page',
++                    uuid => $options{uuid},
++                    page => $page->freeze
++                }
++            );
++        }
++
++        # Split the tiff into its pages and import them individually
++        elsif ( $options{last} >= $options{first} and $options{first} > 0 )
++        {
++            for my $i ( $options{first} - 1 .. $options{last} - 1 ) {
++                $self->{progress} =
++                  $i / ( $options{last} - $options{first} + 1 );
++                $self->{message} =
++                  sprintf __('Importing page %i of %i'),
++                  $i, $options{last} - $options{first} + 1;
++
++                my ( $tif, $error );
++                try {
++                    $tif = File::Temp->new(
++                        DIR    => $options{dir},
++                        SUFFIX => '.tif',
++                        UNLINK => FALSE
++                    );
++                    my ( $status, $out, $err ) =
++                      exec_command(
++                        [ 'tiffcp', "$options{info}{path},$i", $tif ],
++                        $options{pidfile} );
++                    if ( defined $err and $err ne $EMPTY ) {
++                        $logger->error(
+ "Caught error extracting page $i from $options{info}{path}: $err"
+-                            );
+-                            _thread_throw_error(
+-                                $self,
+-                                $options{uuid},
+-                                $options{page}{uuid},
+-                                'Open file',
++                        );
++                        _thread_throw_error(
++                            $self,
++                            $options{uuid},
++                            $options{page}{uuid},
++                            'Open file',
+ "Caught error extracting page $i from $options{info}{path}: $err"
+-                            );
+-                        }
++                        );
+                     }
+-                    catch {
+-                        if ( defined $tif ) {
+-                            $logger->error("Caught error creating $tif: $_");
+-                            _thread_throw_error(
+-                                $self,
+-                                $options{uuid},
+-                                $options{page}{uuid},
+-                                'Open file',
+-                                "Error: unable to write to $tif."
+-                            );
+-                        }
+-                        else {
+-                            $logger->error(
+-                                "Caught error writing to $options{dir}: $_");
+-                            _thread_throw_error(
+-                                $self,
+-                                $options{uuid},
+-                                $options{page}{uuid},
+-                                'Open file',
+-                                "Error: unable to write to $options{dir}."
+-                            );
+-                        }
+-                        $error = TRUE;
+-                    };
+-                    return if ( $_self->{cancel} or $error );
+-                    my $page = Gscan2pdf::Page->new(
+-                        filename => $tif,
+-                        dir      => $options{dir},
+-                        delete   => TRUE,
+-                        format   => $options{info}{format},
+-                        width    => $options{info}{width}[ $i - 1 ],
+-                        height   => $options{info}{height}[ $i - 1 ],
+-                    );
+-                    $self->{return}->enqueue(
+-                        {
+-                            type => 'page',
+-                            uuid => $options{uuid},
+-                            page => $page->freeze
+-                        }
+-                    );
+                 }
+-            }
+-        }
+-        when (/(?:$PNG|$JPG|$GIF)/xsm) {
+-            try {
+-                my $page = Gscan2pdf::Page->new(
+-                    filename    => $options{info}{path},
+-                    dir         => $options{dir},
+-                    format      => $options{info}{format},
+-                    width       => $options{info}{width},
+-                    height      => $options{info}{height},
+-                    xresolution => $options{info}{xresolution},
+-                    yresolution => $options{info}{yresolution},
+-                );
+-                $self->{return}->enqueue(
+-                    {
+-                        type => 'page',
+-                        uuid => $options{uuid},
+-                        page => $page->freeze
++                catch {
++                    if ( defined $tif ) {
++                        $logger->error("Caught error creating $tif: $_");
++                        _thread_throw_error(
++                            $self,
++                            $options{uuid},
++                            $options{page}{uuid},
++                            'Open file',
++                            "Error: unable to write to $tif."
++                        );
+                     }
+-                );
+-            }
+-            catch {
+-                $logger->error("Caught error writing to $options{dir}: $_");
+-                _thread_throw_error( $self, $options{uuid},
+-                    $options{page}{uuid},
+-                    'Open file', "Error: unable to write to $options{dir}." );
+-            };
+-        }
+-
+-        # only 1-bit Portable anymap is properly supported,
+-        # so convert ANY pnm to png
+-        default {
+-            try {
++                    else {
++                        $logger->error(
++                            "Caught error writing to $options{dir}: $_");
++                        _thread_throw_error(
++                            $self,
++                            $options{uuid},
++                            $options{page}{uuid},
++                            'Open file',
++                            "Error: unable to write to $options{dir}."
++                        );
++                    }
++                    $error = TRUE;
++                };
++                return if ( $_self->{cancel} or $error );
+                 my $page = Gscan2pdf::Page->new(
+-                    filename => $options{info}{path},
++                    filename => $tif,
+                     dir      => $options{dir},
++                    delete   => TRUE,
+                     format   => $options{info}{format},
+-                    width    => $options{info}{width},
+-                    height   => $options{info}{height},
++                    width    => $options{info}{width}[ $i - 1 ],
++                    height   => $options{info}{height}[ $i - 1 ],
+                 );
+                 $self->{return}->enqueue(
+                     {
+                         type => 'page',
+                         uuid => $options{uuid},
+-                        page => $page->to_png($paper_sizes)->freeze
++                        page => $page->freeze
+                     }
+                 );
+             }
+-            catch {
+-                $logger->error("Caught error writing to $options{dir}: $_");
+-                _thread_throw_error( $self, $options{uuid},
+-                    $options{page}{uuid},
+-                    'Open file', "Error: unable to write to $options{dir}." );
+-            };
+         }
+     }
++    elsif ( $options{info}{format} =~ /(?:$PNG|$JPG|$GIF)/xsm ) {
++        try {
++            my $page = Gscan2pdf::Page->new(
++                filename    => $options{info}{path},
++                dir         => $options{dir},
++                format      => $options{info}{format},
++                width       => $options{info}{width},
++                height      => $options{info}{height},
++                xresolution => $options{info}{xresolution},
++                yresolution => $options{info}{yresolution},
++            );
++            $self->{return}->enqueue(
++                {
++                    type => 'page',
++                    uuid => $options{uuid},
++                    page => $page->freeze
++                }
++            );
++        }
++        catch {
++            $logger->error("Caught error writing to $options{dir}: $_");
++            _thread_throw_error( $self, $options{uuid},
++                $options{page}{uuid},
++                'Open file', "Error: unable to write to $options{dir}." );
++        };
++    }
++
++    # only 1-bit Portable anymap is properly supported,
++    # so convert ANY pnm to png
++    else {
++        try {
++            my $page = Gscan2pdf::Page->new(
++                filename => $options{info}{path},
++                dir      => $options{dir},
++                format   => $options{info}{format},
++                width    => $options{info}{width},
++                height   => $options{info}{height},
++            );
++            $self->{return}->enqueue(
++                {
++                    type => 'page',
++                    uuid => $options{uuid},
++                    page => $page->to_png($paper_sizes)->freeze
++                }
++            );
++        }
++        catch {
++            $logger->error("Caught error writing to $options{dir}: $_");
++            _thread_throw_error( $self, $options{uuid},
++                $options{page}{uuid},
++                'Open file', "Error: unable to write to $options{dir}." );
++        };
++    }
+     $self->{return}->enqueue(
+         {
+             type    => 'finished',
+@@ -3726,25 +3714,23 @@ sub _add_page_to_pdf {
+     my $gfx = $page->gfx;
+     my ( $imgobj, $msg );
+     try {
+-        given ($format) {
+-            when ('png') {
+-                $imgobj = $pdf->image_png($filename);
+-            }
+-            when ('jpg') {
+-                $imgobj = $pdf->image_jpeg($filename);
+-            }
+-            when (/^p[bn]m$/xsm) {
+-                $imgobj = $pdf->image_pnm($filename);
+-            }
+-            when ('gif') {
+-                $imgobj = $pdf->image_gif($filename);
+-            }
+-            when ('tif') {
+-                $imgobj = $pdf->image_tiff($filename);
+-            }
+-            default {
+-                $msg = "Unknown format $format file $filename";
+-            }
++        if ( $format eq 'png' ) {
++            $imgobj = $pdf->image_png($filename);
++        }
++        elsif ( $format eq 'jpg' ) {
++            $imgobj = $pdf->image_jpeg($filename);
++        }
++        elsif ( $format =~ /^p[bn]m$/xsm ) {
++            $imgobj = $pdf->image_pnm($filename);
++        }
++        elsif ( $format eq 'gif' ) {
++            $imgobj = $pdf->image_gif($filename);
++        }
++        elsif ( $format eq 'tif' ) {
++            $imgobj = $pdf->image_tiff($filename);
++        }
++        else {
++            $msg = "Unknown format $format file $filename";
+         }
+     }
+     catch { $msg = $_ };
+diff --git a/lib/Gscan2pdf/Frontend/CLI.pm b/lib/Gscan2pdf/Frontend/CLI.pm
+index 4914806a..dc621685 100644
+--- a/lib/Gscan2pdf/Frontend/CLI.pm
++++ b/lib/Gscan2pdf/Frontend/CLI.pm
+@@ -2,8 +2,6 @@ package Gscan2pdf::Frontend::CLI;
+ 
+ use strict;
+ use warnings;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ 
+ use Locale::gettext 1.05;    # For translations
+ use Carp;
+@@ -166,107 +164,104 @@ sub scan_pages {
+ 
+ sub parse_scanimage_output {
+     my ( $line, $options ) = @_;
+-    given ($line) {
+ 
+-        # scanimage seems to produce negative progress percentages
+-        # in some circumstances
+-        when (/^Progress:[ ](-?\d*[.]\d*)%/xsm) {
+-            if ( defined $options->{running_callback} ) {
+-                $options->{running_callback}->( $1 / $_100 );
+-            }
++    # scanimage seems to produce negative progress percentages
++    # in some circumstances
++    if ( $line =~ /^Progress:[ ](-?\d*[.]\d*)%/xsm ) {
++        if ( defined $options->{running_callback} ) {
++            $options->{running_callback}->( $1 / $_100 );
+         }
+-        when (/^Scanning[ ](-?\d*|infinity)[ ]pages?/xsm) {
+-            my $num = $1 eq 'infinity' ? $INFINITE_DOCUMENTS : $1;
+-            if ( defined $options->{running_callback} ) {
+-                $options->{running_callback}
+-                  ->( 0, sprintf __('Scanning %i pages...'), $num );
+-            }
++    }
++    elsif ( $line =~ /^Scanning[ ](-?\d*|infinity)[ ]pages?/xsm ) {
++        my $num = $1 eq 'infinity' ? $INFINITE_DOCUMENTS : $1;
++        if ( defined $options->{running_callback} ) {
++            $options->{running_callback}
++              ->( 0, sprintf __('Scanning %i pages...'), $num );
+         }
+-        when (/^Scanning[ ]$page_no/xsm) {
+-            if ( defined $options->{running_callback} ) {
+-                $options->{running_callback}
+-                  ->( 0, sprintf __('Scanning page %i...'), $1 );
+-            }
++    }
++    elsif ( $line =~ /^Scanning[ ]$page_no/xsm ) {
++        if ( defined $options->{running_callback} ) {
++            $options->{running_callback}
++              ->( 0, sprintf __('Scanning page %i...'), $1 );
+         }
+-        when (/^Scanned[ ]$page_no [.][ ][(]scanner[ ]status[ ]=[ ](\d)[)]/xsm)
+-        {
+-            my ( $id, $return ) = ( $1, $2 );
+-            if ( $return == SANE_STATUS_EOF ) {
+-                my $timer = Glib::Timeout->add(
+-                    $_POLL_INTERVAL,
+-                    sub {
+-                        my $path =
+-                          defined( $options->{dir} )
+-                          ? File::Spec->catfile( $options->{dir}, "out$id.pnm" )
+-                          : "out$id.pnm";
+-                        if ( not -e $path ) {
+-                            return Glib::SOURCE_CONTINUE;
+-                        }
+-                        if ( defined $options->{new_page_callback} ) {
+-                            $options->{new_page_callback}->( $path, $id );
+-                        }
+-                        $options->{num_scans}++;
+-                        return Glib::SOURCE_REMOVE;
++    }
++    elsif ( $line =~ /^Scanned[ ]$page_no [.][ ][(]scanner[ ]status[ ]=[ ](\d)[)]/xsm)
++    {
++        my ( $id, $return ) = ( $1, $2 );
++        if ( $return == SANE_STATUS_EOF ) {
++            my $timer = Glib::Timeout->add(
++                $_POLL_INTERVAL,
++                sub {
++                    my $path =
++                      defined( $options->{dir} )
++                      ? File::Spec->catfile( $options->{dir}, "out$id.pnm" )
++                      : "out$id.pnm";
++                    if ( not -e $path ) {
++                        return Glib::SOURCE_CONTINUE;
+                     }
+-                );
+-            }
++                    if ( defined $options->{new_page_callback} ) {
++                        $options->{new_page_callback}->( $path, $id );
++                    }
++                    $options->{num_scans}++;
++                    return Glib::SOURCE_REMOVE;
++                }
++            );
+         }
+-        when ($mess_warmingup) {
+-            if ( defined $options->{running_callback} ) {
+-                $options->{running_callback}->( 0, __('Scanner warming up') );
+-            }
++    }
++    elsif ( $line =~ $mess_warmingup) {
++        if ( defined $options->{running_callback} ) {
++            $options->{running_callback}->( 0, __('Scanner warming up') );
+         }
+-        when (
++    }
++    elsif ( $line =~
+ /^$options->{frontend}:[ ]sane_start:[ ]Document[ ]feeder[ ]out[ ]of[ ]documents/xsm ## no critic (ProhibitComplexRegexes)
+-          )
++      )
++    {
++        if ( defined $options->{error_callback}
++            and $options->{num_scans} == 0 )
+         {
+-            if ( defined $options->{error_callback}
+-                and $options->{num_scans} == 0 )
+-            {
+-                $options->{error_callback}
+-                  ->( __('Document feeder out of documents') );
+-            }
++            $options->{error_callback}
++              ->( __('Document feeder out of documents') );
+         }
+-        when (
+-            $_self->{abort_scan} == TRUE
+-              and ( $line =~
++    }
++    elsif (
++        $_self->{abort_scan} == TRUE
++          and ( $line =~
+ qr{^$options->{frontend}:[ ]sane_start:[ ]Error[ ]during[ ]device[ ]I/O}xsm
+-                or $line =~ /^$options->{frontend}:[ ]received[ ]signal/xsm
+-                or $line =~ /^$options->{frontend}:[ ]aborting/xsm
+-                or $line =~
+-                /^$options->{frontend}:[ ]trying[ ]to[ ]stop[ ]scanner/xsm )
+-          )
+-        {
+-            ;
+-        }
+-        when (/^$options->{frontend}:[ ]rounded/xsm) {
+-            $logger->info( substr $line, 0, index( $line, "\n" ) + 1 );
+-        }
+-        when (/^Batch[ ]terminated,[ ]\d+[ ]pages?[ ]scanned/xsm) {
+-            $logger->info( substr $line, 0, index( $line, "\n" ) + 1 );
+-        }
+-        when (
+-            /^$options->{frontend}:[ ]sane_(?:start|read):[ ]Device[ ]busy/xsm)
+-        {
+-            if ( defined $options->{error_callback} ) {
+-                $options->{error_callback}->( __('Device busy') );
+-            }
++            or $line =~ /^$options->{frontend}:[ ]received[ ]signal/xsm
++            or $line =~ /^$options->{frontend}:[ ]aborting/xsm
++            or $line =~
++            /^$options->{frontend}:[ ]trying[ ]to[ ]stop[ ]scanner/xsm )
++      )
++    {
++        ;
++    }
++    elsif ( $line =~ /^$options->{frontend}:[ ]rounded/xsm ) {
++        $logger->info( substr $line, 0, index( $line, "\n" ) + 1 );
++    }
++    elsif ( $line =~ /^Batch[ ]terminated,[ ]\d+[ ]pages?[ ]scanned/xsm ) {
++        $logger->info( substr $line, 0, index( $line, "\n" ) + 1 );
++    }
++    elsif ( $line =~ /^$options->{frontend}:[ ]sane_(?:start|read):[ ]Device[ ]busy/xsm )
++    {
++        if ( defined $options->{error_callback} ) {
++            $options->{error_callback}->( __('Device busy') );
+         }
+-        when (
++    }
++    elsif ( $line =~
+ /^$options->{frontend}:[ ]sane_(?:start|read):[ ]Operation[ ]was[ ]cancelled/xsm
+-          )
+-        {
+-            if ( defined $options->{error_callback} ) {
+-                $options->{error_callback}->( __('Operation cancelled') );
+-            }
++      )
++    {
++        if ( defined $options->{error_callback} ) {
++            $options->{error_callback}->( __('Operation cancelled') );
+         }
+-        default {
+-            if ( defined $options->{error_callback} ) {
+-                $options->{error_callback}->(
+-                    __('Unknown message: ') . substr $line,
+-                    0, index $line, "\n"
+-                );
+-            }
++    }
++    else {
++        if ( defined $options->{error_callback} ) {
++            $options->{error_callback}->(
++                __('Unknown message: ') . substr $line,
++                0, index $line, "\n"
++            );
+         }
+     }
+     return;
+@@ -423,68 +418,66 @@ sub _scanadf {
+         started_callback => $options{started_callback},
+         err_callback     => sub {
+             my ($line) = @_;
+-            given ($line) {
+-                when ($mess_warmingup) {
+-                    if ( defined $options{running_callback} ) {
+-                        $options{running_callback}
+-                          ->( 0, __('Scanner warming up') );
+-                    }
++            if ( $line =~ $mess_warmingup ) {
++                if ( defined $options{running_callback} ) {
++                    $options{running_callback}
++                      ->( 0, __('Scanner warming up') );
+                 }
+-                when (/^Scanned[ ]document[ ]out(\d*)[.]pnm/xsm) {
+-                    $id = $1;
+-
+-                    # Timer will run until callback returns false
+-                    my $timer = Glib::Timeout->add(
+-                        $_POLL_INTERVAL,
+-                        sub {
+-                            my $path =
+-                              defined( $options{dir} )
+-                              ? File::Spec->catfile( $options{dir},
+-                                "out$id.pnm" )
+-                              : "out$id.pnm";
+-                            if ( not -e $path ) {
+-                                return Glib::SOURCE_CONTINUE;
+-                            }
+-                            if ( defined $options{new_page_callback} ) {
+-                                $options{new_page_callback}->( $path, $id );
+-                            }
+-                            return Glib::SOURCE_REMOVE;
++            }
++            elsif ( $line =~ /^Scanned[ ]document[ ]out(\d*)[.]pnm/xsm ) {
++                $id = $1;
++
++                # Timer will run until callback returns false
++                my $timer = Glib::Timeout->add(
++                    $_POLL_INTERVAL,
++                    sub {
++                        my $path =
++                          defined( $options{dir} )
++                          ? File::Spec->catfile( $options{dir},
++                            "out$id.pnm" )
++                          : "out$id.pnm";
++                        if ( not -e $path ) {
++                            return Glib::SOURCE_CONTINUE;
+                         }
+-                    );
++                        if ( defined $options{new_page_callback} ) {
++                            $options{new_page_callback}->( $path, $id );
++                        }
++                        return Glib::SOURCE_REMOVE;
++                    }
++                );
+ 
+-       # Prevent the Glib::Timeout from checking the size of the file when it is
+-       # about to be renamed
+-                    undef $size;
++   # Prevent the Glib::Timeout from checking the size of the file when it is
++   # about to be renamed
++                undef $size;
+ 
++            }
++            elsif ( $line =~ /^Scanned[ ]\d*[ ]pages/xsm ) {
++                ;
++            }
++            elsif ( $line =~ /^$options{frontend}:[ ]rounded/xsm ) {
++                $logger->info( substr $line, 0, index( $line, "\n" ) + 1 );
++            }
++            elsif ( $line =~ /^$options{frontend}:[ ]sane_start:[ ]Device[ ]busy/xsm ) {
++                if ( defined $options{error_callback} ) {
++                    $options{error_callback}->( __('Device busy') );
+                 }
+-                when (/^Scanned[ ]\d*[ ]pages/xsm) {
+-                    ;
+-                }
+-                when (/^$options{frontend}:[ ]rounded/xsm) {
+-                    $logger->info( substr $line, 0, index( $line, "\n" ) + 1 );
+-                }
+-                when (/^$options{frontend}:[ ]sane_start:[ ]Device[ ]busy/xsm) {
+-                    if ( defined $options{error_callback} ) {
+-                        $options{error_callback}->( __('Device busy') );
+-                    }
+-                    $running = FALSE;
+-                }
+-                when (
++                $running = FALSE;
++            }
++            elsif ( $line =~
+ /^$options{frontend}:[ ]sane_read:[ ]Operation[ ]was[ ]cancelled/xsm
+-                  )
+-                {
+-                    if ( defined $options{error_callback} ) {
+-                        $options{error_callback}->( __('Operation cancelled') );
+-                    }
+-                    $running = FALSE;
++              )
++            {
++                if ( defined $options{error_callback} ) {
++                    $options{error_callback}->( __('Operation cancelled') );
+                 }
+-                default {
+-                    if ( defined $options{error_callback} ) {
+-                        $options{error_callback}->(
+-                            __('Unknown message: ') . substr $line,
+-                            0, index $line, "\n"
+-                        );
+-                    }
++                $running = FALSE;
++            }
++            else {
++                if ( defined $options{error_callback} ) {
++                    $options{error_callback}->(
++                        __('Unknown message: ') . substr $line,
++                        0, index $line, "\n"
++                    );
+                 }
+             }
+         },
+diff --git a/lib/Gscan2pdf/Frontend/Image_Sane.pm b/lib/Gscan2pdf/Frontend/Image_Sane.pm
+index 4a9c85ce..54a4274f 100644
+--- a/lib/Gscan2pdf/Frontend/Image_Sane.pm
++++ b/lib/Gscan2pdf/Frontend/Image_Sane.pm
+@@ -2,8 +2,6 @@ package Gscan2pdf::Frontend::Image_Sane;
+ 
+ use strict;
+ use warnings;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ 
+ use threads;
+ use threads::shared;
+@@ -441,41 +439,41 @@ sub _thread_main {
+         # Signal the sentinel that the request was started.
+         ${ $request->{sentinel} }++;
+ 
+-        given ( $request->{action} ) {
+-            when ('quit') { last }
+-            when ('get-devices') {
+-                _thread_get_devices( $self, $request->{uuid} )
+-            }
+-            when ('open') {
+-                _thread_open_device( $self, $request->{uuid},
+-                    $request->{device_name} )
+-            }
+-            when ('close') {
+-                if ( defined( $self->{device_handle} ) ) {
+-                    $logger->debug("closing device '$self->{device_name}'");
+-                    undef $self->{device_handle};
+-                }
+-                else {
+-                    $logger->debug(
+-                        'Ignoring close_device() call - no device open.');
+-                }
+-            }
+-            when ('get-options') {
+-                _thread_get_options( $self, $request->{uuid} )
+-            }
+-            when ('set-option') {
+-                _thread_set_option( $self, $request->{uuid}, $request->{index},
+-                    $request->{value} )
+-            }
+-            when ('scan-page') {
+-                _thread_scan_page( $self, $request->{uuid}, $request->{path} )
++        if ( $request->{action} eq 'quit' ) { last }
++        elsif ( $request->{action} eq 'get-devices' ) {
++            _thread_get_devices( $self, $request->{uuid} )
++        }
++        elsif ( $request->{action} eq 'open' ) {
++            _thread_open_device( $self, $request->{uuid},
++                $request->{device_name} )
++        }
++        elsif ( $request->{action} eq 'close' ) {
++            if ( defined( $self->{device_handle} ) ) {
++                $logger->debug("closing device '$self->{device_name}'");
++                undef $self->{device_handle};
+             }
+-            when ('cancel') { _thread_cancel( $self, $request->{uuid} ) }
+-            default {
+-                $logger->info("Ignoring unknown request $_");
+-                next;
++            else {
++                $logger->debug(
++                    'Ignoring close_device() call - no device open.');
+             }
+         }
++        elsif ( $request->{action} eq 'get-options' ) {
++            _thread_get_options( $self, $request->{uuid} )
++        }
++        elsif ( $request->{action} eq 'set-option' ) {
++            _thread_set_option( $self, $request->{uuid}, $request->{index},
++                $request->{value} )
++        }
++        elsif ( $request->{action} eq 'scan-page' ) {
++            _thread_scan_page( $self, $request->{uuid}, $request->{path} )
++        }
++        elsif ( $request->{action} eq 'cancel') {
++            _thread_cancel( $self, $request->{uuid} )
++        }
++        else {
++            $logger->info("Ignoring unknown request $request->{action}");
++            next;
++        }
+ 
+         # Signal the sentinel that the request was completed.
+         ${ $request->{sentinel} }++;
+diff --git a/lib/Gscan2pdf/Page.pm b/lib/Gscan2pdf/Page.pm
+index d3e9e8ad..45f44d42 100644
+--- a/lib/Gscan2pdf/Page.pm
++++ b/lib/Gscan2pdf/Page.pm
+@@ -3,8 +3,6 @@ package Gscan2pdf::Page;
+ use 5.008005;
+ use strict;
+ use warnings;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use Carp;
+ use Glib qw(TRUE FALSE);             # To get TRUE and FALSE
+ use File::Copy;
+diff --git a/lib/Gscan2pdf/Scanner/Options.pm b/lib/Gscan2pdf/Scanner/Options.pm
+index f031971e..771818d3 100644
+--- a/lib/Gscan2pdf/Scanner/Options.pm
++++ b/lib/Gscan2pdf/Scanner/Options.pm
+@@ -2,11 +2,9 @@ package Gscan2pdf::Scanner::Options;
+ 
+ use strict;
+ use warnings;
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use Carp;
+ use Glib qw(TRUE FALSE);    # To get TRUE and FALSE
+ use Image::Sane ':all';     # For enums
+-use feature 'switch';
+ use Readonly;
+ Readonly my $MAX_VALUES  => 255;
+ Readonly my $EMPTY_ARRAY => -1;
+@@ -238,31 +236,27 @@ sub flatbed_selected {
+ sub within_tolerance {
+     my ( $option, $value, $tolerance ) = @_;
+     if ( not defined $tolerance ) { $tolerance = 0 }
+-    given ( $option->{constraint_type} ) {
+-        when (SANE_CONSTRAINT_RANGE) {
+-            if ( defined $option->{constraint}{quant} ) {
+-                return (
+-                    abs( $value - $option->{val} ) <=
+-                      $option->{constraint}{quant} / 2 + $tolerance );
+-            }
+-        }
+-        when (SANE_CONSTRAINT_STRING_LIST) {
+-            return ( $value eq $option->{val} );
+-        }
+-        when (SANE_CONSTRAINT_WORD_LIST) {
+-            return ( $value == $option->{val} );
++    if ( $option->{constraint_type} == SANE_CONSTRAINT_RANGE ) {
++        if ( defined $option->{constraint}{quant} ) {
++            return (
++                abs( $value - $option->{val} ) <=
++                  $option->{constraint}{quant} / 2 + $tolerance );
+         }
+     }
+-    given ( $option->{type} ) {
+-        when (SANE_TYPE_BOOL) {
+-            return not( $value xor $option->{val} );
+-        }
+-        when (SANE_TYPE_STRING) {
+-            return ( $value eq $option->{val} );
+-        }
+-        when ( $_ == SANE_TYPE_INT or $_ == SANE_TYPE_FIXED ) {
+-            return ( abs( $value - $option->{val} ) <= $tolerance );
+-        }
++    elsif ( $option->{constraint_type} == SANE_CONSTRAINT_STRING_LIST ) {
++        return ( $value eq $option->{val} );
++    }
++    elsif ( $option->{constraint_type} == SANE_CONSTRAINT_WORD_LIST ) {
++        return ( $value == $option->{val} );
++    }
++    if ( $option->{type} == SANE_TYPE_BOOL ) {
++        return not( $value xor $option->{val} );
++    }
++    elsif ( $option->{type} == SANE_TYPE_STRING ) {
++        return ( $value eq $option->{val} );
++    }
++    elsif ( $option->{type} == SANE_TYPE_INT or $option->{type} == SANE_TYPE_FIXED ) {
++        return ( abs( $value - $option->{val} ) <= $tolerance );
+     }
+     return;
+ }
+@@ -386,25 +380,23 @@ sub _parse_scanimage_output {
+ 
+             $option{desc} = $desc;
+ 
+-            given ( $option{name} ) {
+-                when ('l') {
+-                    $option{name}  = SANE_NAME_SCAN_TL_X;
+-                    $option{title} = 'Top-left x';
+-                }
+-                when ('t') {
+-                    $option{name}  = SANE_NAME_SCAN_TL_Y;
+-                    $option{title} = 'Top-left y';
+-                }
+-                when ('x') {
+-                    $option{name}  = SANE_NAME_SCAN_BR_X;
+-                    $option{title} = 'Bottom-right x';
+-                    $option{desc}  = 'Bottom-right x position of scan area.';
+-                }
+-                when ('y') {
+-                    $option{name}  = SANE_NAME_SCAN_BR_Y;
+-                    $option{title} = 'Bottom-right y';
+-                    $option{desc}  = 'Bottom-right y position of scan area.';
+-                }
++            if ( $option{name} eq 'l' ) {
++                $option{name}  = SANE_NAME_SCAN_TL_X;
++                $option{title} = 'Top-left x';
++            }
++            elsif ( $option{name} eq 't' ) {
++                $option{name}  = SANE_NAME_SCAN_TL_Y;
++                $option{title} = 'Top-left y';
++            }
++            elsif ( $option{name} eq 'x' ) {
++                $option{name}  = SANE_NAME_SCAN_BR_X;
++                $option{title} = 'Bottom-right x';
++                $option{desc}  = 'Bottom-right x position of scan area.';
++            }
++            elsif ( $option{name} eq 'y' ) {
++                $option{name}  = SANE_NAME_SCAN_BR_Y;
++                $option{title} = 'Bottom-right y';
++                $option{desc}  = 'Bottom-right y position of scan area.';
+             }
+         }
+         else {
+@@ -533,25 +525,23 @@ sub parse_list_constraint {
+ 
+ sub unit2enum {
+     my ($unit) = @_;
+-    given ($unit) {
+-        when ('pel') {
+-            return SANE_UNIT_PIXEL;
+-        }
+-        when ('bit') {
+-            return SANE_UNIT_BIT;
+-        }
+-        when ('mm') {
+-            return SANE_UNIT_MM;
+-        }
+-        when ('dpi') {
+-            return SANE_UNIT_DPI;
+-        }
+-        when (q{%}) {
+-            return SANE_UNIT_PERCENT;
+-        }
+-        when ('us') {
+-            return SANE_UNIT_MICROSECOND;
+-        }
++    if ( $unit eq 'pel' ) {
++        return SANE_UNIT_PIXEL;
++    }
++    elsif ( $unit eq 'bit' ) {
++        return SANE_UNIT_BIT;
++    }
++    elsif ( $unit eq 'mm' ) {
++        return SANE_UNIT_MM;
++    }
++    elsif ( $unit eq 'dpi' ) {
++        return SANE_UNIT_DPI;
++    }
++    elsif ( $unit eq q{%} ) {
++        return SANE_UNIT_PERCENT;
++    }
++    elsif ( $unit eq 'us' ) {
++        return SANE_UNIT_MICROSECOND;
+     }
+     return;
+ }
+diff --git a/lib/Gscan2pdf/Scanner/Profile.pm b/lib/Gscan2pdf/Scanner/Profile.pm
+index 51090680..375e0f5e 100644
+--- a/lib/Gscan2pdf/Scanner/Profile.pm
++++ b/lib/Gscan2pdf/Scanner/Profile.pm
+@@ -2,8 +2,6 @@ package Gscan2pdf::Scanner::Profile;
+ 
+ use strict;
+ use warnings;
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+-use feature 'switch';
+ use Carp;
+ use Glib qw(TRUE FALSE);    # To get TRUE and FALSE
+ use Image::Sane ':all';     # For enums
+@@ -184,32 +182,30 @@ sub map_from_cli {
+     my $iter   = $self->each_backend_option;
+     while ( my $i = $iter->() ) {
+         my ( $name, $val ) = $self->get_backend_option_by_index($i);
+-        given ($name) {
+-            when ('l') {
+-                $new->add_backend_option( SANE_NAME_SCAN_TL_X, $val );
+-            }
+-            when ('t') {
+-                $new->add_backend_option( SANE_NAME_SCAN_TL_Y, $val );
+-            }
+-            when ('x') {
+-                my $l = $self->get_option_by_name('l');
+-                if ( not defined $l ) {
+-                    $l = $self->get_option_by_name(SANE_NAME_SCAN_TL_X);
+-                }
+-                if ( defined $l ) { $val += $l }
+-                $new->add_backend_option( SANE_NAME_SCAN_BR_X, $val );
+-            }
+-            when ('y') {
+-                my $t = $self->get_option_by_name('t');
+-                if ( not defined $t ) {
+-                    $t = $self->get_option_by_name(SANE_NAME_SCAN_TL_Y);
+-                }
+-                if ( defined $t ) { $val += $t }
+-                $new->add_backend_option( SANE_NAME_SCAN_BR_Y, $val );
++        if ( $name eq 'l' ) {
++            $new->add_backend_option( SANE_NAME_SCAN_TL_X, $val );
++        }
++        elsif ( $name eq 't' ) {
++            $new->add_backend_option( SANE_NAME_SCAN_TL_Y, $val );
++        }
++        elsif ( $name eq 'x' ) {
++            my $l = $self->get_option_by_name('l');
++            if ( not defined $l ) {
++                $l = $self->get_option_by_name(SANE_NAME_SCAN_TL_X);
+             }
+-            default {
+-                $new->add_backend_option( $name, $val );
++            if ( defined $l ) { $val += $l }
++            $new->add_backend_option( SANE_NAME_SCAN_BR_X, $val );
++        }
++        elsif ( $name eq 'y' ) {
++            my $t = $self->get_option_by_name('t');
++            if ( not defined $t ) {
++                $t = $self->get_option_by_name(SANE_NAME_SCAN_TL_Y);
+             }
++            if ( defined $t ) { $val += $t }
++            $new->add_backend_option( SANE_NAME_SCAN_BR_Y, $val );
++        }
++        else {
++            $new->add_backend_option( $name, $val );
+         }
+     }
+     if ( defined $self->{data}{frontend} ) {
+@@ -226,40 +222,38 @@ sub map_to_cli {
+     my $iter = $self->each_backend_option;
+     while ( my $i = $iter->() ) {
+         my ( $name, $val ) = $self->get_backend_option_by_index($i);
+-        given ($name) {
+-            when (SANE_NAME_SCAN_TL_X) {
+-                $new->add_backend_option( 'l', $val );
+-            }
+-            when (SANE_NAME_SCAN_TL_Y) {
+-                $new->add_backend_option( 't', $val );
+-            }
+-            when (SANE_NAME_SCAN_BR_X) {
+-                my $l = $self->get_option_by_name('l');
+-                if ( not defined $l ) {
+-                    $l = $self->get_option_by_name(SANE_NAME_SCAN_TL_X);
+-                }
+-                if ( defined $l ) { $val -= $l }
+-                $new->add_backend_option( 'x', $val );
++        if ( $name eq SANE_NAME_SCAN_TL_X ) {
++            $new->add_backend_option( 'l', $val );
++        }
++        elsif ( $name eq SANE_NAME_SCAN_TL_Y ) {
++            $new->add_backend_option( 't', $val );
++        }
++        elsif ( $name eq SANE_NAME_SCAN_BR_X ) {
++            my $l = $self->get_option_by_name('l');
++            if ( not defined $l ) {
++                $l = $self->get_option_by_name(SANE_NAME_SCAN_TL_X);
+             }
+-            when (SANE_NAME_SCAN_BR_Y) {
+-                my $t = $self->get_option_by_name('t');
+-                if ( not defined $t ) {
+-                    $t = $self->get_option_by_name(SANE_NAME_SCAN_TL_Y);
+-                }
+-                if ( defined $t ) { $val -= $t }
+-                $new->add_backend_option( 'y', $val );
++            if ( defined $l ) { $val -= $l }
++            $new->add_backend_option( 'x', $val );
++        }
++        elsif ( $name eq SANE_NAME_SCAN_BR_Y ) {
++            my $t = $self->get_option_by_name('t');
++            if ( not defined $t ) {
++                $t = $self->get_option_by_name(SANE_NAME_SCAN_TL_Y);
+             }
+-            default {
+-                if ( defined $options ) {
+-                    my $opt = $options->by_name($name);
+-                    if ( defined( $opt->{type} )
+-                        and $opt->{type} == SANE_TYPE_BOOL )
+-                    {
+-                        $val = $val ? 'yes' : 'no';
+-                    }
++            if ( defined $t ) { $val -= $t }
++            $new->add_backend_option( 'y', $val );
++        }
++        else {
++            if ( defined $options ) {
++                my $opt = $options->by_name($name);
++                if ( defined( $opt->{type} )
++                    and $opt->{type} == SANE_TYPE_BOOL )
++                {
++                    $val = $val ? 'yes' : 'no';
+                 }
+-                $new->add_backend_option( $name, $val );
+             }
++            $new->add_backend_option( $name, $val );
+         }
+     }
+     if ( defined $self->{data}{frontend} ) {
+@@ -291,8 +285,8 @@ sub _synonyms {
+         [ scalar(SANE_NAME_SCAN_BR_Y),   'y' ],
+     );
+     for my $synonym (@synonyms) {
+-        given ($name) {
+-            when ( @{$synonym} ) {
++        for my $variant (@{$synonym}) {
++            if ( $name eq $variant ) {
+                 return $synonym;
+             }
+         }
+diff --git a/lib/Gscan2pdf/Unpaper.pm b/lib/Gscan2pdf/Unpaper.pm
+index 1a39c2dc..ca2e1779 100644
+--- a/lib/Gscan2pdf/Unpaper.pm
++++ b/lib/Gscan2pdf/Unpaper.pm
+@@ -3,8 +3,6 @@ package Gscan2pdf::Unpaper;
+ use 5.008005;
+ use strict;
+ use warnings;
+-use feature 'switch';
+-no if $] >= 5.018, warnings => 'experimental::smartmatch';
+ use Carp;
+ use Glib qw(TRUE FALSE);    # To get TRUE and FALSE
+ use Gtk3;
+@@ -429,86 +427,84 @@ sub add_widget {
+         $default->{$option} = $hashref->{$option}{default};
+     }
+ 
+-    given ( $hashref->{$option}{type} ) {
+-        when ('ComboBox') {
+-            my $hbox = Gtk3::HBox->new;
+-            $vbox->pack_start( $hbox, TRUE, TRUE, 0 );
+-            my $label = Gtk3::Label->new( $hashref->{$option}{string} );
+-            $hbox->pack_start( $label, FALSE, FALSE, 0 );
+-            $widget = Gtk3::ComboBoxText->new;
+-            $hbox->pack_end( $widget, FALSE, FALSE, 0 );
+-
+-            # Add text and tooltips
+-            my @tooltip;
+-            my $i = 0;
+-            for ( keys %{ $hashref->{$option}{options} } ) {
+-                $widget->append_text(
+-                    $hashref->{$option}{options}{$_}{string} );
+-                push @tooltip, $hashref->{$option}{options}{$_}{tooltip};
+-                $hashref->{$option}{options}{$_}{index} = $i++;
+-            }
+-            $widget->signal_connect(
+-                changed => sub {
+-                    if ( defined $tooltip[ $widget->get_active ] ) {
+-                        $widget->set_tooltip_text(
+-                            $tooltip[ $widget->get_active ] );
+-                    }
+-                }
+-            );
++    if ( $hashref->{$option}{type} eq 'ComboBox' ) {
++        my $hbox = Gtk3::HBox->new;
++        $vbox->pack_start( $hbox, TRUE, TRUE, 0 );
++        my $label = Gtk3::Label->new( $hashref->{$option}{string} );
++        $hbox->pack_start( $label, FALSE, FALSE, 0 );
++        $widget = Gtk3::ComboBoxText->new;
++        $hbox->pack_end( $widget, FALSE, FALSE, 0 );
++
++        # Add text and tooltips
++        my @tooltip;
++        my $i = 0;
++        for ( keys %{ $hashref->{$option}{options} } ) {
++            $widget->append_text(
++                $hashref->{$option}{options}{$_}{string} );
++            push @tooltip, $hashref->{$option}{options}{$_}{tooltip};
++            $hashref->{$option}{options}{$_}{index} = $i++;
+         }
++        $widget->signal_connect(
++            changed => sub {
++                if ( defined $tooltip[ $widget->get_active ] ) {
++                    $widget->set_tooltip_text(
++                        $tooltip[ $widget->get_active ] );
++                }
++            }
++        );
++    }
+ 
+-        when ('CheckButton') {
+-            $widget = Gtk3::CheckButton->new( $hashref->{$option}{string} );
+-            $widget->set_tooltip_text( $hashref->{$option}{tooltip} );
+-            $vbox->pack_start( $widget, TRUE, TRUE, 0 );
+-        }
++    elsif ( $hashref->{$option}{type} eq 'CheckButton' ) {
++        $widget = Gtk3::CheckButton->new( $hashref->{$option}{string} );
++        $widget->set_tooltip_text( $hashref->{$option}{tooltip} );
++        $vbox->pack_start( $widget, TRUE, TRUE, 0 );
++    }
+ 
+-        when ('CheckButtonGroup') {
+-            $widget = Gtk3::Frame->new( $hashref->{$option}{string} );
+-            $vbox->pack_start( $widget, TRUE, TRUE, 0 );
+-            my $vboxf = Gtk3::VBox->new;
+-            $vboxf->set_border_width( $vbox->get('border-width') );
+-            $widget->add($vboxf);
+-            $widget->set_tooltip_text( $hashref->{$option}{tooltip} );
+-            for ( keys %{ $hashref->{$option}{options} } ) {
+-                my $button =
+-                  $self->add_widget( $vboxf, $hashref->{$option}{options}, $_ );
+-            }
++    elsif ( $hashref->{$option}{type} eq 'CheckButtonGroup' ) {
++        $widget = Gtk3::Frame->new( $hashref->{$option}{string} );
++        $vbox->pack_start( $widget, TRUE, TRUE, 0 );
++        my $vboxf = Gtk3::VBox->new;
++        $vboxf->set_border_width( $vbox->get('border-width') );
++        $widget->add($vboxf);
++        $widget->set_tooltip_text( $hashref->{$option}{tooltip} );
++        for ( keys %{ $hashref->{$option}{options} } ) {
++            my $button =
++              $self->add_widget( $vboxf, $hashref->{$option}{options}, $_ );
+         }
++    }
+ 
+-        when ('SpinButton') {
+-            my $hbox = Gtk3::HBox->new;
+-            $vbox->pack_start( $hbox, TRUE, TRUE, 0 );
+-            my $label = Gtk3::Label->new( $hashref->{$option}{string} );
+-            $hbox->pack_start( $label, FALSE, FALSE, 0 );
+-            $widget = Gtk3::SpinButton->new_with_range(
+-                $hashref->{$option}{min},
+-                $hashref->{$option}{max},
+-                $hashref->{$option}{step}
+-            );
+-            $hbox->pack_end( $widget, FALSE, FALSE, 0 );
+-            $widget->set_tooltip_text( $hashref->{$option}{tooltip} );
+-            if ( defined $default->{$option} ) {
+-                $widget->set_value( $default->{$option} );
+-            }
++    elsif ( $hashref->{$option}{type} eq 'SpinButton' ) {
++        my $hbox = Gtk3::HBox->new;
++        $vbox->pack_start( $hbox, TRUE, TRUE, 0 );
++        my $label = Gtk3::Label->new( $hashref->{$option}{string} );
++        $hbox->pack_start( $label, FALSE, FALSE, 0 );
++        $widget = Gtk3::SpinButton->new_with_range(
++            $hashref->{$option}{min},
++            $hashref->{$option}{max},
++            $hashref->{$option}{step}
++        );
++        $hbox->pack_end( $widget, FALSE, FALSE, 0 );
++        $widget->set_tooltip_text( $hashref->{$option}{tooltip} );
++        if ( defined $default->{$option} ) {
++            $widget->set_value( $default->{$option} );
+         }
++    }
+ 
+-        when ('SpinButtonGroup') {
+-            $widget = Gtk3::Frame->new( $hashref->{$option}{string} );
+-            $vbox->pack_start( $widget, TRUE, TRUE, 0 );
+-            my $vboxf = Gtk3::VBox->new;
+-            $vboxf->set_border_width( $vbox->get('border-width') );
+-            $widget->add($vboxf);
+-            for (
+-                sort {
+-                    $hashref->{$option}{options}{$a}{order}
+-                      <=> $hashref->{$option}{options}{$b}{order}
+-                } keys %{ $hashref->{$option}{options} }
+-              )
+-            {
+-                my $button =
+-                  $self->add_widget( $vboxf, $hashref->{$option}{options}, $_ );
+-            }
++    elsif ( $hashref->{$option}{type} eq 'SpinButtonGroup' ) {
++        $widget = Gtk3::Frame->new( $hashref->{$option}{string} );
++        $vbox->pack_start( $widget, TRUE, TRUE, 0 );
++        my $vboxf = Gtk3::VBox->new;
++        $vboxf->set_border_width( $vbox->get('border-width') );
++        $widget->add($vboxf);
++        for (
++            sort {
++                $hashref->{$option}{options}{$a}{order}
++                  <=> $hashref->{$option}{options}{$b}{order}
++            } keys %{ $hashref->{$option}{options} }
++          )
++        {
++            my $button =
++              $self->add_widget( $vboxf, $hashref->{$option}{options}, $_ );
+         }
+     }
+ 
+@@ -522,40 +518,37 @@ sub get_option {
+     my $default = $self->{default};
+ 
+     if ( defined $hashref->{$option}{widget} ) {
+-
+-        given ( $hashref->{$option}{type} ) {
+-            when ('ComboBox') {
+-                my $i = $hashref->{$option}{widget}->get_active;
+-                for ( keys %{ $hashref->{$option}{options} } ) {
+-                    if ( $hashref->{$option}{options}{$_}{index} == $i ) {
+-                        return $_;
+-                    }
++        if ( $hashref->{$option}{type} eq 'ComboBox' ) {
++            my $i = $hashref->{$option}{widget}->get_active;
++            for ( keys %{ $hashref->{$option}{options} } ) {
++                if ( $hashref->{$option}{options}{$_}{index} == $i ) {
++                    return $_;
+                 }
+             }
+-            when ('CheckButton') {
+-                return $hashref->{$option}{widget}->get_active;
+-            }
+-            when ('SpinButton') {
+-                return $hashref->{$option}{widget}->get_value;
+-            }
+-            when ('CheckButtonGroup') {
+-                my @items;
+-                for ( sort keys %{ $hashref->{$option}{options} } ) {
+-                    if ( $hashref->{$option}{options}{$_}{widget}->get_active )
+-                    {
+-                        push @items, $_;
+-                    }
++        }
++        elsif ( $hashref->{$option}{type} eq 'CheckButton' ) {
++            return $hashref->{$option}{widget}->get_active;
++        }
++        elsif ( $hashref->{$option}{type} eq 'SpinButton' ) {
++            return $hashref->{$option}{widget}->get_value;
++        }
++        elsif ( $hashref->{$option}{type} eq 'CheckButtonGroup' ) {
++            my @items;
++            for ( sort keys %{ $hashref->{$option}{options} } ) {
++                if ( $hashref->{$option}{options}{$_}{widget}->get_active )
++                {
++                    push @items, $_;
+                 }
+-                if (@items) { return join $COMMA, @items }
+             }
+-            when ('SpinButtonGroup') {
+-                my @items;
+-                for ( keys %{ $hashref->{$option}{options} } ) {
+-                    push @items,
+-                      $hashref->{$option}{options}{$_}{widget}->get_value;
+-                }
+-                if (@items) { return join $COMMA, @items }
++            if (@items) { return join $COMMA, @items }
++        }
++        elsif ( $hashref->{$option}{type} eq 'SpinButtonGroup' ) {
++            my @items;
++            for ( keys %{ $hashref->{$option}{options} } ) {
++                push @items,
++                  $hashref->{$option}{options}{$_}{widget}->get_value;
+             }
++            if (@items) { return join $COMMA, @items }
+         }
+     }
+     elsif ( defined $default->{$option} ) { return $default->{$option} }
+@@ -583,50 +576,48 @@ sub set_options {
+ 
+     for my $option ( keys %{$options} ) {
+         if ( defined $hashref->{$option}{widget} ) {
+-            given ( $hashref->{$option}{type} ) {
+-                when ('ComboBox') {
+-                    my $i = $hashref->{$option}{options}{ $options->{$option} }
+-                      {index};
+-                    if ( defined $i ) {
+-                        $hashref->{$option}{widget}->set_active($i);
+-                    }
++            if ( $hashref->{$option}{type} eq 'ComboBox' ) {
++                my $i = $hashref->{$option}{options}{ $options->{$option} }
++                  {index};
++                if ( defined $i ) {
++                    $hashref->{$option}{widget}->set_active($i);
+                 }
+-                when ('CheckButton') {
+-                    $hashref->{$option}{widget}
+-                      ->set_active( $options->{$option} );
+-                }
+-                when ('CheckButtonGroup') {
+-                    my %default;
+-                    if ( defined $options->{$option} ) {
+-                        for ( split /,/sm, $options->{$option} ) {
+-                            $default{$_} = TRUE;
+-                        }
+-                    }
+-                    for ( keys %{ $hashref->{$option}{options} } ) {
+-                        $hashref->{$option}{options}{$_}{widget}
+-                          ->set_active( defined $default{$_} );
++            }
++            elsif ( $hashref->{$option}{type} eq 'CheckButton' ) {
++                $hashref->{$option}{widget}
++                  ->set_active( $options->{$option} );
++            }
++            elsif ( $hashref->{$option}{type} eq 'CheckButtonGroup' ) {
++                my %default;
++                if ( defined $options->{$option} ) {
++                    for ( split /,/sm, $options->{$option} ) {
++                        $default{$_} = TRUE;
+                     }
+                 }
+-                when ('SpinButton') {
+-                    $hashref->{$option}{widget}
+-                      ->set_value( $options->{$option} );
++                for ( keys %{ $hashref->{$option}{options} } ) {
++                    $hashref->{$option}{options}{$_}{widget}
++                      ->set_active( defined $default{$_} );
+                 }
+-                when ('SpinButtonGroup') {
+-                    my @default;
+-                    if ( defined $options->{$option} ) {
+-                        @default = split /,/sm, $options->{$option};
+-                    }
+-                    for (
+-                        sort {
+-                            $hashref->{$option}{options}{$a}{order}
+-                              <=> $hashref->{$option}{options}{$b}{order}
+-                        } keys %{ $hashref->{$option}{options} }
+-                      )
+-                    {
+-                        if (@default) {
+-                            $hashref->{$option}{options}{$_}{widget}
+-                              ->set_value( shift @default );
+-                        }
++            }
++            elsif ( $hashref->{$option}{type} eq 'SpinButton' ) {
++                $hashref->{$option}{widget}
++                  ->set_value( $options->{$option} );
++            }
++            elsif ( $hashref->{$option}{type} eq 'SpinButtonGroup' ) {
++                my @default;
++                if ( defined $options->{$option} ) {
++                    @default = split /,/sm, $options->{$option};
++                }
++                for (
++                    sort {
++                        $hashref->{$option}{options}{$a}{order}
++                          <=> $hashref->{$option}{options}{$b}{order}
++                    } keys %{ $hashref->{$option}{options} }
++                  )
++                {
++                    if (@default) {
++                        $hashref->{$option}{options}{$_}{widget}
++                          ->set_value( shift @default );
+                     }
+                 }
+             }
+-- 
+2.41.0
+

@@ -2,7 +2,7 @@
   # libs
   librsvg, sane-backends, sane-frontends,
   # runtime dependencies
-  imagemagick, libtiff, djvulibre, poppler_utils, ghostscript, unpaper, pdftk,
+  imagemagick, libtiff_4_5, djvulibre, poppler_utils, ghostscript, unpaper, pdftk,
   # test dependencies
   xvfb-run, liberation_ttf, file, tesseract }:
 
@@ -18,6 +18,13 @@ perlPackages.buildPerlPackage rec {
   };
 
   nativeBuildInputs = [ wrapGAppsHook ];
+
+  patches = [
+    # fixes warnings during tests. See https://sourceforge.net/p/gscan2pdf/bugs/421
+    ./0001-Remove-given-and-when-keywords-and-operator.patch
+    # fixes an error with utf8 file names. See https://sourceforge.net/p/gscan2pdf/bugs/400
+    ./image-utf8-fix.patch
+    ];
 
   buildInputs =
     [ librsvg sane-backends sane-frontends ] ++
@@ -71,7 +78,7 @@ perlPackages.buildPerlPackage rec {
     wrapProgram "$out/bin/gscan2pdf" \
       --prefix PATH : "${sane-backends}/bin" \
       --prefix PATH : "${imagemagick}/bin" \
-      --prefix PATH : "${libtiff}/bin" \
+      --prefix PATH : "${libtiff_4_5}/bin" \
       --prefix PATH : "${djvulibre}/bin" \
       --prefix PATH : "${poppler_utils}/bin" \
       --prefix PATH : "${ghostscript}/bin" \
@@ -87,7 +94,7 @@ perlPackages.buildPerlPackage rec {
 
   nativeCheckInputs = [
     imagemagick
-    libtiff
+    libtiff_4_5 # needs older libtiff version. See commit f57a4b0a for more infos
     djvulibre
     poppler_utils
     ghostscript
@@ -129,12 +136,6 @@ perlPackages.buildPerlPackage rec {
     # t/0601_Dialog_Scan.t                        (Wstat: 139 Tests: 14 Failed: 0)
     #   Non-zero wait status: 139
     rm t/0601_Dialog_Scan.t
-
-    # Disable a test which failed due to convert returning an exit value of 1
-    # convert: negative or zero image size `/build/KL5kTVnNCi/YfgegFM53e.pnm' @ error/resize.c/ResizeImage/3743.
-    # *** unhandled exception in callback:
-    # ***   "convert" unexpectedly returned exit value 1 at t/357_unpaper_rtl.t line 63.
-    rm t/357_unpaper_rtl.t
 
     xvfb-run -s '-screen 0 800x600x24' \
       make test

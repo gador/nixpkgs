@@ -11348,6 +11348,9 @@ with self; {
     buildInputs = [ BotTrainingMegaHAL BotTrainingStarCraft DataSection FileSlurp PodSection TestException TestExpect TestOutput TestScript TestScriptRun ];
     propagatedBuildInputs = [ ClassLoad DBDSQLite DataDump DirSelf FileCountLines GetoptLongDescriptive IOInteractive IPCSystemSimple ListMoreUtils Moose MooseXGetopt MooseXStrictConstructor MooseXTypes RegexpCommon TermSk namespaceclean ];
     nativeBuildInputs = lib.optional stdenv.isDarwin shortenPerlShebang;
+    patches = [
+      ../development/perl-modules/Hailo-fix-test-gld.patch
+    ];
     postPatch = ''
       patchShebangs bin
     '';
@@ -16578,10 +16581,10 @@ with self; {
 
   Mojolicious = buildPerlPackage {
     pname = "Mojolicious";
-    version = "9.34";
+    version = "9.35";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/S/SR/SRI/Mojolicious-9.34.tar.gz";
-      hash = "sha256-UGnWjk4titZj21iFm0/sDOeasTTZ5YBVqq8/DzpzosY=";
+      url = "mirror://cpan/authors/id/S/SR/SRI/Mojolicious-9.35.tar.gz";
+      hash = "sha256-akpEbuB/ynxtty9dgXVA1oMwCcuN58zkxvskoV7n1Gs=";
     };
     meta = {
       description = "Real-time web framework";

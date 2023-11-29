@@ -1,4 +1,4 @@
-{ lib, fetchurl, perlPackages, wrapGAppsHook,
+{ lib, fetchurl, perlPackages, wrapGAppsHook, fetchpatch,
   # libs
   librsvg, sane-backends, sane-frontends,
   # runtime dependencies
@@ -17,14 +17,18 @@ perlPackages.buildPerlPackage rec {
     hash = "sha256-NGz6DUa7TdChpgwmD9pcGdvYr3R+Ft3jPPSJpybCW4Q=";
   };
 
-  nativeBuildInputs = [ wrapGAppsHook ];
-
   patches = [
     # fixes warnings during tests. See https://sourceforge.net/p/gscan2pdf/bugs/421
-    ./0001-Remove-given-and-when-keywords-and-operator.patch
+    (fetchpatch {
+      name = "0001-Remove-given-and-when-keywords-and-operator.patch";
+      url = "https://sourceforge.net/p/gscan2pdf/bugs/_discuss/thread/602a7cedfd/1ea4/attachment/0001-Remove-given-and-when-keywords-and-operator.patch";
+      hash = "sha256-JtrHUkfEKnDhWfEVdIdYVlr5b/xChTzsrrPmruLaJ5M=";
+    })
     # fixes an error with utf8 file names. See https://sourceforge.net/p/gscan2pdf/bugs/400
     ./image-utf8-fix.patch
-    ];
+  ];
+
+  nativeBuildInputs = [ wrapGAppsHook ];
 
   buildInputs =
     [ librsvg sane-backends sane-frontends ] ++
@@ -94,7 +98,10 @@ perlPackages.buildPerlPackage rec {
 
   nativeCheckInputs = [
     imagemagick
-    libtiff_4_5 # needs older libtiff version. See commit f57a4b0a for more infos
+    # Needs older libtiff version, because it stopped packageing tools like
+    # tiff2pdf and others in version 4.6. These tools are necessary for gscan2pdf.
+    # See commit f57a4b0ac1b954eec0c8def2a99e2a464ac6ff7a for in-depth explanation.
+    libtiff_4_5
     djvulibre
     poppler_utils
     ghostscript

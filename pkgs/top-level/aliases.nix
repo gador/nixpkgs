@@ -151,12 +151,12 @@ mapAliases ({
   composable_kernel = throw "'composable_kernel' has been replaced with 'rocmPackages.composable_kernel'"; # Added 2023-10-08
   cpp-ipfs-api = cpp-ipfs-http-client; # Project has been renamed. Added 2022-05-15
   crispyDoom = crispy-doom; # Added 2023-05-01
+  cryptowatch-desktop = throw "Cryptowatch Desktop was sunset on September 30th 2023 and has been removed from nixpkgs"; # Added 2023-12-22
   clash = throw "'clash' has been removed, upstream gone. Consider using 'clash-meta' instead."; # added 2023-11-10
   clasp = clingo; # added 2022-12-22
   claws-mail-gtk3 = claws-mail; # Added 2021-07-10
   clucene_core_1 = throw "'clucene_core_1' has been renamed to/replaced by 'clucene_core'"; # Added 2023-12-09
   cntk = throw "'cntk' has been removed from nixpkgs, as it was broken and unmaintained"; # Added 2023-10-09
-  code-server = throw "'code-server' has been removed from nixpkgs, as it was depending on EOL Node.js and is unmaintained."; # Added 2023-10-30
   codimd = hedgedoc; # Added 2020-11-29
   inherit (libsForQt5.mauiPackages) communicator; # added 2022-05-17
   compton = throw "'compton' has been renamed to/replaced by 'picom'"; # Converted to throw 2023-09-10
@@ -177,6 +177,7 @@ mapAliases ({
   clang14Stdenv = lowPrio llvmPackages_14.stdenv;
   clang15Stdenv = lowPrio llvmPackages_15.stdenv;
   clang16Stdenv = lowPrio llvmPackages_16.stdenv;
+  clang17Stdenv = lowPrio llvmPackages_17.stdenv;
 
   clang-tools_7  = throw "clang-tools_7 has been removed from nixpkgs"; # Added 2023-11-19
   clang_7  = throw "clang_7 has been removed from nixpkgs"; # Added 2023-11-19
@@ -192,6 +193,7 @@ mapAliases ({
   deltachat-electron = deltachat-desktop; # added 2021-07-18
 
   demjson = with python3Packages; toPythonApplication demjson; # Added 2022-01-18
+  dep = throw "'dep' has been removed, because it is deprecated and archived in favor of Go modules"; # Added 2023-12-26
   devserver = throw "'devserver' has been removed in favor of 'miniserve' or other alternatives"; # Added 2023-01-13
   dhcp = throw "dhcp (ISC DHCP) has been removed from nixpkgs, because it reached its end of life"; # Added 2023-04-04
   dnnl = oneDNN; # Added 2020-04-22
@@ -303,6 +305,7 @@ mapAliases ({
   }; # Added 2021-01-14
 
   gitter = throw "gitter has been removed since the client has been abandoned by upstream with the backend migration to Matrix"; # Added 2023-09-18
+  glide = throw "'glide' has been removed as it is unmaintained, please use Go modules instead"; # Added 2023-12-26
   gmailieer = lieer; # Added 2020-04-19
   gmic-qt-krita = throw "gmic-qt-krita was removed as it's no longer supported upstream."; # Converted to throw 2023-02-02
   gnatboot11 = gnat-bootstrap11;
@@ -329,6 +332,7 @@ mapAliases ({
   gnuradio-nacl = throw "'gnuradio-nacl' has been renamed to/replaced by 'gnuradio3_7.pkgs.nacl'"; # Converted to throw 2023-09-10
   gnuradio-osmosdr = throw "'gnuradio-osmosdr' has been renamed to/replaced by 'gnuradio3_7.pkgs.osmosdr'"; # Converted to throw 2023-09-10
   gnuradio-rds = throw "'gnuradio-rds' has been renamed to/replaced by 'gnuradio3_7.pkgs.rds'"; # Converted to throw 2023-09-10
+  go2nix = throw "'go2nix' has been removed as it was archived upstream"; # Added 2023-12-27
   gobby5 = gobby; # Added 2021-02-01
 
   #godot
@@ -341,6 +345,7 @@ mapAliases ({
   google-chrome-dev = throw "'google-chrome-dev' has been removed due to the lack of maintenance in nixpkgs. Consider using 'google-chrome' instead."; # Added 2023-10-18
   google-gflags = throw "'google-gflags' has been renamed to/replaced by 'gflags'"; # Converted to throw 2023-09-10
   go-thumbnailer = thud; # Added 2023-09-21
+  govendor = throw "'govendor' has been removed as it is no longer maintained upstream, please use Go modules instead"; # Added 2023-12-26
   gometer = throw "gometer has been removed from nixpkgs because goLance stopped offering Linux support"; # Added 2023-02-10
 
   graalvm11-ce = throw "graalvm11-ce has been removed because upstream dropped support to different JDK versions for each GraalVM release. Please use graalvm-ce instead"; # Added 2023-09-26
@@ -589,6 +594,7 @@ mapAliases ({
   matrique = spectral; # Added 2020-01-27
   matrix-recorder = throw "matrix-recorder has been removed due to being unmaintained"; # Added 2023-05-21
   maui-nota = libsForQt5.mauiPackages.nota; # added 2022-05-17
+  mbox = throw "'mbox' has been removed, as it was broken and unmaintained"; # Added 2023-12-21
   mcomix3 = mcomix; # Added 2022-06-05
   meme = meme-image-generator; # Added 2021-04-21
   mess = throw "'mess' has been renamed to/replaced by 'mame'"; # Converted to throw 2023-09-10
@@ -918,10 +924,12 @@ mapAliases ({
   spotify-unwrapped = spotify; # added 2022-11-06
   spring-boot = spring-boot-cli; # added 2020-04-24
   squid4 = throw "'squid4' has been renamed to/replaced by 'squid'"; # Converted to throw 2023-09-10
+  ssb = throw "'ssb' has been removed, as it was broken and unmaintained"; # Added 2023-12-21
   ssm-agent = amazon-ssm-agent; # Added 2023-10-17
   starboard-octant-plugin = throw "starboard-octant-plugin has been dropped due to needing octant which is archived"; # Added 2023-09-29
   steam-run-native = steam-run; # added 2022-02-21
   sumneko-lua-language-server = lua-language-server; # Added 2023-02-07
+  supertux-editor = throw "'supertux-editor' has been removed, as it was broken and unmaintained"; # Added 2023-12-22
   swift-im = throw "swift-im has been removed as it is unmaintained and depends on deprecated Python 2 / Qt WebKit"; # Added 2023-01-06
   swtpm-tpm2 = swtpm; # Added 2021-02-26
   syncthing-cli = syncthing; # Added 2021-04-06
@@ -994,6 +1002,7 @@ mapAliases ({
   virtmanager-qt = throw "'virtmanager-qt' has been renamed to/replaced by 'virt-manager-qt'"; # Converted to throw 2023-09-10
   vivaldi-widevine = throw "'vivaldi-widevine' has been renamed to/replaced by 'widevine-cdm'"; # Added 2023-02-25
   vkBasalt = vkbasalt; # Added 2022-11-22
+  vsmtp = throw "'vsmtp' has been removed, upstream gone"; # Added 2023-12-18
   vte_290 = throw "'vte_290' has been renamed to/replaced by 'vte'"; # Added 2023-01-05
   varnish72 = throw "varnish 7.2 is EOL. Either use the LTS or upgrade."; # Added 2023-10-09
   varnish73 = throw "varnish 7.3 is EOL. Either use the LTS or upgrade."; # Added 2023-10-09

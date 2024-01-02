@@ -7931,6 +7931,8 @@ with pkgs;
 
   zabbixctl = callPackage ../tools/misc/zabbixctl { };
 
+  zabbix-agent2-plugin-postgresql = callPackage ../tools/misc/zabbix-agent2-plugin-postgresql { };
+
   zee = callPackage ../applications/editors/zee {
     inherit (darwin.apple_sdk.frameworks) Security;
   };

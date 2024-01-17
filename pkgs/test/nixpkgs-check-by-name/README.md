@@ -28,6 +28,8 @@ These checks are performed by this tool:
 - Each package directory must not refer to files outside itself using symlinks or Nix path expressions.
 
 ### Nix evaluation checks
+
+Evaluate Nixpkgs with `system` set to `x86_64-linux` and check that:
 - For each package directory, the `pkgs.${name}` attribute must be defined as `callPackage pkgs/by-name/${shard}/${name}/package.nix args` for some `args`.
 - For each package directory, `pkgs.lib.isDerivation pkgs.${name}` must be `true`.
 
@@ -43,6 +45,8 @@ The current ratchets are:
 
 - New manual definitions of `pkgs.${name}` (e.g. in `pkgs/top-level/all-packages.nix`) with `args = { }`
   (see [nix evaluation checks](#nix-evaluation-checks)) must not be introduced.
+- New top-level packages defined using `pkgs.callPackage` must be defined with a package directory.
+  - Once a top-level package uses `pkgs/by-name`, it also can't be moved back out of it.
 
 ## Development
 

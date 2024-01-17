@@ -11,7 +11,7 @@ buildKodiBinaryAddon rec {
     sha256 = "sha256-QooWK+LwlN5RAISjAQ2YiyDAjQQMzod8fFXpI0ll+hc=";
   };
 
-extraBuildInputs = [ libGL ];
+  extraBuildInputs = [ libGL ];
 
   meta = with lib; {
     homepage = "https://github.com/kodi-pvr/pvr.vdr.vnsi";

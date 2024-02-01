@@ -3353,6 +3353,13 @@
     githubId = 4526429;
     name = "Philipp Dargel";
   };
+  chito = {
+    email = "iamchito@protonmail.com";
+    github = "chitochi";
+    githubId = 153365419;
+    matrix = "@chito:nichijou.dev";
+    name = "Chito";
+  };
   chivay = {
     email = "hubert.jasudowicz@gmail.com";
     github = "chivay";
@@ -10100,6 +10107,12 @@
     githubId = 264372;
     name = "Jan van den Berg";
   };
+  koppor = {
+    email = "kopp.dev@gmail.com";
+    github = "koppor";
+    githubId = 1366654;
+    name = "Oliver Kopp";
+  };
   koral = {
     email = "koral@mailoo.org";
     github = "k0ral";
@@ -13126,6 +13139,12 @@
     github = "namore";
     githubId = 1222539;
     name = "Roman Naumann";
+  };
+  nanotwerp = {
+    email = "nanotwerp@gmail.com";
+    github = "nanotwerp";
+    githubId = 17240342;
+    name = "Nano Twerpus";
   };
   naphta = {
     github = "naphta";

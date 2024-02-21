@@ -6,12 +6,12 @@
 
 buildPythonPackage rec {
   pname = "types-html5lib";
-  version = "1.1.11.20240106";
+  version = "1.1.11.20240221";
   pyproject = true;
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-/DobGOtgGz7q+SyQC9Z2dcCk+h3R0qKJPr20aSNUfuk=";
+    hash = "sha256-mkKut60hArzno+NNCt/KSyXT2qLVTX4JUqiEXzrZCaI=";
   };
 
   nativeBuildInputs = [

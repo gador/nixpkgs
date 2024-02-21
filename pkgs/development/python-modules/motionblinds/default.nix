@@ -3,12 +3,13 @@
 , fetchFromGitHub
 , pycryptodomex
 , pythonOlder
+, setuptools
 }:
 
 buildPythonPackage rec {
   pname = "motionblinds";
-  version = "0.6.19";
-  format = "setuptools";
+  version = "0.6.21";
+  pyproject = true;
 
   disabled = pythonOlder "3.7";
 
@@ -16,8 +17,12 @@ buildPythonPackage rec {
     owner = "starkillerOG";
     repo = "motion-blinds";
     rev = "refs/tags/${version}";
-    hash = "sha256-t2Y3ASGoMZKlZzbafpAjZHeWgaWS+UsvFd5wyfmJGvE=";
+    hash = "sha256-zWEVgBEjxc0mg9KhlU1UvAd7HzQ2Rvsnsa2Q+/KxrHw=";
   };
+
+  nativeBuildInputs = [
+    setuptools
+  ];
 
   propagatedBuildInputs = [
     pycryptodomex

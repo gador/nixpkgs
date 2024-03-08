@@ -1,18 +1,18 @@
-{ stdenv, lib, runCommand, patchelf, makeWrapper, pkg-config, curl, runtimeShell
+{ stdenv, lib, runCommand, patchelf, makeWrapper, pkg-config, curl, runtimeShell, fetchpatch
 , openssl, zlib, fetchFromGitHub, rustPlatform, libiconv }:
 
 rustPlatform.buildRustPackage rec {
   pname = "elan";
-  version = "3.1.0";
+  version = "3.1.1";
 
   src = fetchFromGitHub {
     owner = "leanprover";
     repo = "elan";
     rev = "v${version}";
-    hash = "sha256-IC/xb4tZer2cbwIusdCwXxJS3K7kN/XFoU4mxKW4dVc=";
+    hash = "sha256-/g5bO3UQcg0XYm62KdoWcVQqOV3SIedWUYLufEcblmE=";
   };
 
-  cargoHash = "sha256-F80iiXb0UpV+N9q7Msef6/Uzas1DGjMKPWuOKrk8tqU=";
+  cargoHash = "sha256-f8YVUTxHX1FY2p73DlnLDtCJaG/0JImUtJFraV6ErNM=";
 
   nativeBuildInputs = [ pkg-config makeWrapper ];
 
@@ -23,6 +23,14 @@ rustPlatform.buildRustPackage rec {
   buildFeatures = [ "no-self-update" ];
 
   patches = lib.optionals stdenv.isLinux [
+    # revert temporary directory creation, because it break the wrapper
+    # https://github.com/NixOS/nixpkgs/pull/289941#issuecomment-1980778358
+    (fetchpatch {
+      url = "https://github.com/leanprover/elan/commit/bd54acaab75d08b3912ee1f051af8657f3a9cfdf.patch";
+      hash = "sha256-6If/wxWSea8Zjlp3fx9wh3D0TjmWZbvCuY9q5c2qJGA=";
+      revert = true;
+    })
+
     # Run patchelf on the downloaded binaries.
     # This is necessary because Lean 4 is now dynamically linked.
     (runCommand "0001-dynamically-patchelf-binaries.patch" {

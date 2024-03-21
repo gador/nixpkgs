@@ -5,14 +5,14 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "checkov";
-  version = "3.2.32";
+  version = "3.2.42";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "bridgecrewio";
     repo = "checkov";
     rev = "refs/tags/${version}";
-    hash = "sha256-brebisU7YhbLHEojJUu5Ei0F6hMHg1lsYjppBAXewYQ=";
+    hash = "sha256-2ZhG7j9kV5E1I1xRzUKSONZ32T1oaDZ7linXjfFrvRg=";
   };
 
   patches = [
@@ -29,6 +29,7 @@ python3.pkgs.buildPythonApplication rec {
     "license-expression"
     "networkx"
     "openai"
+    "packageurl-python"
     "pycep-parser"
     "termcolor"
   ];

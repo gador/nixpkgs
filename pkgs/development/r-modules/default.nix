@@ -382,6 +382,7 @@ let
     nloptr = with pkgs; [ nlopt pkg-config ];
     n1qn1 = [ pkgs.gfortran ];
     odbc = [ pkgs.unixODBC ];
+    opencv = [ pkgs.pkg-config ];
     pak = [ pkgs.curl.dev ];
     pander = with pkgs; [ pandoc which ];
     pbdMPI = [ pkgs.mpi ];
@@ -531,7 +532,10 @@ let
   packagesWithBuildInputs = {
     # sort -t '=' -k 2
     asciicast = with pkgs; [ xz.dev bzip2.dev zlib.dev icu.dev ];
+    island = [ pkgs.gsl.dev ];
     svKomodo = [ pkgs.which ];
+    ulid = [ pkgs.zlib.dev ];
+    unrtf = with pkgs; [ xz.dev bzip2.dev zlib.dev icu.dev ];
     nat = [ pkgs.which ];
     nat_templatebrains = [ pkgs.which ];
     pbdZMQ = [ pkgs.zeromq ] ++ lib.optionals stdenv.isDarwin [ pkgs.darwin.binutils ];
@@ -539,16 +543,20 @@ let
     bayesWatch = [ pkgs.boost.dev ];
     clustermq = [  pkgs.pkg-config ];
     coga = [ pkgs.gsl.dev ];
+    gpg = [ pkgs.gpgme ];
     webp = [ pkgs.libwebp ];
     RMark = [ pkgs.which ];
     RPushbullet = [ pkgs.which ];
+    stpphawkes = [ pkgs.gsl ];
     RCurl = [ pkgs.curl.dev ];
     R2SWF = [ pkgs.pkg-config ];
+    rDEA = [ pkgs.glpk ];
     rgl = with pkgs; [ libGLU libGLU.dev libGL xorg.libX11.dev freetype.dev libpng.dev ];
     RGtk2 = [ pkgs.pkg-config ];
     RProtoBuf = [ pkgs.pkg-config ];
     Rpoppler = [ pkgs.pkg-config ];
     XML = [ pkgs.pkg-config ];
+    apsimx = [ pkgs.which ];
     cairoDevice = [ pkgs.pkg-config ];
     chebpol = [ pkgs.pkg-config ];
     fftw = [ pkgs.pkg-config ];
@@ -889,6 +897,7 @@ let
     "scholar"
     "stepR"
     "styler"
+    "teal_code"
     "TreeTools"
     "TreeSearch"
     "ACNE"
@@ -1356,6 +1365,12 @@ let
       ];
     });
 
+    xslt = old.xslt.overrideAttrs (attrs: {
+      env = (attrs.env or { }) // {
+        NIX_CFLAGS_COMPILE = attrs.env.NIX_CFLAGS_COMPILE + " -fpermissive";
+      };
+    });
+
     sparklyr = old.sparklyr.overrideAttrs (attrs: {
       # Pyspark's spark is full featured and better maintained than pkgs.spark
       preConfigure = ''
@@ -1408,6 +1423,13 @@ let
 
     geomorph = old.geomorph.overrideAttrs (attrs: {
       RGL_USE_NULL = "true";
+    });
+
+
+    opencv = let
+      opencvGtk = pkgs.opencv.override (old : { enableGtk2 = true; });
+    in old.opencv.overrideAttrs (attrs: {
+      buildInputs = attrs.buildInputs ++ [ opencvGtk ];
     });
 
     Rhdf5lib = let

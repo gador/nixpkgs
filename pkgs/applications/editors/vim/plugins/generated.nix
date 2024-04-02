@@ -17046,7 +17046,7 @@ final: prev:
   };
 
   jupytext-nvim = buildVimPlugin {
-    pname = "jupytest-nvim";
+    pname = "jupytext-nvim";
     version = "2024-01-24";
     src = fetchFromGitHub {
       owner = "GCBallesteros";
@@ -17055,6 +17055,42 @@ final: prev:
       sha256 = "sha256-x5emW+qfUTUDR72B9QdDgVdrb8wGH9D7AdtRrQm80sI=";
     };
     meta.homepage = "https://github.com/GCBallesteros/jupytext.nvim/";
+  };
+
+  improved-search-nvim = buildVimPlugin {
+    pname = "improved-search-nvim";
+    version = "2023-12-21";
+    src = fetchFromGitHub {
+      owner = "backdround";
+      repo = "improved-search.nvim";
+      rev = "9480bfb0e05f990a1658464c1d349dd2acfb9c34";
+      sha256 = "sha256-k35uJZfarjRskS9MgCjSQ3gfl57d+r8vWvw0Uq16Z30=";
+    };
+    meta.homepage = "https://github.com/backdround/improved-search.nvim/";
+  };
+
+  qmk-nvim = buildVimPlugin {
+    pname = "qmk-nvim";
+    version = "2024-02-15";
+    src = fetchFromGitHub {
+      owner = "codethread";
+      repo = "qmk.nvim";
+      rev = "67c1a94b10f7266ac01b0a2431dade70693edba9";
+      sha256 = "sha256-YKp9/unDL52guKRHI50DSPV8nXyPqAHY9mEHUMHFhmc=";
+    };
+    meta.homepage = "https://github.com/codethread/qmk.nvim/";
+  };
+
+  vim-godot = buildVimPlugin {
+    pname = "vim-godot";
+    version = "2024-02-18";
+    src = fetchFromGitHub {
+      owner = "habamax";
+      repo = "vim-godot";
+      rev = "f9c0b36b299efcc4aa4cb119a2be36a83fe10388";
+      sha256 = "sha256-HKp3CQwAOs+7TL8MjWZ2EHLHMZ3Ss7AckAZ5eOjTDEg=";
+    };
+    meta.homepage = "https://github.com/habamax/vim-godot/";
   };
 
 

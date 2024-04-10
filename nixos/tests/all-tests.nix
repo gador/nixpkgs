@@ -219,6 +219,7 @@ in {
   containers-physical_interfaces = handleTest ./containers-physical_interfaces.nix {};
   containers-portforward = handleTest ./containers-portforward.nix {};
   containers-reloadable = handleTest ./containers-reloadable.nix {};
+  containers-require-bind-mounts = handleTest ./containers-require-bind-mounts.nix {};
   containers-restart_networking = handleTest ./containers-restart_networking.nix {};
   containers-tmpfs = handleTest ./containers-tmpfs.nix {};
   containers-unified-hierarchy = handleTest ./containers-unified-hierarchy.nix {};
@@ -522,6 +523,8 @@ in {
   matrix-conduit = handleTest ./matrix/conduit.nix {};
   matrix-synapse = handleTest ./matrix/synapse.nix {};
   matrix-synapse-workers = handleTest ./matrix/synapse-workers.nix {};
+  mautrix-meta-postgres = handleTest ./matrix/mautrix-meta-postgres.nix {};
+  mautrix-meta-sqlite = handleTest ./matrix/mautrix-meta-sqlite.nix {};
   mattermost = handleTest ./mattermost.nix {};
   mealie = handleTest ./mealie.nix {};
   mediamtx = handleTest ./mediamtx.nix {};
@@ -648,6 +651,8 @@ in {
   nvmetcfg = handleTest ./nvmetcfg.nix {};
   nzbget = handleTest ./nzbget.nix {};
   nzbhydra2 = handleTest ./nzbhydra2.nix {};
+  ocis = handleTest ./ocis.nix {};
+  oddjobd = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./oddjobd.nix {};
   oh-my-zsh = handleTest ./oh-my-zsh.nix {};
   ollama = handleTest ./ollama.nix {};
   ombi = handleTest ./ombi.nix {};
@@ -808,6 +813,7 @@ in {
   shattered-pixel-dungeon = handleTest ./shattered-pixel-dungeon.nix {};
   shiori = handleTest ./shiori.nix {};
   signal-desktop = handleTest ./signal-desktop.nix {};
+  silverbullet = handleTest ./silverbullet.nix {};
   simple = handleTest ./simple.nix {};
   sing-box = handleTest ./sing-box.nix {};
   slimserver = handleTest ./slimserver.nix {};
@@ -820,6 +826,7 @@ in {
   soapui = handleTest ./soapui.nix {};
   soft-serve = handleTest ./soft-serve.nix {};
   sogo = handleTest ./sogo.nix {};
+  soju = handleTest ./soju.nix {};
   solanum = handleTest ./solanum.nix {};
   sonarr = handleTest ./sonarr.nix {};
   sonic-server = handleTest ./sonic-server.nix {};
@@ -915,6 +922,7 @@ in {
   tang = handleTest ./tang.nix {};
   taskserver = handleTest ./taskserver.nix {};
   tayga = handleTest ./tayga.nix {};
+  technitium-dns-server = handleTest ./technitium-dns-server.nix {};
   teeworlds = handleTest ./teeworlds.nix {};
   telegraf = handleTest ./telegraf.nix {};
   teleport = handleTest ./teleport.nix {};

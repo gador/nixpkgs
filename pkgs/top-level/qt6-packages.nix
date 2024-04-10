@@ -65,6 +65,7 @@ makeScopeWithSplicing' {
   };
   qcoro = callPackage ../development/libraries/qcoro { };
   qgpgme = callPackage ../development/libraries/gpgme { };
+  qmlbox2d = callPackage ../development/libraries/qmlbox2d { };
   packagekit-qt = callPackage ../tools/package-management/packagekit/qt.nix { };
 
   qt6ct = callPackage ../tools/misc/qt6ct { };
@@ -104,6 +105,8 @@ makeScopeWithSplicing' {
   # Not a library, but we do want it to be built for every qt version there
   # is, to allow users to choose the right build if needed.
   sddm = callPackage ../applications/display-managers/sddm {};
+
+  sierra-breeze-enhanced = kdePackages.callPackage ../data/themes/kwin-decorations/sierra-breeze-enhanced { };
 
   signond = callPackage ../development/libraries/signond {};
 

@@ -45,6 +45,9 @@ buildPythonPackage rec {
     # Tests require network access
     "test_pickling"
     "test_password_manager"
+
+    # https://github.com/python-mechanize/mechanize/issues/94
+    "test_ftp"
   ];
 
   meta = with lib; {

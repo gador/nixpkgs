@@ -1,0 +1,17 @@
+--- a/internal/manager/local_storage/local_storage.go
++++ b/internal/manager/local_storage/local_storage.go
+@@ -106,13 +106,7 @@
+ }
+ 
+ func getSuitableStorageRoot() string {
+-	exename, err := os.Executable()
+-	if err == nil {
+-		return filepath.Dir(exename)
+-	}
+-	log.Error().Err(err).Msg("unable to determine the path of the currently running executable")
+-
+-	// Fall back to current working directory.
++// Fall back to current working directory.
+ 	cwd, err := os.Getwd()
+ 	if err == nil {
+ 		return cwd

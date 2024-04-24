@@ -4,6 +4,7 @@
   ForceFeedback,
   OpenAL,
   OpenGL,
+  darwin,
   SDL,
   addOpenGLRunpath,
   alembic,
@@ -78,6 +79,8 @@
   waylandSupport ? stdenv.isLinux,
   zlib,
   zstd,
+  sse2neon,
+  brotli
 }:
 
 let
@@ -114,15 +117,15 @@ stdenv.mkDerivation (finalAttrs: {
         ''
           : > build_files/cmake/platform/platform_apple_xcode.cmake
           substituteInPlace source/creator/CMakeLists.txt \
-            --replace '${"$"}{LIBDIR}/python' \
+            --replace-fail '${"$"}{LIBDIR}/python' \
                       '${python3}'
           substituteInPlace build_files/cmake/platform/platform_apple.cmake \
-            --replace '${"$"}{LIBDIR}/python' \
-                      '${python3}' \
-            --replace '${"$"}{LIBDIR}/opencollada' \
+            --replace-fail '${"$"}{LIBDIR}/opencollada' \
                       '${opencollada}' \
-            --replace '${"$"}{PYTHON_LIBPATH}/site-packages/numpy' \
-                      '${python3Packages.numpy}/${python3.sitePackages}/numpy'
+            --replace-fail '${"$"}{LIBDIR}/brotli/lib/libbrotlicommon-static.a' \
+                      '${lib.getLib brotli}/lib/libbrotlicommon.dylib' \
+            --replace-fail '${"$"}{LIBDIR}/brotli/lib/libbrotlidec-static.a' \
+                      '${lib.getLib brotli}/lib/libbrotlidec.dylib'
         ''
       else
         ''
@@ -160,11 +163,12 @@ stdenv.mkDerivation (finalAttrs: {
       "-DWITH_PYTHON_INSTALL_REQUESTS=OFF"
       "-DWITH_SDL=OFF"
       "-DWITH_TBB=ON"
-      "-DWITH_USD=ON"
+      "-DWITH_USD=OFF"
+      "-DWITH_OPENIMAGEDENOISE=OFF"
+      "-DSSE2NEON_INCLUDE_DIR=${sse2neon}/lib"
 
       # Blender supplies its own FindAlembic.cmake (incompatible with the Alembic-supplied config file)
       "-DALEMBIC_INCLUDE_DIR=${lib.getDev alembic}/include"
-      "-DALEMBIC_LIBRARY=${lib.getLib alembic}/lib/libAlembic.so"
     ]
     ++ lib.optionals waylandSupport [
       "-DWITH_GHOST_WAYLAND=ON"
@@ -172,11 +176,18 @@ stdenv.mkDerivation (finalAttrs: {
       "-DWITH_GHOST_WAYLAND_DYNLOAD=OFF"
       "-DWITH_GHOST_WAYLAND_LIBDECOR=ON"
     ]
-    ++ lib.optionals stdenv.hostPlatform.isAarch64 [ "-DWITH_CYCLES_EMBREE=OFF" ]
+    #++ lib.optionals stdenv.hostPlatform.isAarch64 [ "-DWITH_CYCLES_EMBREE=OFF" ]
+    ++ lib.optionals (!stdenv.isDarwin) [ "-DALEMBIC_LIBRARY=${lib.getLib alembic}/lib/libAlembic.so" ]
     ++ lib.optionals stdenv.isDarwin [
       "-DLIBDIR=/does-not-exist"
       "-DWITH_CYCLES_OSL=OFF" # requires LLVM
       "-DWITH_OPENVDB=OFF" # OpenVDB currently doesn't build on darwin
+      "-DALEMBIC_LIBRARY=${lib.getLib alembic}/lib/libAlembic.dylib"
+      "-DBROTLI_INCLUDE_DIR=${lib.getDev brotli}/include"
+      "-DBROTLI_LIBRARY_COMMON=${lib.getLib brotli}/lib/libbrotlicommon.dylib"
+      "-DBROTLI_LIBRARY_DEC=${lib.getLib brotli}/lib/libbrotlidec.dylib"
+      "-DBROTLI_LIBRARY_DIR=${lib.getLib brotli}/lib"
+      "-DBROTLI_ROOT_DIR=${lib.getLib brotli}/lib"
     ]
     ++ lib.optional stdenv.cc.isClang "-DPYTHON_LINKFLAGS=" # Clang doesn't support "-export-dynamic"
     ++ lib.optional jackaudioSupport "-DWITH_JACK=ON"
@@ -227,11 +238,12 @@ stdenv.mkDerivation (finalAttrs: {
       (opensubdiv.override { inherit cudaSupport; })
       potrace
       pugixml
-      pyPkgsOpenusd
+      # pyPkgsOpenusd
       python3
       tbb
       zlib
       zstd
+      sse2neon
     ]
     ++ lib.optionals (!stdenv.isAarch64) [
       embree
@@ -257,9 +269,11 @@ stdenv.mkDerivation (finalAttrs: {
           CoreGraphics
           ForceFeedback
           OpenAL
-          OpenGL
+          darwin.apple_sdk.frameworks.OpenGL
+          embree
           SDL
           llvmPackages.openmp
+          brotli
         ]
     )
     ++ lib.optionals cudaSupport [ cudaPackages.cuda_cudart ]
@@ -283,7 +297,7 @@ stdenv.mkDerivation (finalAttrs: {
       ps.numpy
       ps.requests
       ps.zstandard
-      pyPkgsOpenusd
+      # pyPkgsOpenusd
     ];
 
   blenderExecutable =
@@ -372,8 +386,9 @@ stdenv.mkDerivation (finalAttrs: {
       "aarch64-linux"
       "x86_64-darwin"
       "x86_64-linux"
+      "aarch64-darwin"
     ];
-    broken = stdenv.isDarwin;
+    # broken = stdenv.isDarwin;
     maintainers = with lib.maintainers; [
       goibhniu
       veprbl

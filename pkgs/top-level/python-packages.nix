@@ -3897,7 +3897,7 @@ self: super: with self; {
   enum-compat = callPackage ../development/python-modules/enum-compat { };
 
   env-canada = callPackage ../development/python-modules/env-canada { };
-
+  
   environmental-override = callPackage ../development/python-modules/environmental-override { };
 
   environs = callPackage ../development/python-modules/environs { };
@@ -10728,6 +10728,8 @@ self: super: with self; {
   py3status = callPackage ../development/python-modules/py3status { };
 
   py3to2 = callPackage ../development/python-modules/3to2 { };
+
+  py3-validate-email = callPackage ../development/python-modules/py3-validate-email { };
 
   py4j = callPackage ../development/python-modules/py4j { };
 

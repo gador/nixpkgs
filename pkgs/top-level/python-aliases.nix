@@ -132,6 +132,7 @@ mapAliases ({
   django_hijack_admin = django-hijack-admin; # added 2023-05-16
   django-hijack-admin = throw "django-hijack-admin has been removed, since it is no longer compatible to django-hijack"; # added 2023-06-21
   django_modelcluster = django-modelcluster; # added 2022-04-02
+  django-mysql = throw "django-mysql has been removed, since it was an unused leaf package"; # added 2024-07-02
   django_nose = django-nose; # added 2023-07-25
   django-nose = throw "django-nose has been removed since it has not been maintained and there are no dependent packages"; # added 2024-05-21
   django_reversion = django-reversion; # added 2022-06-18
@@ -160,6 +161,7 @@ mapAliases ({
   face_recognition_models = face-recognition-models; # added 2022-10-15
   factory_boy = factory-boy; # added 2023-10-08
   fake_factory = throw "fake_factory has been removed because it is unused and deprecated by upstream since 2016."; # added 2022-05-30
+  faster-fifo = throw "faster-fifo has been removed since it was an unused leaf package"; # added 2024-07-02
   fastnlo_toolkit = fastnlo-toolkit; # added 2024-01-03
   fastpair = throw "fastpair is unmaintained upstream and has therefore been removed"; # added 2024-05-01
   faulthandler = throw "faulthandler is built into ${python.executable}"; # added 2021-07-12
@@ -421,6 +423,7 @@ mapAliases ({
   pytest_6 = pytest; # added 2022-02-10
   pytestcov = pytest-cov; # added 2021-01-04
   pytest-ordering = throw "pytest-ordering has been removed, since it is no longer maintained and broken"; # added 2023-06-22
+  pytest-openfiles = throw "pytest-openfiles has been removed, since it is unmaintained and archived"; # added 2024-06-19
   pytest-pep8 = pytestpep8; # added 2021-01-04
   pytest-pep257 = throw "pytest-pep257 was removed, as the pep257 package was migrated into pycodestyle"; # added 2022-04-12
   pytest-pythonpath = throw "pytest-pythonpath is obsolete as of pytest 7.0.0 and has been removed"; # added 2022-03-09

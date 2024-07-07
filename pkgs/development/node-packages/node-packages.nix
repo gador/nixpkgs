@@ -27033,15 +27033,6 @@ let
         sha512 = "v7w209VPj4L6pPn/ftFRJu31Oa8QagwcVw7BZmLCUWU4AQoc954rX9ogSIahDf67Pg+GjPbkW/Kn9XWnlWJG0g==";
       };
     };
-    "fraction.js-4.3.7" = {
-      name = "fraction.js";
-      packageName = "fraction.js";
-      version = "4.3.7";
-      src = fetchurl {
-        url = "https://registry.npmjs.org/fraction.js/-/fraction.js-4.3.7.tgz";
-        sha512 = "ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==";
-      };
-    };
     "fragment-cache-0.2.1" = {
       name = "fragment-cache";
       packageName = "fragment-cache";
@@ -63305,39 +63296,6 @@ in
     bypassCache = true;
     reconstructLock = true;
   };
-  autoprefixer = nodeEnv.buildNodePackage {
-    name = "autoprefixer";
-    packageName = "autoprefixer";
-    version = "10.4.19";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.4.19.tgz";
-      sha512 = "BaENR2+zBZ8xXhM4pUaKUxlVdxZ0EZhjvbopwnXmxRUfqDmwSpC2lAi/QXvx7NRdPCo1WKEcEF6mV64si1z4Ew==";
-    };
-    dependencies = [
-      sources."browserslist-4.23.1"
-      sources."caniuse-lite-1.0.30001634"
-      sources."electron-to-chromium-1.4.802"
-      sources."escalade-3.1.2"
-      sources."fraction.js-4.3.7"
-      sources."nanoid-3.3.7"
-      sources."node-releases-2.0.14"
-      sources."normalize-range-0.1.2"
-      sources."picocolors-1.0.1"
-      sources."postcss-8.4.38"
-      sources."postcss-value-parser-4.2.0"
-      sources."source-map-js-1.2.0"
-      sources."update-browserslist-db-1.0.16"
-    ];
-    buildInputs = globalBuildInputs;
-    meta = {
-      description = "Parse CSS and add vendor prefixes to CSS rules using values from the Can I Use website";
-      homepage = "https://github.com/postcss/autoprefixer#readme";
-      license = "MIT";
-    };
-    production = true;
-    bypassCache = true;
-    reconstructLock = true;
-  };
   aws-cdk = nodeEnv.buildNodePackage {
     name = "aws-cdk";
     packageName = "aws-cdk";
@@ -80762,24 +80720,6 @@ in
     bypassCache = true;
     reconstructLock = true;
   };
-  lv_font_conv = nodeEnv.buildNodePackage {
-    name = "lv_font_conv";
-    packageName = "lv_font_conv";
-    version = "1.5.3";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/lv_font_conv/-/lv_font_conv-1.5.3.tgz";
-      sha512 = "0xJQThBOw2iptFccSXrKDIUTQAwr/2zhKjCI1lATIRgZo8uvYRTmenKafW9yTw6G0y5AyW00tqGpUtYuTuBIbQ==";
-    };
-    buildInputs = globalBuildInputs;
-    meta = {
-      description = "Rasterize vector fonts for embedded use. Supports subsettings & merge.";
-      homepage = "https://github.com/lvgl/lv_font_conv#readme";
-      license = "MIT";
-    };
-    production = true;
-    bypassCache = true;
-    reconstructLock = true;
-  };
   madoko = nodeEnv.buildNodePackage {
     name = "madoko";
     packageName = "madoko";
@@ -90175,59 +90115,6 @@ in
     bypassCache = true;
     reconstructLock = true;
   };
-  typescript-language-server = nodeEnv.buildNodePackage {
-    name = "typescript-language-server";
-    packageName = "typescript-language-server";
-    version = "4.3.3";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/typescript-language-server/-/typescript-language-server-4.3.3.tgz";
-      sha512 = "3QLj57Ru9S6zv10sa4z1pA3TIR1Rdkd04Ke0EszbO4fx5PLdlYhlC/PMxwlyxls9wrZs7wPCME1Ru0s1Gabz4Q==";
-    };
-    buildInputs = globalBuildInputs;
-    meta = {
-      description = "Language Server Protocol (LSP) implementation for TypeScript using tsserver";
-      license = "Apache-2.0";
-    };
-    production = true;
-    bypassCache = true;
-    reconstructLock = true;
-  };
-  uglify-js = nodeEnv.buildNodePackage {
-    name = "uglify-js";
-    packageName = "uglify-js";
-    version = "3.18.0";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/uglify-js/-/uglify-js-3.18.0.tgz";
-      sha512 = "SyVVbcNBCk0dzr9XL/R/ySrmYf0s372K6/hFklzgcp2lBFyXtw4I7BOdDjlLhE1aVqaI/SHWXWmYdlZxuyF38A==";
-    };
-    buildInputs = globalBuildInputs;
-    meta = {
-      description = "JavaScript parser, mangler/compressor and beautifier toolkit";
-      homepage = "https://github.com/mishoo/UglifyJS#readme";
-      license = "BSD-2-Clause";
-    };
-    production = true;
-    bypassCache = true;
-    reconstructLock = true;
-  };
-  undollar = nodeEnv.buildNodePackage {
-    name = "undollar";
-    packageName = "undollar";
-    version = "1.0.0";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/undollar/-/undollar-1.0.0.tgz";
-      sha512 = "nV0/O+9yV/We9a0ZwH8LTXW9Aqit2em7zMpHetUk/kXxw6ongHs4D8PyPPryYGx5/w8iHqu6dJ+qJjHtA7SfUw==";
-    };
-    buildInputs = globalBuildInputs;
-    meta = {
-      description = "undollar strips the dollar sign from the beginning of the terminal command you just copied from StackOverflow when you were searching for what arguments to pass to `tar` (`xzf`? `xvfJ`? Or was it `xvf`? You never seem to remember).";
-      homepage = "https://github.com/ImFeelingDucky/undollar#readme";
-      license = "MIT";
-    };
-    production = true;
-    bypassCache = true;
-    reconstructLock = true;
-  };
   unified-language-server = nodeEnv.buildNodePackage {
     name = "unified-language-server";
     packageName = "unified-language-server";
@@ -91186,72 +91073,6 @@ in
     bypassCache = true;
     reconstructLock = true;
   };
-  vscode-css-languageserver-bin = nodeEnv.buildNodePackage {
-    name = "vscode-css-languageserver-bin";
-    packageName = "vscode-css-languageserver-bin";
-    version = "1.4.0";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/vscode-css-languageserver-bin/-/vscode-css-languageserver-bin-1.4.0.tgz";
-      sha512 = "KWrF5f4RYYe8RBDfqb1c0Sdf9xPS2Ly/Z/T18H+uUOMw2QyzIrkxv4bMKy5GFfPm4479k6Ln4ji4UHqSmhGf3g==";
-    };
-    dependencies = [
-      sources."vscode-css-languageservice-3.0.13"
-      sources."vscode-jsonrpc-8.2.0"
-      sources."vscode-languageserver-4.4.2"
-      sources."vscode-languageserver-protocol-3.17.5"
-      sources."vscode-languageserver-protocol-foldingprovider-2.0.1"
-      sources."vscode-languageserver-types-3.17.5"
-      sources."vscode-nls-4.1.2"
-      sources."vscode-uri-1.0.8"
-    ];
-    buildInputs = globalBuildInputs;
-    meta = {
-      description = "Binary version published on npm of vscode-css-languageserver extracted from VSCode tree";
-      homepage = "https://github.com/vscode-langservers/vscode-css-languageserver-bin#readme";
-      license = "MIT";
-    };
-    production = true;
-    bypassCache = true;
-    reconstructLock = true;
-  };
-  vscode-html-languageserver-bin = nodeEnv.buildNodePackage {
-    name = "vscode-html-languageserver-bin";
-    packageName = "vscode-html-languageserver-bin";
-    version = "1.4.0";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/vscode-html-languageserver-bin/-/vscode-html-languageserver-bin-1.4.0.tgz";
-      sha512 = "rDnpvASQwf1dlRaGiu8edo5WlAr4dM3/r/dcPCH4O6UD4+eShhdC1E8IyiSisnJU6bRk+4mDTCgA6cyhGJY2xA==";
-    };
-    dependencies = [
-      sources."typescript-2.9.2"
-      (sources."vscode-css-languageservice-3.0.13" // {
-        dependencies = [
-          sources."vscode-nls-4.1.2"
-        ];
-      })
-      (sources."vscode-html-languageservice-2.1.12" // {
-        dependencies = [
-          sources."vscode-nls-4.1.2"
-        ];
-      })
-      sources."vscode-jsonrpc-8.2.0"
-      sources."vscode-languageserver-4.4.2"
-      sources."vscode-languageserver-protocol-3.17.5"
-      sources."vscode-languageserver-protocol-foldingprovider-2.0.1"
-      sources."vscode-languageserver-types-3.17.5"
-      sources."vscode-nls-3.2.5"
-      sources."vscode-uri-1.0.8"
-    ];
-    buildInputs = globalBuildInputs;
-    meta = {
-      description = "Binary version published on npm of vscode-html-languageserver extracted from VSCode tree";
-      homepage = "https://github.com/vscode-langservers/vscode-html-languageserver-bin#readme";
-      license = "MIT";
-    };
-    production = true;
-    bypassCache = true;
-    reconstructLock = true;
-  };
   vscode-json-languageserver = nodeEnv.buildNodePackage {
     name = "vscode-json-languageserver";
     packageName = "vscode-json-languageserver";
@@ -91290,57 +91111,6 @@ in
     buildInputs = globalBuildInputs;
     meta = {
       description = "JSON language server";
-      license = "MIT";
-    };
-    production = true;
-    bypassCache = true;
-    reconstructLock = true;
-  };
-  vscode-json-languageserver-bin = nodeEnv.buildNodePackage {
-    name = "vscode-json-languageserver-bin";
-    packageName = "vscode-json-languageserver-bin";
-    version = "1.0.1";
-    src = fetchurl {
-      url = "https://registry.npmjs.org/vscode-json-languageserver-bin/-/vscode-json-languageserver-bin-1.0.1.tgz";
-      sha512 = "WU+Ks0OEo1c4pgFUA4gIockhzlRqWqSRL2NXHOCtYhJnuIqfrNgSyECZC+nCMyn/CnzpPuQQjzC74GWlIRXnZQ==";
-    };
-    dependencies = [
-      sources."agent-base-4.3.0"
-      sources."debug-3.1.0"
-      sources."es6-promise-4.2.8"
-      sources."es6-promisify-5.0.0"
-      sources."http-proxy-agent-2.1.0"
-      sources."https-proxy-agent-2.2.4"
-      sources."jsonc-parser-1.0.3"
-      sources."ms-2.0.0"
-      (sources."request-light-0.2.5" // {
-        dependencies = [
-          sources."vscode-nls-4.1.2"
-        ];
-      })
-      (sources."vscode-json-languageservice-3.11.0" // {
-        dependencies = [
-          sources."jsonc-parser-3.2.1"
-          sources."vscode-nls-5.2.0"
-          sources."vscode-uri-2.1.2"
-        ];
-      })
-      sources."vscode-jsonrpc-3.5.0"
-      sources."vscode-languageserver-3.5.1"
-      (sources."vscode-languageserver-protocol-3.5.1" // {
-        dependencies = [
-          sources."vscode-languageserver-types-3.5.0"
-        ];
-      })
-      sources."vscode-languageserver-textdocument-1.0.11"
-      sources."vscode-languageserver-types-3.16.0-next.2"
-      sources."vscode-nls-2.0.2"
-      sources."vscode-uri-1.0.8"
-    ];
-    buildInputs = globalBuildInputs;
-    meta = {
-      description = "JSON language server";
-      homepage = "https://github.com/vscode-langservers/vscode-json-languageserver-bin#readme";
       license = "MIT";
     };
     production = true;

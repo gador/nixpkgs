@@ -39,7 +39,7 @@ buildPythonPackage rec {
     pynose
     util-linux
     xorg.xauth
-    xorg.xorgserver
+    xorg.xvfb
   ];
 
   disabledTestPaths = [

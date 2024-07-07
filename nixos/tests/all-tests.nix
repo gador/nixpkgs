@@ -280,6 +280,7 @@ in {
   ecryptfs = handleTest ./ecryptfs.nix {};
   fscrypt = handleTest ./fscrypt.nix {};
   fastnetmon-advanced = runTest ./fastnetmon-advanced.nix;
+  eintopf = handleTest ./eintopf.nix {};
   ejabberd = handleTest ./xmpp/ejabberd.nix {};
   elk = handleTestOn ["x86_64-linux"] ./elk.nix {};
   emacs-daemon = handleTest ./emacs-daemon.nix {};
@@ -337,6 +338,7 @@ in {
   freenet = handleTest ./freenet.nix {};
   freeswitch = handleTest ./freeswitch.nix {};
   freetube = discoverTests (import ./freetube.nix);
+  freshrss-extensions = handleTest ./freshrss-extensions.nix {};
   freshrss-sqlite = handleTest ./freshrss-sqlite.nix {};
   freshrss-pgsql = handleTest ./freshrss-pgsql.nix {};
   freshrss-http-auth = handleTest ./freshrss-http-auth.nix {};
@@ -534,7 +536,7 @@ in {
   mailman = handleTest ./mailman.nix {};
   man = handleTest ./man.nix {};
   mariadb-galera = handleTest ./mysql/mariadb-galera.nix {};
-  mastodon = discoverTests (import ./web-apps/mastodon { inherit handleTestOn; });
+  mastodon = pkgs.recurseIntoAttrs (handleTest ./web-apps/mastodon { inherit handleTestOn; });
   pixelfed = discoverTests (import ./web-apps/pixelfed { inherit handleTestOn; });
   mate = handleTest ./mate.nix {};
   mate-wayland = handleTest ./mate-wayland.nix {};

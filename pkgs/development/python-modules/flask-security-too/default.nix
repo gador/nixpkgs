@@ -59,12 +59,12 @@ buildPythonPackage rec {
     hash = "sha256-YrGTl+jXGo1MuNwNRAnMehSXmCVJAwOWlgruUYdV5YM=";
   };
 
-  nativeBuildInputs = [ setuptools ];
+   build-system = [ setuptools ];
 
   # flask-login>=0.6.2 not satisfied by version 0.7.0.dev0
   pythonRelaxDeps = [ "flask-login" ];
 
-  propagatedBuildInputs = [
+  dependencies = [
     email-validator
     flask
     flask-login

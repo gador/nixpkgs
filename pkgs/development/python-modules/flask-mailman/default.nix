@@ -1,5 +1,6 @@
 {
   lib,
+  aiosmtpd,
   buildPythonPackage,
   fetchFromGitHub,
   poetry-core,
@@ -11,7 +12,7 @@
 
 buildPythonPackage rec {
   pname = "flask-mailman";
-  version = "1.1.0";
+  version = "1.1.1";
   format = "pyproject";
 
   disabled = pythonOlder "3.7";
@@ -20,7 +21,7 @@ buildPythonPackage rec {
     owner = "waynerv";
     repo = pname;
     rev = "refs/tags/v${version}";
-    hash = "sha256-2ll5+D35dQN3r7gDpY1iSOuJBlqMorhjhFohPug8GK8=";
+    hash = "sha256-0kD3rxFDJ7FcmBLVju75z1nf6U/7XfjiLD/oM/VP4jQ=";
   };
 
   nativeBuildInputs = [ poetry-core ];
@@ -30,7 +31,7 @@ buildPythonPackage rec {
     mkdocs-material-extensions
   ];
 
-  nativeCheckInputs = [ pytestCheckHook ];
+  nativeCheckInputs = [ aiosmtpd pytestCheckHook ];
 
   pythonImportsCheck = [ "flask_mailman" ];
 

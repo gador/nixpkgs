@@ -61,6 +61,9 @@ buildPythonPackage rec {
 
   nativeBuildInputs = [ setuptools ];
 
+  # flask-login>=0.6.2 not satisfied by version 0.7.0.dev0
+  pythonRelaxDeps = [ "flask-login" ];
+
   propagatedBuildInputs = [
     email-validator
     flask

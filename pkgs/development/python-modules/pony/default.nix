@@ -30,6 +30,15 @@ buildPythonPackage rec {
     })
   ];
 
+  patches = [
+    # https://github.com/ponyorm/pony/pull/713
+    (fetchpatch {
+      name = "py312-compat.patch";
+      url = "https://github.com/ponyorm/pony/commit/5a37f6d59b6433d17d6d56b54f3726190e98c98f.patch";
+      hash = "sha256-niOoANOYHqrcmEXRZEDew2BM8P/s7UFnn0qpgB8V0Mk=";
+    })
+  ];
+
   nativeBuildInputs = [ setuptools ];
 
   nativeCheckInputs = [ pytestCheckHook ];

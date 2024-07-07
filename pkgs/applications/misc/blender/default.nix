@@ -71,7 +71,7 @@
   pkg-config,
   potrace,
   pugixml,
-  python311Packages, # must use instead of python3.pkgs, see https://github.com/NixOS/nixpkgs/issues/211340
+  python312Packages, # must use instead of python3.pkgs, see https://github.com/NixOS/nixpkgs/issues/211340
   rocmPackages, # comes with a significantly larger closure size
   runCommand,
   spaceNavSupport ? stdenv.isLinux,
@@ -86,7 +86,7 @@
 }:
 
 let
-  python3Packages = python311Packages;
+  python3Packages = python312Packages;
   python3 = python3Packages.python;
   pyPkgsOpenusd = python3Packages.openusd.override { withOsl = false; };
 

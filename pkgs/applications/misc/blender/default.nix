@@ -72,7 +72,7 @@
   pkg-config,
   potrace,
   pugixml,
-  python312Packages, # must use instead of python3.pkgs, see https://github.com/NixOS/nixpkgs/issues/211340
+  python3Packages, # must use instead of python3.pkgs, see https://github.com/NixOS/nixpkgs/issues/211340
   rocmPackages, # comes with a significantly larger closure size
   runCommand,
   spaceNavSupport ? stdenv.isLinux,
@@ -87,7 +87,6 @@
 }:
 
 let
-  python3Packages = python312Packages;
   python3 = python3Packages.python;
   pyPkgsOpenusd = python3Packages.openusd.override { withOsl = false; };
 
@@ -114,7 +113,6 @@ stdenv.mkDerivation (finalAttrs: {
 
   patches = [
     ./draco.patch
-    # https://projects.blender.org/blender/blender/pulls/121636
     (fetchpatch {
       url = " https://projects.blender.org/blender/blender/commit/ae35b5758791bebb21741f9b505b9fca347ae50e.patch";
       hash = "sha256-xUi55+7aiwEjtjqOi8to1YxdPlsBUThCCkCa5T6LIQc=";

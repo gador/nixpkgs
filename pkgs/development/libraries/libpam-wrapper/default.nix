@@ -24,8 +24,8 @@ stdenv.mkDerivation rec {
   patches = [
     (substituteAll {
       src = ./python.patch;
-      siteDir = if enablePython then "${python.sitePackages}" else "";
-      includeDir = if enablePython then "include/${lib.versions.major python.version}.${lib.versions.minor python.version}" else "";
+      siteDir = lib.optionalString enablePython python.sitePackages;
+      includeDir = lib.optionalString enablePython "include/${python.libPrefix}";
     })
   ];
 

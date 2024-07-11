@@ -112,7 +112,7 @@ stdenv.mkDerivation (finalAttrs: {
   patches = [
     ./draco.patch
     (fetchpatch {
-      url = " https://projects.blender.org/blender/blender/commit/ae35b5758791bebb21741f9b505b9fca347ae50e.patch";
+      url = "https://projects.blender.org/blender/blender/commit/ae35b5758791bebb21741f9b505b9fca347ae50e.patch";
       hash = "sha256-xUi55+7aiwEjtjqOi8to1YxdPlsBUThCCkCa5T6LIQc=";
     })
   ] ++ lib.optional stdenv.isDarwin ./darwin.patch;
@@ -134,12 +134,12 @@ stdenv.mkDerivation (finalAttrs: {
         ''
       else
         ''
-          substituteInPlace extern/clew/src/clew.c --replace-fail '"libOpenCL.so"' '"${ocl-icd}/lib/libOpenCL.so"'
+          substituteInPlace extern/clew/src/clew.c --replace '"libOpenCL.so"' '"${ocl-icd}/lib/libOpenCL.so"'
         ''
     )
     + (lib.optionalString hipSupport ''
-      substituteInPlace extern/hipew/src/hipew.c --replace-fail '"/opt/rocm/hip/lib/libamdhip64.so"' '"${rocmPackages.clr}/lib/libamdhip64.so"'
-      substituteInPlace extern/hipew/src/hipew.c --replace-fail '"opt/rocm/hip/bin"' '"${rocmPackages.clr}/bin"'
+      substituteInPlace extern/hipew/src/hipew.c --replace '"/opt/rocm/hip/lib/libamdhip64.so"' '"${rocmPackages.clr}/lib/libamdhip64.so"'
+      substituteInPlace extern/hipew/src/hipew.c --replace '"opt/rocm/hip/bin"' '"${rocmPackages.clr}/bin"'
     '');
 
   env.NIX_CFLAGS_COMPILE = "-I${python3}/include/${python3.libPrefix}";

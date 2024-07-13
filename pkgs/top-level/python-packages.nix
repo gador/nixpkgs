@@ -4104,6 +4104,11 @@ self: super: with self; {
     python3Packages = self;
   });
 
+  f3d_egl = toPythonModule (pkgs.f3d_egl.override {
+    withPythonBinding = true;
+    python3Packages = self;
+  });
+
   f5-icontrol-rest = callPackage ../development/python-modules/f5-icontrol-rest { };
 
   f5-sdk = callPackage ../development/python-modules/f5-sdk { };
@@ -5757,7 +5762,9 @@ self: super: with self; {
 
   idasen = callPackage ../development/python-modules/idasen { };
 
-  icoextract = callPackage ../development/python-modules/icoextract { };
+  icoextract = toPythonModule (pkgs.icoextract.override {
+    python3Packages = self;
+  });
 
   icontract = callPackage ../development/python-modules/icontract { };
 
@@ -8827,8 +8834,6 @@ self: super: with self; {
   nbformat = callPackage ../development/python-modules/nbformat { };
 
   nbmake = callPackage ../development/python-modules/nbmake { };
-
-  nbmerge = callPackage ../development/python-modules/nbmerge { };
 
   nbsmoke = callPackage ../development/python-modules/nbsmoke { };
 

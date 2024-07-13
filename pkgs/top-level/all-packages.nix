@@ -981,6 +981,8 @@ with pkgs;
   inherit (callPackages ../build-support/node/fetch-yarn-deps { })
     fixup-yarn-lock
     prefetch-yarn-deps
+    yarnConfigHook
+    yarnBuildHook
     fetchYarnDeps;
 
   find-cursor = callPackage ../tools/X11/find-cursor { };
@@ -4857,10 +4859,6 @@ with pkgs;
 
   dieharder = callPackage ../tools/security/dieharder { };
 
-  diesel-cli = callPackage ../development/tools/diesel-cli {
-    inherit (darwin.apple_sdk.frameworks) Security;
-  };
-
   digitemp = callPackage ../tools/misc/digitemp { };
 
   dijo = callPackage ../tools/misc/dijo {
@@ -5100,6 +5098,8 @@ with pkgs;
   f3d = callPackage ../applications/graphics/f3d {
     inherit (darwin.apple_sdk.frameworks) Cocoa OpenGL;
   };
+
+  f3d_egl = f3d.override { vtk_9 = vtk_9_egl; };
 
   facedetect = callPackage ../tools/graphics/facedetect { };
 
@@ -9521,7 +9521,9 @@ with pkgs;
   last-resort = callPackage ../data/fonts/last-resort { };
 
   ligo =
-    let ocaml_p = ocaml-ng.ocamlPackages_4_14; in
+    let ocaml_p = ocaml-ng.ocamlPackages_4_14.overrideScope (self: super: {
+      zarith = super.zarith.override { version = "1.13"; };
+    }); in
     callPackage ../development/compilers/ligo {
     coq = coq_8_13.override {
       customOCamlPackages = ocaml_p;
@@ -9647,8 +9649,6 @@ with pkgs;
   lagrange-tui = lagrange.override { enableTUI = true; };
 
   kzipmix = pkgsi686Linux.callPackage ../tools/compression/kzipmix { };
-
-  ma1sd = callPackage ../servers/ma1sd { };
 
   mailcatcher = callPackage ../development/web/mailcatcher { };
 
@@ -12083,8 +12083,6 @@ with pkgs;
 
   qmarkdowntextedit = libsForQt5.callPackage  ../development/libraries/qmarkdowntextedit { };
 
-  qodem = callPackage ../tools/networking/qodem { };
-
   qosmic = libsForQt5.callPackage ../applications/graphics/qosmic { };
 
   qovery-cli = callPackage ../tools/admin/qovery-cli { };
@@ -13514,8 +13512,6 @@ with pkgs;
 
   tor = callPackage ../tools/security/tor { };
 
-  tor-browser = callPackage ../applications/networking/browsers/tor-browser { };
-
   touchegg = callPackage ../tools/inputmethods/touchegg { };
 
   torrent7z = callPackage ../tools/archivers/torrent7z { };
@@ -13777,6 +13773,11 @@ with pkgs;
   udpx = callPackage ../tools/security/udpx { };
 
   uftrace = callPackage ../development/tools/uftrace { };
+
+  uftraceFull = uftrace.override {
+    withLuaJIT = true;
+    withPython = true;
+  };
 
   uftpd = callPackage ../servers/ftp/uftpd {};
 
@@ -15953,7 +15954,9 @@ with pkgs;
     graalvmDrv = graalvm-ce;
   }).override;
 
-  openshot-qt = libsForQt5.callPackage ../applications/video/openshot-qt { };
+  openshot-qt = libsForQt5.callPackage ../applications/video/openshot-qt {
+    python3 = python311;
+  };
 
   lingua-franca = callPackage ../development/compilers/lingua-franca { };
 
@@ -16555,9 +16558,6 @@ with pkgs;
 
   leptosfmt = callPackage ../development/tools/rust/leptosfmt { };
 
-  maturin = callPackage ../development/tools/rust/maturin {
-    inherit (darwin.apple_sdk.frameworks) Security;
-  };
   panamax = callPackage ../development/tools/rust/panamax { };
 
   ograc = callPackage ../development/tools/rust/ograc { };
@@ -24568,6 +24568,9 @@ with pkgs;
   vtk_9_withQt5 = vtk_9.override { enableQt = true; };
 
   vtk = vtk_9;
+
+  vtk_9_egl = vtk_9.override { enableEgl = true; };
+
   vtkWithQt5 = vtk_9_withQt5;
 
   vulkan-caps-viewer = libsForQt5.callPackage ../tools/graphics/vulkan-caps-viewer { };
@@ -25672,8 +25675,6 @@ with pkgs;
 
   mullvad-vpn = callPackage ../applications/networking/mullvad-vpn { };
 
-  mullvad-browser = callPackage ../applications/networking/browsers/mullvad-browser { };
-
   mullvad-closest = with python3Packages; toPythonApplication mullvad-closest;
 
   mycorrhiza = callPackage ../servers/mycorrhiza { };
@@ -25818,8 +25819,6 @@ with pkgs;
   pomerium-cli = callPackage ../tools/security/pomerium-cli { };
 
   postgrey = callPackage ../servers/mail/postgrey { };
-
-  pshs = callPackage ../servers/http/pshs { };
 
   quark = callPackage ../servers/http/quark { };
 
@@ -26122,9 +26121,6 @@ with pkgs;
   prometheus-nextcloud-exporter = callPackage ../servers/monitoring/prometheus/nextcloud-exporter.nix { };
   prometheus-nginx-exporter = callPackage ../servers/monitoring/prometheus/nginx-exporter.nix { };
   prometheus-nginxlog-exporter = callPackage ../servers/monitoring/prometheus/nginxlog-exporter.nix { };
-  prometheus-node-exporter = callPackage ../servers/monitoring/prometheus/node-exporter.nix {
-    inherit (darwin.apple_sdk.frameworks) CoreFoundation IOKit;
-  };
   prometheus-nut-exporter = callPackage ../servers/monitoring/prometheus/nut-exporter.nix { };
   prometheus-openldap-exporter = callPackage ../servers/monitoring/prometheus/openldap-exporter.nix { } ;
   prometheus-pgbouncer-exporter = callPackage ../servers/monitoring/prometheus/pgbouncer-exporter.nix { };
@@ -29554,6 +29550,7 @@ with pkgs;
 
   blender = callPackage  ../applications/misc/blender {
     openexr = openexr_3;
+    python3Packages = python311Packages;
     inherit (darwin.apple_sdk.frameworks) Cocoa CoreGraphics ForceFeedback OpenAL OpenGL;
   };
 
@@ -35691,8 +35688,6 @@ with pkgs;
   };
 
   monero-gui = libsForQt5.callPackage ../applications/blockchains/monero-gui { };
-
-  masari = callPackage ../applications/blockchains/masari { };
 
   napari = with python3Packages; toPythonApplication napari;
 

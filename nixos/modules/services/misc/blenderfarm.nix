@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  cfg = config.services.blenderfarm;
+  cfg = config.services.blendfarm;
   json = pkgs.formats.json { };
   configFile = json.generate "ServerSettings" (defaultConfig // cfg.serverConfig);
   defaultConfig = {
@@ -17,20 +17,20 @@ in
 {
   meta.maintainers = with lib.maintainers; [ gador ];
 
-  options.services.blenderfarm = with lib.types; {
-    enable = lib.mkEnableOption "Blenderfarm, a render farm management software for Blender.";
-    package = lib.mkPackageOption pkgs "blenderfarm" { };
-    openFirewall = lib.mkEnableOption "Allow blenderfarm network access through the firewall.";
+  options.services.blendfarm = with lib.types; {
+    enable = lib.mkEnableOption "Blendfarm, a render farm management software for Blender.";
+    package = lib.mkPackageOption pkgs "blendfarm" { };
+    openFirewall = lib.mkEnableOption "Allow blendfarm network access through the firewall.";
 
     user = lib.mkOption {
-      description = "User under which blenderfarm runs.";
-      default = "blenderfarm";
+      description = "User under which blendfarm runs.";
+      default = "blendfarm";
       type = str;
     };
 
     group = lib.mkOption {
-      description = "Group under which blenderfarm runs.";
-      default = "blenderfarm";
+      description = "Group under which blendfarm runs.";
+      default = "blendfarm";
       type = str;
     };
 
@@ -50,18 +50,18 @@ in
         freeformType = attrsOf anything;
         options = {
           Port = lib.mkOption {
-            description = "Default port blenderfarm server listens on.";
+            description = "Default port blendfarm server listens on.";
             default = 15000;
             type = types.port;
           };
           BroadcastPort = lib.mkOption {
-            description = "Default port blenderfarm server advertises itself on.";
+            description = "Default port blendfarm server advertises itself on.";
             default = 16342;
             type = types.port;
           };
 
           BypassScriptUpdate = lib.mkOption {
-            description = "Prevents blenderfarm from replacing the .py self-generated scripts.";
+            description = "Prevents blendfarm from replacing the .py self-generated scripts.";
             default = false;
             type = bool;
           };
@@ -77,11 +77,11 @@ in
       allowedUDPPorts = [ cfg.serverConfig.BroadcastPort ];
     };
 
-    systemd.services.blenderfarm-server = {
+    systemd.services.blendfarm-server = {
       wantedBy = [ "multi-user.target" ];
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
-      description = "blenderfarm server";
+      description = "blendfarm server";
       path = [ cfg.blenderPackage ];
       preStart = ''
         rm -f ServerSettings
@@ -94,19 +94,19 @@ in
         ln -s ${lib.getExe cfg.blenderPackage} BlenderData/nix-blender-linux64/blender
       '' +
       lib.optionalString (cfg.basicSecurityPasswordFile != null) ''
-        BLENDERFARM_PASSWORD=$(${pkgs.systemd}/bin/systemd-creds cat BLENDERFARM_PASS_FILE)
-        sed -i "s/null/\"$BLENDERFARM_PASSWORD\"/g" ServerSettings
+        BLENDFARM_PASSWORD=$(${pkgs.systemd}/bin/systemd-creds cat BLENDFARM_PASS_FILE)
+        sed -i "s/null/\"$BLENDFARM_PASSWORD\"/g" ServerSettings
       '';
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/LogicReinc.BlendFarm.Server";
         DynamicUser = true;
-        LogsDirectory = "blenderfarm";
-        StateDirectory = "blenderfarm";
-        WorkingDirectory = "/var/lib/blenderfarm";
+        LogsDirectory = "blendfarm";
+        StateDirectory = "blendfarm";
+        WorkingDirectory = "/var/lib/blendfarm";
         User = cfg.user;
         Group = cfg.group;
         StateDirectoryMode = "0755";
-        LoadCredential = lib.optional (cfg.basicSecurityPasswordFile != null) "BLENDERFARM_PASS_FILE:${cfg.basicSecurityPasswordFile}";
+        LoadCredential = lib.optional (cfg.basicSecurityPasswordFile != null) "BLENDFARM_PASS_FILE:${cfg.basicSecurityPasswordFile}";
         ReadWritePaths = "";
         CapabilityBoundingSet = "";
         RestrictAddressFamilies = [ "AF_UNIX" "AF_INET" "AF_INET6" ];
@@ -132,10 +132,10 @@ in
       };
     };
 
-    users.users.blenderfarm = {
+    users.users.blendfarm = {
       isSystemUser = true;
-      group = "blenderfarm";
+      group = "blendfarm";
     };
-    users.groups.blenderfarm = { };
+    users.groups.blendfarm = { };
   };
 }

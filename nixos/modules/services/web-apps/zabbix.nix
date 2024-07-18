@@ -79,7 +79,8 @@ in
       [
         "services"
         "zabbixWeb"
-        "HttpdVirtualHost"
+        "httpd"
+        "virtualHost"
       ]
     )
   ];
@@ -183,7 +184,7 @@ in
         description = "Frontend server to use.";
       };
 
-      HttpdVirtualHost = mkOption {
+      httpd.virtualHost = mkOption {
         type = types.submodule (import ../web-servers/apache-httpd/vhost-options.nix);
         example = literalExpression ''
           {
@@ -206,13 +207,13 @@ in
         description = "Hostname for either nginx or httpd.";
       };
 
-      NginxVirtualHost = mkOption {
+      nginx.virtualHost = mkOption {
         type = types.submodule (import ../web-servers/nginx/vhost-options.nix);
         example = literalExpression ''
           {
             forceSSL = true;
             sslCertificateKey = "/etc/ssl/zabbix.key";
-            slCertificate = "/etc/ssl/zabbix.crt";
+            sslCertificate = "/etc/ssl/zabbix.crt";
           }
         '';
         default = { };
@@ -277,8 +278,7 @@ in
 
     services.phpfpm.pools.zabbix = {
       inherit user;
-      group =
-        if cfg.frontend == "httpd" then config.services.httpd.group else config.services.nginx.group;
+      group = config.services.${cfg.frontend}.group;
       phpOptions =
         ''
           # https://www.zabbix.com/documentation/current/manual/installation/install
@@ -310,10 +310,10 @@ in
 
     services.httpd = mkIf (cfg.frontend == "httpd") {
       enable = true;
-      adminAddr = mkDefault cfg.HttpdVirtualHost.adminAddr;
+      adminAddr = mkDefault cfg.httpd.virtualHost.adminAddr;
       extraModules = [ "proxy_fcgi" ];
       virtualHosts.${cfg.hostname} = mkMerge [
-        cfg.HttpdVirtualHost
+        cfg.httpd.virtualHost
         {
           documentRoot = mkForce "${cfg.package}/share/zabbix";
           extraConfig = ''
@@ -335,7 +335,7 @@ in
     services.nginx = mkIf (cfg.frontend == "nginx") {
       enable = true;
       virtualHosts.${cfg.hostname} = mkMerge [
-        cfg.NginxVirtualHost
+        cfg.nginx.virtualHost
         {
           root = mkForce "${cfg.package}/share/zabbix";
           locations."/" = {

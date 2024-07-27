@@ -7,7 +7,9 @@
   ivy,
   pkg-config,
   tclap,
+  unstableGitUpdater,
   xapian,
+  # Configurable options
   # Include pre-configured hydras
   withHydra ? false,
   # Include Ivy integration
@@ -30,13 +32,22 @@ let
     pname = "notdeft-xapian";
     inherit version src;
 
-    sourceRoot = "${src.name}/xapian";
+    strictDeps = true;
 
-    nativeBuildInputs = [
-      pkg-config
+    nativeBuildInputs = [ pkg-config ];
+
+    buildInputs = [
       tclap
       xapian
     ];
+
+    buildPhase = ''
+      runHook preBuild
+
+      $CXX -std=c++11 -o notdeft-xapian xapian/notdeft-xapian.cc -lxapian
+
+      runHook postBuild
+    '';
 
     installPhase = ''
       runHook preInstall
@@ -65,6 +76,11 @@ melpaBuild {
      ${lib.optionalString withHydra ''"extras/notdeft-mode-hydra.el"''}
      ${lib.optionalString withIvy ''"extras/notdeft-ivy.el"''})
   '';
+
+  passthru = {
+    inherit notdeft-xapian;
+    updateScript = unstableGitUpdater { hardcodeZeroVersion = true; };
+  };
 
   meta = {
     homepage = "https://tero.hasu.is/notdeft/";

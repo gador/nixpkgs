@@ -438,7 +438,7 @@ let
               };
 
               meta = with lib; {
-                homepage = "https://octoprint.org/";
+                homepage = "https://octoprint.org";
                 description = "The snappy web interface for your 3D printer";
                 license = licenses.agpl3Only;
                 maintainers = with maintainers; [ abbradar gebner WhittlesJr gador ];

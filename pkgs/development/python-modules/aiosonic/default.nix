@@ -30,6 +30,7 @@
   aiohttp,
   aiodns,
   pytestCheckHook,
+  stdenv,
 }:
 
 buildPythonPackage rec {
@@ -46,11 +47,19 @@ buildPythonPackage rec {
     hash = "sha256-RMkmmXUqzt9Nsx8N+f9Xdbgjt1nd5NuJHs9dzarx8IY=";
   };
 
-  postPatch = ''
-    substituteInPlace pytest.ini --replace-fail \
-      "addopts = --black --cov=aiosonic --cov-report term --cov-report html --doctest-modules" \
-      "addopts = --doctest-modules"
-  '';
+  postPatch =
+    ''
+      substituteInPlace pytest.ini --replace-fail \
+        "addopts = --black --cov=aiosonic --cov-report term --cov-report html --doctest-modules" \
+        "addopts = --doctest-modules"
+    ''
+    # patch `localhost`. See https://github.com/NixOS/nix/issues/1238
+    + lib.optionalString stdenv.isLinux ''
+      substituteInPlace tests/test_aiosonic.py --replace-fail \
+        "localhost" "127.0.0.1"
+      substituteInPlace tests/conftest.py --replace-fail \
+        "localhost" "127.0.0.1"
+    '';
 
   build-system = [ poetry-core ];
 
@@ -86,48 +95,15 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "aiosonic" ];
 
-  disabledTests = [
-    # need network
-    "test_simple_get"
-    "test_get_python"
-    "test_post_http2"
-    "test_get_http2"
-    "test_method_lower"
-    "test_keep_alive_smart_pool"
-    "test_keep_alive_cyclic_pool"
-    "test_get_with_params"
-    "test_get_with_params_in_url"
-    "test_get_with_params_tuple"
-    "test_post_form_urlencoded"
-    "test_post_tuple_form_urlencoded"
-    "test_post_json"
-    "test_put_patch"
-    "test_delete"
-    "test_delete_2"
-    "test_get_keepalive"
-    "test_post_multipart_to_django"
-    "test_connect_timeout"
-    "test_read_timeout"
-    "test_timeouts_overriden"
-    "test_pool_acquire_timeout"
-    "test_simple_get_ssl"
-    "test_simple_get_ssl_ctx"
-    "test_simple_get_ssl_no_valid"
-    "test_get_chunked_response"
-    "test_get_chunked_response_and_not_read_it"
-    "test_read_chunks_by_text_method"
-    "test_get_body_gzip"
-    "test_get_body_deflate"
-    "test_post_chunked"
-    "test_close_connection"
-    "test_close_old_keeped_conn"
-    "test_get_redirect"
-    "test_max_redirects"
-    "test_get_image"
-    "test_get_image_chunked"
-    "test_get_with_cookies"
-    "test_proxy_request"
-  ];
+  disabledTests =
+    [
+      # `proxy` fails on darwin and linux to proxy. Probably a sandbox/network error
+      "test_proxy_request"
+    ]
+    ++ lib.optionals stdenv.isLinux [
+      # django's `live_server` uses `localhost` which isn't available in the build env
+      "test_post_multipart_to_django"
+    ];
 
   meta = {
     changelog = "https://github.com/sonic182/aiosonic/blob/${version}/CHANGELOG.md";

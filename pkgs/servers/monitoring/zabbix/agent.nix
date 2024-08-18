@@ -51,7 +51,7 @@ import ./versions.nix (
         mmahut
         psyanticy
       ];
-      platforms = lib.platforms.linux;
+      platforms = lib.platforms.unix;
     };
   }
 )

@@ -6,14 +6,15 @@
   openjdk17,
   python3,
   unzip,
+  nixosTests,
 }:
 stdenv.mkDerivation rec {
   pname = "nzbhydra2";
-  version = "7.3.0";
+  version = "7.5.0";
 
   src = fetchzip {
     url = "https://github.com/theotherp/${pname}/releases/download/v${version}/${pname}-${version}-generic.zip";
-    hash = "sha256-ybI6nCw8yY2XceXiMkION7/p7gl58lrAPpUq6EpManU=";
+    hash = "sha256-jnClKsWSdRWCxNFO9RSnjdoDjOmtv9CrOL9KyaZ8PTc=";
     stripRoot = false;
   };
 
@@ -36,6 +37,10 @@ stdenv.mkDerivation rec {
 
     runHook postInstall
   '';
+
+  passthru.tests = {
+    inherit (nixosTests) nzbhydra2;
+  };
 
   meta = {
     description = "Usenet meta search";

@@ -1,26 +1,28 @@
-{ stdenv
-, lib
-, fetchFromGitLab
-, nix-update-script
-, cargo
-, meson
-, ninja
-, rustPlatform
-, rustc
-, pkg-config
-, glib
-, gtk4
-, gtksourceview5
-, libadwaita
-, gst_all_1
-, desktop-file-utils
-, appstream-glib
-, openssl
-, pipewire
-, libshumate
-, wrapGAppsHook4
-, sqlite
-, xdg-desktop-portal
+{
+  stdenv,
+  lib,
+  fetchFromGitLab,
+  nix-update-script,
+  cargo,
+  meson,
+  ninja,
+  rustPlatform,
+  rustc,
+  pkg-config,
+  glib,
+  gtk4,
+  gtksourceview5,
+  libadwaita,
+  gst_all_1,
+  desktop-file-utils,
+  appstream-glib,
+  openssl,
+  pipewire,
+  libshumate,
+  wrapGAppsHook4,
+  sqlite,
+  xdg-desktop-portal,
+  darwin,
 }:
 
 stdenv.mkDerivation rec {
@@ -58,22 +60,30 @@ stdenv.mkDerivation rec {
     wrapGAppsHook4
   ];
 
-  buildInputs = [
-    glib
-    gtk4
-    gtksourceview5
-    libadwaita
-    openssl
-    pipewire
-    libshumate
-    sqlite
-    xdg-desktop-portal
-  ] ++ (with gst_all_1; [
-    gstreamer
-    gst-plugins-base
-    gst-plugins-bad
-    gst-plugins-good
-  ]);
+  buildInputs =
+    [
+      glib
+      gtk4
+      gtksourceview5
+      libadwaita
+      openssl
+      libshumate
+      sqlite
+    ]
+    ++ (with gst_all_1; [
+      gstreamer
+      gst-plugins-base
+      gst-plugins-bad
+      gst-plugins-good
+    ])
+    ++ lib.optionals stdenv.isLinux [
+      pipewire
+      xdg-desktop-portal
+    ]
+    ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [ Security ]);
+
+  # Suppress incompatible function pointer error in clang
+  env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.cc.isClang " -Wno-error=incompatible-function-pointer-types";
 
   passthru = {
     updateScript = nix-update-script { };
@@ -85,7 +95,7 @@ stdenv.mkDerivation rec {
     changelog = "https://gitlab.gnome.org/World/fractal/-/releases/${version}";
     license = licenses.gpl3Plus;
     maintainers = teams.gnome.members;
-    platforms = platforms.linux;
+    # platforms = platforms.linux;
     mainProgram = "fractal";
   };
 }

@@ -80,7 +80,13 @@ stdenv.mkDerivation rec {
       pipewire
       xdg-desktop-portal
     ]
-    ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [ Security ]);
+    ++ lib.optionals stdenv.isDarwin (
+      with darwin.apple_sdk.frameworks;
+      [
+        Security
+        Foundation
+      ]
+    );
 
   # Suppress incompatible function pointer error in clang
   env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.cc.isClang " -Wno-error=incompatible-function-pointer-types";

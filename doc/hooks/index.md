@@ -10,6 +10,7 @@ automake.section.md
 autopatchelf.section.md
 bmake.section.md
 breakpoint.section.md
+cernlib.section.md
 cmake.section.md
 gdk-pixbuf.section.md
 ghc.section.md
@@ -24,6 +25,7 @@ patch-rc-path-hooks.section.md
 perl.section.md
 pkg-config.section.md
 postgresql-test-hook.section.md
+premake.section.md
 python.section.md
 scons.section.md
 tetex-tex-live.section.md

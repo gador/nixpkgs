@@ -31,36 +31,34 @@ in
 { lib, pkgs }: variant: self:
 let
   dontConfigure = pkg:
-    if pkg != null then pkg.override (args: {
+    pkg.override (args: {
       melpaBuild = drv: args.melpaBuild (drv // {
         dontConfigure = true;
       });
-    }) else null;
+    });
 
   markBroken = pkg:
-    if pkg != null then pkg.override (args: {
+    pkg.override (args: {
       melpaBuild = drv: args.melpaBuild (drv // {
         meta = (drv.meta or { }) // { broken = true; };
       });
-    }) else null;
+    });
 
   externalSrc = pkg: epkg:
-    if pkg != null then pkg.override (args: {
+    pkg.override (args: {
       melpaBuild = drv: args.melpaBuild (drv // {
         inherit (epkg) src version;
 
         propagatedUserEnvPkgs = [ epkg ];
       });
-    }) else null;
+    });
 
   buildWithGit = pkg: pkg.overrideAttrs (attrs: {
     nativeBuildInputs =
       (attrs.nativeBuildInputs or [ ]) ++ [ pkgs.git ];
   });
 
-  fix-rtags = pkg:
-    if pkg != null then dontConfigure (externalSrc pkg pkgs.rtags)
-    else null;
+  fix-rtags = pkg: dontConfigure (externalSrc pkg pkgs.rtags);
 
   generateMelpa = lib.makeOverridable ({ archiveJson ? defaultArchive
                                        }:
@@ -130,7 +128,7 @@ let
         ligo-mode =
           if super.ligo-mode.version == "0.3"
           then markBroken super.ligo-mode
-          else null; # auto-updater is failing; use manual one
+          else super.ligo-mode;
 
         # upstream issue: missing file header
         link = markBroken super.link;
@@ -451,6 +449,13 @@ let
 
         orgit-forge = buildWithGit super.orgit-forge;
 
+        ormolu = super.ormolu.overrideAttrs (attrs: {
+          postPatch = attrs.postPatch or "" + ''
+            substituteInPlace ormolu.el \
+              --replace-fail 'ormolu-process-path "ormolu"' 'ormolu-process-path "${lib.getExe pkgs.ormolu}"'
+          '';
+        });
+
         ox-rss = buildWithGit super.ox-rss;
 
         python-isort = super.python-isort.overrideAttrs (attrs: {
@@ -541,6 +546,13 @@ let
           postPatch = attrs.postPatch or "" + ''
             substituteInPlace typst-mode.el \
               --replace 'typst-executable-location  "typst"' 'typst-executable-location "${lib.getExe pkgs.typst}"'
+          '';
+        });
+
+        units-mode = super.units-mode.overrideAttrs (attrs: {
+          postPatch = attrs.postPatch or "" + ''
+            substituteInPlace units-mode.el \
+              --replace-fail 'units-binary-path "units"' 'units-binary-path "${lib.getExe pkgs.units}"'
           '';
         });
 

@@ -3,38 +3,45 @@
   stdenv,
   buildPythonPackage,
   fetchFromGitHub,
+
+  # build-system
+  poetry-core,
+
+  # dependencies
+  jsonpatch,
+  langsmith,
+  packaging,
+  pyyaml,
+  tenacity,
+
+  # optional-dependencies
+  pydantic,
+
+  # tests
   freezegun,
   grandalf,
   httpx,
-  jsonpatch,
-  langsmith,
   numpy,
-  packaging,
-  poetry-core,
-  pydantic,
   pytest-asyncio,
   pytest-mock,
   pytest-xdist,
   pytestCheckHook,
-  pythonOlder,
-  pyyaml,
   syrupy,
-  tenacity,
+
+  # passthru
   writeScript,
 }:
 
 buildPythonPackage rec {
   pname = "langchain-core";
-  version = "0.2.33";
+  version = "0.3.0";
   pyproject = true;
-
-  disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
     owner = "langchain-ai";
     repo = "langchain";
     rev = "refs/tags/langchain-core==${version}";
-    hash = "sha256-vM3FY9E8PeC8LHP4QCTM1ggFynI+PscF7pv7CMaSZlU=";
+    hash = "sha256-BCqrJuy7R2jT3QmTvYwn8gHX7bc6Tq8HArK+F3PjBhw=";
   };
 
   sourceRoot = "${src.name}/libs/core";
@@ -80,7 +87,7 @@ buildPythonPackage rec {
       #!/usr/bin/env nix-shell
       #!nix-shell -i bash -p nix-update
 
-      set -eu -o pipefail
+      set -u -o pipefail +e
       nix-update --commit --version-regex 'langchain-core==(.*)' python3Packages.langchain-core
       nix-update --commit --version-regex 'langchain-text-splitters==(.*)' python3Packages.langchain-text-splitters
       nix-update --commit --version-regex 'langchain==(.*)' python3Packages.langchain
@@ -95,6 +102,12 @@ buildPythonPackage rec {
       # Compares with machine-specific timings
       "test_rate_limit_invoke"
       "test_rate_limit_stream"
+      # flaky: assert (1726352133.7419367 - 1726352132.2697523) < 1
+      "test_benchmark_model"
+
+      # TypeError: exceptions must be derived from Warning, not <class 'NoneType'>
+      "test_chat_prompt_template_variable_names"
+      "test_create_model_v2"
     ]
     ++ lib.optionals stdenv.isDarwin [
       # Langchain-core the following tests due to the test comparing execution time with magic values.

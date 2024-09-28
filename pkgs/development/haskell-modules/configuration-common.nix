@@ -12,8 +12,8 @@
 { pkgs, haskellLib }:
 
 let
-  inherit (pkgs) fetchpatch fetchpatch2 lib;
-  inherit (lib) throwIfNot versionOlder versions;
+  inherit (pkgs) fetchpatch lib;
+  inherit (lib) throwIfNot versionOlder;
 in
 
 with haskellLib;
@@ -387,7 +387,7 @@ self: super: {
   numerals-base = dontCheck (doJailbreak super.numerals-base);
 
   # This test keeps being aborted because it runs too quietly for too long
-  Lazy-Pbkdf2 = if pkgs.stdenv.isi686 then dontCheck super.Lazy-Pbkdf2 else super.Lazy-Pbkdf2;
+  Lazy-Pbkdf2 = if pkgs.stdenv.hostPlatform.isi686 then dontCheck super.Lazy-Pbkdf2 else super.Lazy-Pbkdf2;
 
   # check requires mysql server
   mysql-simple = dontCheck super.mysql-simple;
@@ -901,12 +901,12 @@ self: super: {
   Cabal-ide-backend = dontCheck super.Cabal-ide-backend;
 
   # This package can't be built on non-Windows systems.
-  Win32 = overrideCabal (drv: { broken = !pkgs.stdenv.isCygwin; }) super.Win32;
+  Win32 = overrideCabal (drv: { broken = !pkgs.stdenv.hostPlatform.isCygwin; }) super.Win32;
   inline-c-win32 = dontDistribute super.inline-c-win32;
   Southpaw = dontDistribute super.Southpaw;
 
   # https://ghc.haskell.org/trac/ghc/ticket/9825
-  vimus = overrideCabal (drv: { broken = pkgs.stdenv.isLinux && pkgs.stdenv.isi686; }) super.vimus;
+  vimus = overrideCabal (drv: { broken = pkgs.stdenv.hostPlatform.isLinux && pkgs.stdenv.hostPlatform.isi686; }) super.vimus;
 
   # https://github.com/kazu-yamamoto/logger/issues/42
   logger = dontCheck super.logger;
@@ -2649,7 +2649,7 @@ self: super: {
       purescript =
         lib.pipe
           (super.purescript.overrideScope purescriptOverlay)
-          ([
+          [
             # https://github.com/purescript/purescript/pull/4547
             (appendPatches [
               (pkgs.fetchpatch {
@@ -2668,7 +2668,7 @@ self: super: {
             doJailbreak
             # Generate shell completions
             (self.generateOptparseApplicativeCompletions [ "purs" ])
-          ]);
+          ];
 
       purenix =
         lib.pipe

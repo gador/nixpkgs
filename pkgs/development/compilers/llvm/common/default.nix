@@ -27,6 +27,9 @@
   officialRelease ? null,
   monorepoSrc ? null,
   version ? null,
+  # Allows passthrough to packages via newScope. This makes it possible to
+  # do `(llvmPackages.override { <someLlvmDependency> = bar; }).clang` and get
+  # an llvmPackages whose packages are overridden in an internally consistent way.
   ...
 }@args:
 
@@ -1055,7 +1058,7 @@ let
               lib.optional
                 (
                   lib.versions.major metadata.release_version == "17"
-                  && stdenv.isDarwin
+                  && stdenv.hostPlatform.isDarwin
                   && lib.versionOlder stdenv.hostPlatform.darwinMinVersion "10.13"
                 )
                 # https://github.com/llvm/llvm-project/issues/64226
@@ -1070,7 +1073,7 @@ let
               lib.optional
                 (
                   lib.versionAtLeast metadata.release_version "18"
-                  && stdenv.isDarwin
+                  && stdenv.hostPlatform.isDarwin
                   && lib.versionOlder stdenv.hostPlatform.darwinMinVersion "10.13"
                 )
                 # https://github.com/llvm/llvm-project/issues/64226

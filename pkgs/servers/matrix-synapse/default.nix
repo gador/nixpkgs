@@ -17,20 +17,20 @@ let
 in
 python3.pkgs.buildPythonApplication rec {
   pname = "matrix-synapse";
-  version = "1.114.0";
+  version = "1.115.0";
   format = "pyproject";
 
   src = fetchFromGitHub {
     owner = "element-hq";
     repo = "synapse";
     rev = "v${version}";
-    hash = "sha256-AvUc6vE2gjsUEbRLaexDbvEPwJio7W3YMyN3fJvr4c0=";
+    hash = "sha256-R7TAuAdEGvk/cAttxbrOZkZfsfbrsPujt0zVcp3aDZQ=";
   };
 
   cargoDeps = rustPlatform.fetchCargoTarball {
     inherit src;
     name = "${pname}-${version}";
-    hash = "sha256-cAGTEi7UwNVfTzckWBpjxfEMWXZRZDdkXIhx/HjAiTg=";
+    hash = "sha256-h84Hp+vhGfunbD3nRb1EXPnGhnMXncjk3ASKdRr805Y=";
   };
 
   postPatch = ''
@@ -58,7 +58,7 @@ python3.pkgs.buildPythonApplication rec {
 
   buildInputs = [
     openssl
-  ] ++ lib.optionals stdenv.isDarwin [
+  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
     libiconv
   ];
 
@@ -140,7 +140,7 @@ python3.pkgs.buildPythonApplication rec {
   ])
   ++ lib.flatten (lib.attrValues passthru.optional-dependencies);
 
-  doCheck = !stdenv.isDarwin;
+  doCheck = !stdenv.hostPlatform.isDarwin;
 
   checkPhase = ''
     runHook preCheck

@@ -14,6 +14,8 @@
 
   better_thermostat = callPackage ./better_thermostat {};
 
+  bodymiscale = callPackage ./bodymiscale { };
+
   dwd = callPackage ./dwd { };
 
   elevenlabs_tts = callPackage ./elevenlabs_tts {};
@@ -63,6 +65,8 @@
   smartir = callPackage ./smartir {};
 
   smartthinq-sensors = callPackage ./smartthinq-sensors {};
+
+  solax_modbus = callPackage ./solax_modbus {};
 
   solis-sensor = callPackage ./solis-sensor {};
 

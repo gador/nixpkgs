@@ -53,7 +53,7 @@
   inputSupport ? true,
   jackSupport ? true,
   mpdSupport ? true,
-  mprisSupport ? stdenv.isLinux,
+  mprisSupport ? stdenv.hostPlatform.isLinux,
   nlSupport ? true,
   pipewireSupport ? true,
   pulseSupport ? true,
@@ -158,7 +158,7 @@ stdenv.mkDerivation (finalAttrs: {
     ++ lib.optional upowerSupport upower
     ++ lib.optional wireplumberSupport wireplumber
     ++ lib.optional (cavaSupport || pipewireSupport) pipewire
-    ++ lib.optional (!stdenv.isLinux) libinotify-kqueue;
+    ++ lib.optional (!stdenv.hostPlatform.isLinux) libinotify-kqueue;
 
   nativeCheckInputs = [ catch2_3 ];
   doCheck = runTests;
@@ -179,12 +179,14 @@ stdenv.mkDerivation (finalAttrs: {
       "pulseaudio" = pulseSupport;
       "rfkill" = rfkillSupport;
       "sndio" = sndioSupport;
-      "systemd" = false;
+      "systemd" = true;
       "tests" = runTests;
       "upower_glib" = upowerSupport;
       "wireplumber" = wireplumberSupport;
     })
     ++ lib.optional experimentalPatches (lib.mesonBool "experimental" true);
+
+  PKG_CONFIG_SYSTEMD_SYSTEMDUSERUNITDIR = "${placeholder "out"}/lib/systemd/user";
 
   postPatch = ''
     substituteInPlace include/util/command.hpp \

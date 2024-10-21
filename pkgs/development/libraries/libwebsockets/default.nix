@@ -43,7 +43,7 @@ stdenv.mkDerivation rec {
   );
 
   postInstall = ''
-    find "$out" -type f -exec remove-references-to -t ${stdenv.cc} '{}' +
+    find "$out" -type f -exec remove-references-to -t ${stdenv.cc.cc} '{}' +
     # Fix path that will be incorrect on move to "dev" output.
     substituteInPlace "$out/lib/cmake/libwebsockets/LibwebsocketsTargets-release.cmake" \
       --replace "\''${_IMPORT_PREFIX}" "$out"

@@ -52,6 +52,7 @@ in
 buildPythonPackage rec {
   pname = "openusd";
   version = "24.08";
+  pyproject = false;
 
   src = fetchFromGitHub {
     owner = "PixarAnimationStudios";
@@ -65,13 +66,11 @@ buildPythonPackage rec {
 
   outputs = [ "out" ] ++ lib.optional withDocs "doc";
 
-  format = "other";
-
   patches = [
     (fetchpatch {
       name = "port-to-embree-4.patch";
-      url = "https://github.com/PixarAnimationStudios/OpenUSD/pull/2266/commits/4b6c23d459c602fdac5e0ebc9b7722cbd5475e86.patch";
-      hash = "sha256-yjqdGAVqfEsOX1W/tG6c+GgQLYya5U9xgUe/sNIuDbw=";
+      url = "https://github.com/PixarAnimationStudios/OpenUSD/pull/2266/commits/c8fec1342e05dca98a1afd4ea93c7a5f0b41e25b.patch";
+      hash = "sha256-pK1TUwmVv9zsZkOypq25pl+FJDxJJvozUtVP9ystGtI=";
     })
   ];
 

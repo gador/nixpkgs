@@ -26,6 +26,7 @@
 , icu
 , systemd
 , systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd
+, fast-float
 , nixosTests
 , blackbox-terminal
 }:
@@ -54,6 +55,37 @@ stdenv.mkDerivation (finalAttrs: {
       url = "https://git.alpinelinux.org/aports/plain/community/vte3/fix-W_EXITCODE.patch?id=4d35c076ce77bfac7655f60c4c3e4c86933ab7dd";
       hash = "sha256-FkVyhsM0mRUzZmS2Gh172oqwcfXv6PyD6IEgjBhy2uU=";
     })
+    # build: Add missing includes
+    # https://gitlab.gnome.org/GNOME/vte/-/issues/2824
+    (fetchpatch {
+      name = "0002-build-Add-missing-includes.patch";
+      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/c90b078ecf4382458a9af44d765d710eb46b0453.patch";
+      hash = "sha256-S7SHYBq309DLDOBGTFmUTUpsICl3mgMDb2RpYxy+o64=";
+    })
+    # build: Add fast_float dependency
+    # https://gitlab.gnome.org/GNOME/vte/-/issues/2823
+    (fetchpatch {
+      name = "0003-build-Add-fast_float-dependency.patch";
+      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/f6095fca4d1baf950817e7010e6f1e7c313b9e2e.patch";
+      hash = "sha256-EL9PPiI5pDJOXf4Ck4nkRte/jHx/QWbxkjDFRSsp+so=";
+    })
+    (fetchpatch {
+      name = "0003-widget-termprops-Use-fast_float.patch";
+      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/6c2761f51a0400772f443f12ea23a75576e195d3.patch";
+      hash = "sha256-jjM9bhl8EhtylUIQ2nMSNX3ugnkZQP/2POvSUDW0LM0=";
+    })
+    (fetchpatch {
+      name = "0003-build-Use-correct-path-to-include-fast_float.h.patch";
+      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/d09330585e648b5c9991dffab4a06d1f127bf916.patch";
+      hash = "sha256-YGVXt2VojljYgTcmahQ2YEZGEysyUSwk+snQfoipJ+E=";
+    })
+    # tests: Remove excessive constexpr
+    # https://gitlab.gnome.org/GNOME/vte/-/issues/2819
+    (fetchpatch {
+      name = "0004-tests-Remove-excessive-constrexpr.patch";
+      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/c8838779d5f8c0e03411cef9775cd8f5a10a6204.patch";
+      hash = "sha256-zF+tDAzllhbts5pO4Uo2DgzPxVunNmf42jWOgWJO3MI=";
+    })
   ];
 
   nativeBuildInputs = [
@@ -79,6 +111,8 @@ stdenv.mkDerivation (finalAttrs: {
     icu
   ] ++ lib.optionals systemdSupport [
     systemd
+  ] ++ lib.optionals stdenv.cc.isClang [
+    fast-float
   ];
 
   # Required by vte-2.91.pc.

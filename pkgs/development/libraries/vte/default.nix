@@ -62,6 +62,14 @@ stdenv.mkDerivation (finalAttrs: {
       url = "https://gitlab.gnome.org/GNOME/vte/-/commit/c90b078ecf4382458a9af44d765d710eb46b0453.patch";
       hash = "sha256-S7SHYBq309DLDOBGTFmUTUpsICl3mgMDb2RpYxy+o64=";
     })
+    # tests: Remove excessive constexpr
+    # https://gitlab.gnome.org/GNOME/vte/-/issues/2819
+    (fetchpatch {
+      name = "0004-tests-Remove-excessive-constrexpr.patch";
+      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/c8838779d5f8c0e03411cef9775cd8f5a10a6204.patch";
+      hash = "sha256-zF+tDAzllhbts5pO4Uo2DgzPxVunNmf42jWOgWJO3MI=";
+    })
+  ] ++ lib.optionals stdenv.cc.isClang [
     # build: Add fast_float dependency
     # https://gitlab.gnome.org/GNOME/vte/-/issues/2823
     (fetchpatch {
@@ -78,13 +86,6 @@ stdenv.mkDerivation (finalAttrs: {
       name = "0003-build-Use-correct-path-to-include-fast_float.h.patch";
       url = "https://gitlab.gnome.org/GNOME/vte/-/commit/d09330585e648b5c9991dffab4a06d1f127bf916.patch";
       hash = "sha256-YGVXt2VojljYgTcmahQ2YEZGEysyUSwk+snQfoipJ+E=";
-    })
-    # tests: Remove excessive constexpr
-    # https://gitlab.gnome.org/GNOME/vte/-/issues/2819
-    (fetchpatch {
-      name = "0004-tests-Remove-excessive-constrexpr.patch";
-      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/c8838779d5f8c0e03411cef9775cd8f5a10a6204.patch";
-      hash = "sha256-zF+tDAzllhbts5pO4Uo2DgzPxVunNmf42jWOgWJO3MI=";
     })
   ];
 

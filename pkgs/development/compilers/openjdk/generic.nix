@@ -134,13 +134,7 @@ stdenv.mkDerivation (finalAttrs: {
   pname = "openjdk" + lib.optionalString headless "-headless";
   inherit version;
 
-  outputs =
-    [
-      "out"
-    ]
-    ++ lib.optionals (!atLeast11) [
-      "jre"
-    ];
+  outputs = [ "out" ] ++ lib.optionals (!atLeast11) [ "jre" ];
 
   inherit (source) src;
 
@@ -247,18 +241,10 @@ stdenv.mkDerivation (finalAttrs: {
       pkg-config
       removeReferencesTo
     ]
-    ++ lib.optionals atLeast11 [
-      autoconf
-    ]
-    ++ lib.optionals (!atLeast11) [
-      lndir
-    ]
-    ++ [
-      unzip
-    ]
-    ++ lib.optionals atLeast21 [
-      ensureNewerSourcesForZipFilesHook
-    ];
+    ++ lib.optionals atLeast11 [ autoconf ]
+    ++ lib.optionals (!atLeast11) [ lndir ]
+    ++ [ unzip ]
+    ++ lib.optionals atLeast21 [ ensureNewerSourcesForZipFilesHook ];
 
   buildInputs =
     [
@@ -272,9 +258,7 @@ stdenv.mkDerivation (finalAttrs: {
       cups
       freetype
     ]
-    ++ lib.optionals (atLeast11 && !atLeast21) [
-      harfbuzz
-    ]
+    ++ lib.optionals (atLeast11 && !atLeast21) [ harfbuzz ]
     ++ [
       alsa-lib
       libjpeg
@@ -289,15 +273,9 @@ stdenv.mkDerivation (finalAttrs: {
       libX11
       libICE
     ]
-    ++ lib.optionals (!atLeast11) [
-      libXext
-    ]
-    ++ [
-      libXrender
-    ]
-    ++ lib.optionals atLeast11 [
-      libXext
-    ]
+    ++ lib.optionals (!atLeast11) [ libXext ]
+    ++ [ libXrender ]
+    ++ lib.optionals atLeast11 [ libXext ]
     ++ [
       libXtst
       libXt
@@ -316,9 +294,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   propagatedBuildInputs = lib.optionals (!atLeast11) [ setJavaClassPath ];
 
-  nativeInstallCheckInputs = lib.optionals atLeast23 [
-    versionCheckHook
-  ];
+  nativeInstallCheckInputs = lib.optionals atLeast23 [ versionCheckHook ];
 
   # JDK's build system attempts to specifically detect
   # and special-case WSL, and we don't want it to do that,
@@ -330,9 +306,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   # https://openjdk.org/groups/build/doc/building.html
   configureFlags =
-    [
-      "--with-boot-jdk=${jdk-bootstrap'.home}"
-    ]
+    [ "--with-boot-jdk=${jdk-bootstrap'.home}" ]
     ++ (
       if atLeast23 then
         [
@@ -344,9 +318,7 @@ stdenv.mkDerivation (finalAttrs: {
           "--with-version-build=${versionBuild}"
           "--with-version-opt=nixos"
         ]
-        ++ [
-          "--with-version-pre="
-        ]
+        ++ [ "--with-version-pre=" ]
       else
         [
           "--with-update-version=${lib.removePrefix "${featureVersion}u" (lib.elemAt versionSplit 0)}"
@@ -365,9 +337,7 @@ stdenv.mkDerivation (finalAttrs: {
           "--with-harfbuzz=system"
         ]
       else
-        [
-          "--disable-freetype-bundling"
-        ]
+        [ "--disable-freetype-bundling" ]
     )
     ++ (
       if atLeast11 then
@@ -384,12 +354,8 @@ stdenv.mkDerivation (finalAttrs: {
           "--with-giflib=system"
         ]
     )
-    ++ [
-      "--with-stdc++lib=dynamic"
-    ]
-    ++ lib.optionals (featureVersion == "11") [
-      "--disable-warnings-as-errors"
-    ]
+    ++ [ "--with-stdc++lib=dynamic" ]
+    ++ lib.optionals (featureVersion == "11") [ "--disable-warnings-as-errors" ]
     # OpenJDK 11 cannot be built by recent versions of Clang, as far as I can tell (see
     # https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=260319). Known to
     # compile with LLVM 12.
@@ -623,9 +589,7 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   # TODO: The OpenJDK 8 derivation got this wrong.
-  disallowedReferences = [
-    (if atLeast11 then jdk-bootstrap' else jdk-bootstrap)
-  ];
+  disallowedReferences = [ (if atLeast11 then jdk-bootstrap' else jdk-bootstrap) ];
 
   passthru =
     {
@@ -634,9 +598,7 @@ stdenv.mkDerivation (finalAttrs: {
       inherit (source) updateScript;
     }
     // (if atLeast11 then { inherit gtk3; } else { inherit gtk2; })
-    // lib.optionalAttrs (!atLeast23) {
-      inherit architecture;
-    };
+    // lib.optionalAttrs (!atLeast23) { inherit architecture; };
 
   meta = {
     description = "Open-source Java Development Kit";
@@ -658,9 +620,7 @@ stdenv.mkDerivation (finalAttrs: {
         "armv6l-linux"
         "powerpc64le-linux"
       ]
-      ++ lib.optionals atLeast17 [
-        "riscv64-linux"
-      ];
+      ++ lib.optionals atLeast17 [ "riscv64-linux" ];
     # OpenJDK 8 was broken for musl at 2024-01-17. Tracking issue:
     # https://github.com/NixOS/nixpkgs/issues/281618
     # error: ‘isnanf’ was not declared in this scope

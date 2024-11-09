@@ -1213,8 +1213,7 @@ lib.mapAttrs mkLicense ({
   };
 
   tost = {
-    shortName = "TSL";
-    fullName = "Tomorrow Open Source License";
+    fullName = "Tomorrow Open Source Technology License 1.0";
     url = "https://github.com/PixarAnimationStudios/OpenUSD/blob/release/LICENSE.txt";
   };
 

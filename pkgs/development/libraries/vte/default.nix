@@ -33,7 +33,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "vte";
-  version = "0.78.0";
+  version = "0.78.1";
 
   outputs = [ "out" "dev" ]
     ++ lib.optional (gtkVersion != null) "devdoc";
@@ -43,7 +43,7 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "GNOME";
     repo = "vte";
     rev = finalAttrs.version;
-    hash = "sha256-Ql4q30Q4OEyH63SMbpMVyT/ZySeH/5b+5vo+Xv2HGdQ=";
+    hash = "sha256-dVCvf4eTIJlrSzG6xLdKU47N9uAtHDwRrGkWtSmqbEU=";
   };
 
   patches = [
@@ -55,21 +55,6 @@ stdenv.mkDerivation (finalAttrs: {
       url = "https://git.alpinelinux.org/aports/plain/community/vte3/fix-W_EXITCODE.patch?id=4d35c076ce77bfac7655f60c4c3e4c86933ab7dd";
       hash = "sha256-FkVyhsM0mRUzZmS2Gh172oqwcfXv6PyD6IEgjBhy2uU=";
     })
-    # build: Add missing includes
-    # https://gitlab.gnome.org/GNOME/vte/-/issues/2824
-    (fetchpatch {
-      name = "0002-build-Add-missing-includes.patch";
-      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/c90b078ecf4382458a9af44d765d710eb46b0453.patch";
-      hash = "sha256-S7SHYBq309DLDOBGTFmUTUpsICl3mgMDb2RpYxy+o64=";
-    })
-    # tests: Remove excessive constexpr
-    # https://gitlab.gnome.org/GNOME/vte/-/issues/2819
-    (fetchpatch {
-      name = "0004-tests-Remove-excessive-constrexpr.patch";
-      url = "https://gitlab.gnome.org/GNOME/vte/-/commit/c8838779d5f8c0e03411cef9775cd8f5a10a6204.patch";
-      hash = "sha256-zF+tDAzllhbts5pO4Uo2DgzPxVunNmf42jWOgWJO3MI=";
-    })
-  ] ++ lib.optionals stdenv.cc.isClang [
     # build: Add fast_float dependency
     # https://gitlab.gnome.org/GNOME/vte/-/issues/2823
     (fetchpatch {
@@ -110,10 +95,9 @@ stdenv.mkDerivation (finalAttrs: {
     pcre2
     lz4
     icu
+    fast-float
   ] ++ lib.optionals systemdSupport [
     systemd
-  ] ++ lib.optionals stdenv.cc.isClang [
-    fast-float
   ];
 
   # Required by vte-2.91.pc.

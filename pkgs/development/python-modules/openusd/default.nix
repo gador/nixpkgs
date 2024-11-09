@@ -69,7 +69,8 @@ buildPythonPackage rec {
   patches = [
     (fetchpatch {
       name = "port-to-embree-4.patch";
-      url = "https://github.com/PixarAnimationStudios/OpenUSD/pull/2266/commits/c8fec1342e05dca98a1afd4ea93c7a5f0b41e25b.patch";
+      # https://github.com/PixarAnimationStudios/OpenUSD/pull/2266
+      url = "https://github.com/PixarAnimationStudios/OpenUSD/commit/c8fec1342e05dca98a1afd4ea93c7a5f0b41e25b.patch?full_index=1";
       hash = "sha256-pK1TUwmVv9zsZkOypq25pl+FJDxJJvozUtVP9ystGtI=";
     })
   ];
@@ -175,6 +176,9 @@ buildPythonPackage rec {
     '';
     homepage = "https://openusd.org/";
     license = lib.licenses.tost;
-    maintainers = with lib.maintainers; [ shaddydc ];
+    maintainers = with lib.maintainers; [
+      shaddydc
+      gador
+    ];
   };
 }

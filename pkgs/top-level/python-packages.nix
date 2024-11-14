@@ -1603,6 +1603,8 @@ self: super: with self; {
 
   bids-validator = callPackage ../development/python-modules/bids-validator { };
 
+  bidsschematools = callPackage ../development/python-modules/bidsschematools { };
+
   biliass = callPackage ../development/python-modules/biliass { };
 
   bilibili-api-python = callPackage ../development/python-modules/bilibili-api-python { };
@@ -9123,6 +9125,8 @@ self: super: with self; {
 
   nlpcloud = callPackage ../development/python-modules/nlpcloud { };
 
+  nlpo3 =  callPackage ../development/python-modules/nlpo3 { };
+
   nltk = callPackage ../development/python-modules/nltk { };
 
   nnpdf = toPythonModule (pkgs.nnpdf.override {
@@ -10199,18 +10203,23 @@ self: super: with self; {
   pillowfight = callPackage ../development/python-modules/pillowfight { };
 
   pillow = callPackage ../development/python-modules/pillow {
-    inherit (pkgs) freetype libjpeg zlib libtiff libwebp tcl lcms2 tk;
-    inherit (pkgs.xorg) libX11 libxcb;
+    inherit (pkgs)
+      freetype
+      lcms2
+      libimagequant
+      libjpeg
+      libraqm
+      libtiff
+      libwebp
+      openjpeg
+      zlib
+    ;
+    inherit (pkgs.xorg) libxcb;
   };
 
   pillow-heif = callPackage ../development/python-modules/pillow-heif { };
 
   pillow-jpls = callPackage ../development/python-modules/pillow-jpls { };
-
-  pillow-simd = callPackage ../development/python-modules/pillow-simd {
-      inherit (pkgs) freetype libjpeg zlib libtiff libwebp tcl lcms2 tk;
-      inherit (pkgs.xorg) libX11;
-  };
 
   pims = callPackage ../development/python-modules/pims { };
 
@@ -11157,6 +11166,8 @@ self: super: with self; {
   pybigwig = callPackage ../development/python-modules/pybigwig { };
 
   pybind11 = callPackage ../development/python-modules/pybind11 { };
+
+  pybind11-stubgen = callPackage ../development/python-modules/pybind11-stubgen { };
 
   pybindgen = callPackage ../development/python-modules/pybindgen { };
 
@@ -14919,6 +14930,8 @@ self: super: with self; {
 
   sphinx-book-theme = callPackage ../development/python-modules/sphinx-book-theme { };
 
+  sphinx-click = callPackage ../development/python-modules/sphinx-click { };
+
   sphinx-codeautolink = callPackage ../development/python-modules/sphinx-codeautolink { };
 
   sphinx-comments = callPackage ../development/python-modules/sphinx-comments { };
@@ -15621,7 +15634,6 @@ self: super: with self; {
       };
       grpcioTF = self.grpcio.override {
         protobuf = protobufTF;
-        grpc = grpcTF;
       };
       tensorboard-plugin-profileTF = self.tensorboard-plugin-profile.override {
         protobuf = protobuf-pythonTF;

@@ -1100,8 +1100,6 @@ with pkgs;
     inherit (darwin.apple_sdk_11_0.frameworks) AppKit CoreAudio CoreGraphics Foundation IOKit MediaPlayer Security;
   };
 
-  trimage = callPackage ../applications/graphics/trimage { inherit (qt5) wrapQtAppsHook; };
-
   ufolint = with python3Packages; toPythonApplication ufolint;
 
   valeronoi = qt6Packages.callPackage ../tools/misc/valeronoi { };
@@ -3941,8 +3939,6 @@ with pkgs;
 
   internetarchive = with python3Packages; toPythonApplication internetarchive;
 
-  invidious = callPackage ../servers/invidious { };
-
   iocextract = with python3Packages; toPythonApplication iocextract;
 
   iocsearcher = with python3Packages; toPythonApplication iocsearcher;
@@ -4755,10 +4751,6 @@ with pkgs;
   openrgb-plugin-effects = libsForQt5.callPackage ../applications/misc/openrgb-plugins/effects { };
 
   openrgb-plugin-hardwaresync = libsForQt5.callPackage ../applications/misc/openrgb-plugins/hardwaresync { };
-
-  opensc = callPackage ../tools/security/opensc {
-    inherit (darwin.apple_sdk.frameworks) Carbon PCSC;
-  };
 
   toastify = darwin.apple_sdk_11_0.callPackage ../tools/misc/toastify {};
 
@@ -5900,6 +5892,9 @@ with pkgs;
   yamlfix = with python3Packages; toPythonApplication yamlfix;
 
   yamllint = with python3Packages; toPythonApplication yamllint;
+
+  # To expose more packages for Yi, override the extraPackages arg.
+  yi = callPackage ../applications/editors/yi/wrapper.nix { };
 
   yaydl = callPackage ../tools/video/yaydl {
     inherit (darwin.apple_sdk.frameworks) Security;
@@ -7611,15 +7606,25 @@ with pkgs;
     bluezSupport = lib.meta.availableOn stdenv.hostPlatform bluez;
     x11Support = true;
   };
+  python314Full = python314.override {
+    self = python314Full;
+    pythonAttr = "python314Full";
+    bluezSupport = lib.meta.availableOn stdenv.hostPlatform bluez;
+    x11Support = true;
+  };
 
   # https://py-free-threading.github.io
   python313FreeThreading = python313.override {
     pythonAttr = "python313FreeThreading";
     enableGIL = false;
   };
+  python314FreeThreading = python314.override {
+    pythonAttr = "python313FreeThreading";
+    enableGIL = false;
+  };
 
   pythonInterpreters = callPackage ./../development/interpreters/python { };
-  inherit (pythonInterpreters) python27 python39 python310 python311 python312 python313 python3Minimal pypy27 pypy310 pypy39 rustpython;
+  inherit (pythonInterpreters) python27 python39 python310 python311 python312 python313 python314 python3Minimal pypy27 pypy310 pypy39 rustpython;
 
   # List of extensions with overrides to apply to all Python package sets.
   pythonPackagesExtensions = [ ];
@@ -7631,6 +7636,7 @@ with pkgs;
   python311Packages = recurseIntoAttrs python311.pkgs;
   python312Packages = recurseIntoAttrs python312.pkgs;
   python313Packages = python313.pkgs;
+  python314Packages = python314.pkgs;
   pypyPackages = pypy.pkgs;
   pypy2Packages = pypy2.pkgs;
   pypy27Packages = pypy27.pkgs;
@@ -9526,9 +9532,7 @@ with pkgs;
     autoconf = buildPackages.autoconf269;
   };
 
-  gpac = callPackage ../applications/video/gpac {
-    inherit (darwin.apple_sdk.frameworks) Carbon;
-  };
+  gpac = callPackage ../applications/video/gpac { };
 
   gpgme = callPackage ../development/libraries/gpgme { };
 
@@ -10729,9 +10733,7 @@ with pkgs;
     utils = true;
   };
 
-  portaudio = callPackage ../development/libraries/portaudio {
-    inherit (darwin.apple_sdk.frameworks) AudioToolbox AudioUnit CoreAudio CoreServices Carbon;
-  };
+  portaudio = callPackage ../development/libraries/portaudio { };
 
   portmidi = callPackage ../development/libraries/portmidi {
     inherit (darwin.apple_sdk.frameworks) Carbon CoreAudio CoreFoundation CoreMIDI CoreServices;
@@ -11769,10 +11771,6 @@ with pkgs;
   };
 
   eventstore = callPackage ../servers/nosql/eventstore { };
-
-  rustus = callPackage ../servers/networking/rustus {
-    inherit (darwin.apple_sdk.frameworks) Security;
-  };
 
   fedigroups = callPackage ../servers/fedigroups {
     inherit (darwin.apple_sdk.frameworks) Security;
@@ -13652,10 +13650,7 @@ with pkgs;
 
   cdparanoia = cdparanoiaIII;
 
-  cdparanoiaIII = callPackage ../applications/audio/cdparanoia {
-    inherit (darwin) IOKit;
-    inherit (darwin.apple_sdk.frameworks) Carbon;
-  };
+  cdparanoiaIII = callPackage ../applications/audio/cdparanoia { };
 
   brotab = callPackage ../tools/misc/brotab {
     python = python3;
@@ -14142,13 +14137,11 @@ with pkgs;
 
   buildMozillaMach = opts: callPackage (import ../applications/networking/browsers/firefox/common.nix opts) { };
 
-  firefoxPackages = recurseIntoAttrs (callPackage ../applications/networking/browsers/firefox/packages.nix {});
-
-  firefox-unwrapped = firefoxPackages.firefox;
-  firefox-beta-unwrapped = firefoxPackages.firefox-beta;
-  firefox-devedition-unwrapped = firefoxPackages.firefox-devedition;
-  firefox-esr-128-unwrapped = firefoxPackages.firefox-esr-128;
-  firefox-esr-unwrapped = firefoxPackages.firefox-esr-128;
+  firefox-unwrapped = callPackage ../applications/networking/browsers/firefox/packages/firefox.nix { };
+  firefox-beta-unwrapped = callPackage ../applications/networking/browsers/firefox/packages/firefox-beta.nix { };
+  firefox-devedition-unwrapped = callPackage ../applications/networking/browsers/firefox/packages/firefox-devedition.nix { };
+  firefox-esr-128-unwrapped = callPackage ../applications/networking/browsers/firefox/packages/firefox-esr-128.nix { };
+  firefox-esr-unwrapped = firefox-esr-128-unwrapped;
 
   firefox = wrapFirefox firefox-unwrapped { };
   firefox-beta = wrapFirefox firefox-beta-unwrapped {
@@ -14391,14 +14384,6 @@ with pkgs;
   gpxsee-qt6 = qt6Packages.callPackage ../applications/misc/gpxsee { };
 
   gpxsee = gpxsee-qt5;
-
-  gtklock = callPackage ../tools/wayland/gtklock { };
-
-  gtklock-playerctl-module = callPackage ../tools/wayland/gtklock/playerctl-module.nix { };
-
-  gtklock-powerbar-module = callPackage ../tools/wayland/gtklock/powerbar-module.nix { };
-
-  gtklock-userinfo-module = callPackage ../tools/wayland/gtklock/userinfo-module.nix { };
 
   guvcview = libsForQt5.callPackage ../os-specific/linux/guvcview { };
 
@@ -16135,8 +16120,6 @@ with pkgs;
     wlroots = wlroots_0_18;
   };
 
-  tree-from-tags = callPackage ../applications/audio/tree-from-tags { };
-
   treesheets = callPackage ../applications/office/treesheets {
     wxGTK = wxGTK32;
     inherit (darwin.apple_sdk.frameworks) Cocoa;
@@ -17031,9 +17014,7 @@ with pkgs;
   deliantra-maps = callPackage ../games/deliantra/maps.nix { };
   deliantra-data = callPackage ../games/deliantra/data.nix { };
 
-  ddnet = callPackage ../games/ddnet {
-    inherit (darwin.apple_sdk.frameworks) Carbon Cocoa OpenGL Security;
-  };
+  ddnet = callPackage ../games/ddnet {};
   ddnet-server = ddnet.override { buildClient = false; };
 
   devilutionx = callPackage ../games/devilutionx {
@@ -17220,12 +17201,11 @@ with pkgs;
 
   manaplus = callPackage ../games/manaplus { stdenv = gcc11Stdenv; };
 
-  mindustry = callPackage ../games/mindustry { };
-  mindustry-wayland = callPackage ../games/mindustry {
+  mindustry-wayland = callPackage ../by-name/mi/mindustry/package.nix {
     enableWayland = true;
   };
 
-  mindustry-server = callPackage ../games/mindustry {
+  mindustry-server = callPackage ../by-name/mi/mindustry/package.nix {
     enableClient = false;
     enableServer = true;
   };
@@ -18692,9 +18672,7 @@ with pkgs;
 
   nix-linter = haskell.lib.compose.justStaticExecutables (haskellPackages.nix-linter);
 
-  nixos-option = callPackage ../tools/nix/nixos-option {
-    nix = nixVersions.nix_2_18;
-  };
+  nixos-option = callPackage ../tools/nix/nixos-option { };
 
   nix-pin = callPackage ../tools/package-management/nix-pin { };
 
@@ -19274,5 +19252,9 @@ with pkgs;
 
   cantata = callPackage ../by-name/ca/cantata/package.nix {
     ffmpeg = ffmpeg_6;
+  };
+
+  tree-from-tags = callPackage ../by-name/tr/tree-from-tags/package.nix {
+    ruby = ruby_3_1;
   };
 }

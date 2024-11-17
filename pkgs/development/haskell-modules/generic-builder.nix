@@ -31,6 +31,7 @@ in
 
 { pname
 , dontStrip ? outputsJS
+, debug ? false
 , version, revision ? null
 , sha256 ? null
 , src ? fetchurl { url = "mirror://hackage/${pname}-${version}.tar.gz"; inherit sha256; }
@@ -374,7 +375,7 @@ let
     # e.g. Cabal in the database with the same name and version, which is
     # ambiguous.
     if [ -d "$p/${mkGhcLibdir thisGhc}/package.conf.d" ] && [ "$p" != "${ghc}" ] && [ "$p" != "${nativeGhc}" ]; then
-      cp -f "$p/${mkGhcLibdir thisGhc}/package.conf.d/"*.conf ${packageConfDir}/
+      cp -f "$p/${mkGhcLibdir thisGhc}/package.conf.d/"*.conf ${packageConfDir}/ || echo "fail to copy files from "$p/${mkGhcLibdir thisGhc}/package.conf.d/"
       continue
     fi
   '';
@@ -851,6 +852,7 @@ stdenv.mkDerivation ({
 // optionalAttrs (args ? preFixup)               { inherit preFixup; }
 // optionalAttrs (args ? postFixup)              { inherit postFixup; }
 // optionalAttrs (args ? dontStrip)              { inherit dontStrip; }
+// optionalAttrs (args ? debug)              { NIX_DEBUG=7; }
 // optionalAttrs (postPhases != [])              { inherit postPhases; }
 // optionalAttrs (stdenv.buildPlatform.libc == "glibc"){ LOCALE_ARCHIVE = "${glibcLocales}/lib/locale/locale-archive"; }
 // optionalAttrs (disallowedRequisites != [] || disallowGhcReference) {

@@ -375,7 +375,10 @@ let
     # e.g. Cabal in the database with the same name and version, which is
     # ambiguous.
     if [ -d "$p/${mkGhcLibdir thisGhc}/package.conf.d" ] && [ "$p" != "${ghc}" ] && [ "$p" != "${nativeGhc}" ]; then
-      cp -f "$p/${mkGhcLibdir thisGhc}/package.conf.d/"*.conf ${packageConfDir}/ || echo "fail to copy files from "$p/${mkGhcLibdir thisGhc}/package.conf.d/"
+      if [ -f "$p/${mkGhcLibdir thisGhc}/package.conf.d/.conf" ]; then
+        mv "$p/${mkGhcLibdir thisGhc}/package.conf.d/.conf" "$p/${mkGhcLibdir thisGhc}/package.conf.d/$(mktemp -u XXXXXXXXXX).conf"
+      fi
+      cp -vf "$p/${mkGhcLibdir thisGhc}/package.conf.d/"*.conf ${packageConfDir}/
       continue
     fi
   '';

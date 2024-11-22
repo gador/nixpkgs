@@ -6549,6 +6549,8 @@ self: super: with self; {
 
   jenkins-job-builder = callPackage ../development/python-modules/jenkins-job-builder { };
 
+  jianpu-ly = callPackage ../development/python-modules/jianpu-ly { };
+
   jieba = callPackage ../development/python-modules/jieba { };
 
   jinja2 = callPackage ../development/python-modules/jinja2 { };
@@ -17759,6 +17761,8 @@ self: super: with self; {
   wfuzz = callPackage ../development/python-modules/wfuzz { };
 
   wget = callPackage ../development/python-modules/wget { };
+
+  wgnlpy = callPackage ../development/python-modules/wgnlpy { };
 
   whatthepatch = callPackage ../development/python-modules/whatthepatch { };
 

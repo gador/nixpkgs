@@ -12,7 +12,6 @@
   lndir,
   unzip,
   ensureNewerSourcesForZipFilesHook,
-  removeReferencesTo,
 
   cpio,
   file,
@@ -232,7 +231,6 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs =
     [
       pkg-config
-      removeReferencesTo
     ]
     ++ lib.optionals atLeast11 [
       autoconf
@@ -565,8 +563,6 @@ stdenv.mkDerivation (finalAttrs: {
           mkdir -p $out/nix-support
           #TODO or printWords?  cf https://github.com/NixOS/nixpkgs/pull/27427#issuecomment-317293040
           echo -n "${setJavaClassPath}" > $out/nix-support/propagated-build-inputs
-          # remove references also in CA-derivations
-          find "$out" -type f -exec remove-references-to -t ${jdk-bootstrap'} '{}' +
         ''
       else
         ''
@@ -575,8 +571,6 @@ stdenv.mkDerivation (finalAttrs: {
           # properly.
           mkdir -p $jre/nix-support
           printWords ${setJavaClassPath} > $jre/nix-support/propagated-build-inputs
-          # remove references also in CA-derivations
-          find "$out" -type f -exec remove-references-to -t ${jdk-bootstrap} '{}' +
         ''
     )
     + ''

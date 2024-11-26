@@ -2,6 +2,7 @@
   lib,
   stdenv,
   fetchFromGitHub,
+  fetchpatch,
   buildDotnetModule,
   dotnetCorePackages,
   xz,
@@ -54,6 +55,19 @@ buildDotnetModule rec {
     hash = "sha256-2w2tdl5n0IFTuthY97NYMeyRe2r72jaKFfoNSjWQMM4=";
   };
 
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/LogicReinc/LogicReinc.BlendFarm/commit/aecfb0a69f9e418158d4a09ec955e0c3f4d8f062.patch?full_index=1";
+      hash = "sha256-GaIED/TuEa2BYNNfy+/auvLzj7J7HUo2QvUq+pYJPMc=";
+    })
+    (fetchpatch {
+      url = "https://github.com/LogicReinc/LogicReinc.BlendFarm/commit/6276136de0fc567d3a2cc2ecff6effc27688d1a4.patch?full_index=1";
+      hash = "sha256-F4XW79fAMmdmDpUC0Ktt1YRpzUuMcRQp+48ryZFkSi4=";
+    })
+    ./fix-references.patch
+    ./net8.patch
+  ];
+
   nativeBuildInputs =
     [ ]
     ++ lib.optionals stdenv.hostPlatform.isLinux [ autoPatchelfHook ]
@@ -86,8 +100,8 @@ buildDotnetModule rec {
     "liblzma.so.5"
   ];
 
-  dotnet-sdk = dotnetCorePackages.sdk_6_0;
-  dotnet-runtime = dotnetCorePackages.runtime_6_0;
+  dotnet-sdk = dotnetCorePackages.sdk_8_0;
+  dotnet-runtime = dotnetCorePackages.runtime_8_0;
 
   projectFile = [
     "LogicReinc.BlendFarm.Client/LogicReinc.BlendFarm.Client.csproj"

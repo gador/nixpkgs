@@ -56,15 +56,15 @@ buildDotnetModule rec {
   };
 
   patches = [
-    (fetchpatch {
-      url = "https://github.com/LogicReinc/LogicReinc.BlendFarm/commit/aecfb0a69f9e418158d4a09ec955e0c3f4d8f062.patch?full_index=1";
-      hash = "sha256-GaIED/TuEa2BYNNfy+/auvLzj7J7HUo2QvUq+pYJPMc=";
-    })
-    (fetchpatch {
-      url = "https://github.com/LogicReinc/LogicReinc.BlendFarm/commit/6276136de0fc567d3a2cc2ecff6effc27688d1a4.patch?full_index=1";
-      hash = "sha256-F4XW79fAMmdmDpUC0Ktt1YRpzUuMcRQp+48ryZFkSi4=";
-    })
+    # https://github.com/LogicReinc/LogicReinc.BlendFarm/pull/121
+    ./fix-nixos-crashing-on-runtime.patch
+    # https://github.com/LogicReinc/LogicReinc.BlendFarm/pull/122
+    ./rename-evee-to-eevee_next.patch
+    # Fixes the error with net8 update:
+    # "The referenced project is a non self-contained executable.
+    # A non self-contained executable cannot be referenced by a self-contained executable"
     ./fix-references.patch
+    # Update project files to net8
     ./net8.patch
   ];
 

@@ -58,6 +58,11 @@ buildPythonApplication rec {
     runHook postCheck
   '';
 
+  patches = [
+    # https://github.com/nicolargo/glances/pull/3045
+    ./fix_test_aarch64.patch
+  ];
+
   dependencies = [
     defusedxml
     netifaces

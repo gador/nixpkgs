@@ -456,7 +456,7 @@ in {
   hitch = handleTest ./hitch {};
   hledger-web = handleTest ./hledger-web.nix {};
   hockeypuck = handleTest ./hockeypuck.nix { };
-  home-assistant = handleTest ./home-assistant.nix {};
+  home-assistant = runTest ./home-assistant.nix;
   hostname = handleTest ./hostname.nix {};
   hound = handleTest ./hound.nix {};
   hub = handleTest ./git/hub.nix {};
@@ -499,6 +499,7 @@ in {
   jotta-cli = handleTest ./jotta-cli.nix {};
   k3s = handleTest ./k3s {};
   kafka = handleTest ./kafka.nix {};
+  kanboard = handleTest ./web-apps/kanboard.nix {};
   kanidm = handleTest ./kanidm.nix {};
   kanidm-provisioning = handleTest ./kanidm-provisioning.nix {};
   karma = handleTest ./karma.nix {};
@@ -578,6 +579,7 @@ in {
   mailman = handleTest ./mailman.nix {};
   man = handleTest ./man.nix {};
   mariadb-galera = handleTest ./mysql/mariadb-galera.nix {};
+  marytts = handleTest ./marytts.nix {};
   mastodon = pkgs.recurseIntoAttrs (handleTest ./web-apps/mastodon { inherit handleTestOn; });
   pixelfed = discoverTests (import ./web-apps/pixelfed { inherit handleTestOn; });
   mate = handleTest ./mate.nix {};
@@ -891,6 +893,7 @@ in {
   rstudio-server = handleTest ./rstudio-server.nix {};
   rsyncd = handleTest ./rsyncd.nix {};
   rsyslogd = handleTest ./rsyslogd.nix {};
+  rtkit = runTest ./rtkit.nix;
   rtorrent = handleTest ./rtorrent.nix {};
   rxe = handleTest ./rxe.nix {};
   sabnzbd = handleTest ./sabnzbd.nix {};
@@ -964,8 +967,14 @@ in {
   swapspace = handleTestOn ["aarch64-linux" "x86_64-linux"] ./swapspace.nix {};
   sway = handleTest ./sway.nix {};
   swayfx = handleTest ./swayfx.nix {};
-  switchTest = handleTest ./switch-test.nix { ng = false; };
-  switchTestNg = handleTest ./switch-test.nix { ng = true; };
+  switchTest = runTest {
+    imports = [ ./switch-test.nix ];
+    defaults.system.switch.enableNg = false;
+  };
+  switchTestNg = runTest {
+    imports = [ ./switch-test.nix ];
+    defaults.system.switch.enableNg = true;
+  };
   sx = handleTest ./sx.nix {};
   sympa = handleTest ./sympa.nix {};
   syncthing = handleTest ./syncthing.nix {};

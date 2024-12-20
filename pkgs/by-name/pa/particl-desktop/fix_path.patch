@@ -1,0 +1,55 @@
+diff --git a/modules/particl-core/particlcore.js b/modules/particl-core/particlcore.js
+index 335ffbef9..c7cff88b7 100644
+--- a/modules/particl-core/particlcore.js
++++ b/modules/particl-core/particlcore.js
+@@ -320,7 +320,7 @@ module.exports = class ParticlCore extends CoreInstance {
+     this.#settingsValues = this.#settingsRef.store;
+ 
+     this.#appVersion = appConfig.VERSIONS.app;
+-    this.#binaryPath = _path.join(appConfig.PATHS.binaries, 'particl');
++    this.#binaryPath = '@particl_core@/bin';
+     this.#blockMainnet = appConfig.TESTING_MODE === true;
+     this.#isDevelopmentEnvironment = appConfig.MODE === 'developer';
+   }
+@@ -630,21 +630,7 @@ module.exports = class ParticlCore extends CoreInstance {
+ 
+ 
+   #createBinariesDir() {
+-    // Test for existence of the containing binaries dir
+-    let pathExists = false;
+-    try {
+-      _fs.accessSync(this.#binaryPath, _fs.constants.W_OK | _fs.constants.R_OK );
+-      pathExists = true;
+-    } catch (err) {
+-
+-      try {
+-        if (!_fs.existsSync(this.#binaryPath)) {
+-          _fs.mkdirSync(this.#binaryPath, {recursive: true});
+-          pathExists = true;
+-        }
+-      } catch(_) { /* nothing much to do here */}
+-    }
+-    return pathExists;
++    return true;
+   }
+ 
+ 
+@@ -807,18 +793,6 @@ module.exports = class ParticlCore extends CoreInstance {
+ 
+     if (this.#cancelSignal.aborted) return false;
+ 
+-    if (hasBinary) {
+-      this.#updateStatus({message: `Verifying found binary file version`});
+-      const isvalid = await this.#validateBinary(binPath, version).catch(() => false);
+-
+-      if (this.#cancelSignal.aborted) return false;
+-
+-      if (!isvalid) {
+-        hasBinary = false;
+-        this.#updateStatus({message: `Verification of found binary failed!`});
+-      }
+-    }
+-
+     if (!hasBinary) {
+ 
+       // check for previously downloaded archive locally

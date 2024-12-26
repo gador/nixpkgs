@@ -331,8 +331,6 @@ with pkgs;
     catch2 = catch2_3;
   };
 
-  edgedb = callPackage ../tools/networking/edgedb { };
-
   eludris = callPackage ../tools/misc/eludris { };
 
   enochecker-test = with python3Packages; callPackage ../development/tools/enochecker-test { };
@@ -4843,7 +4841,7 @@ with pkgs;
 
   pleroma = callPackage ../servers/pleroma {
     elixir = elixir_1_17;
-    beamPackages = beamPackages.extend (self: super: { elixir = elixir_1_17; });
+    beamPackages = beam.packages.erlang_26.extend (self: super: { elixir = elixir_1_17; });
   };
 
   plfit = callPackage ../by-name/pl/plfit/package.nix {
@@ -6957,8 +6955,6 @@ with pkgs;
     llvmPackages = llvmPackages_18;
   };
 
-  ubports-click = python3Packages.callPackage ../development/tools/click { };
-
   urweb = callPackage ../development/compilers/urweb {
     icu = icu67;
   };
@@ -7179,16 +7175,19 @@ with pkgs;
 
   inherit (beam.interpreters)
     erlang erlang_27 erlang_26 erlang_25 erlang_24
-    elixir elixir_1_17 elixir_1_16 elixir_1_15 elixir_1_14 elixir_1_13 elixir_1_12 elixir_1_11 elixir_1_10
+    elixir elixir_1_18 elixir_1_17 elixir_1_16 elixir_1_15 elixir_1_14
     elixir-ls;
 
   erlang_nox = beam_nox.interpreters.erlang;
 
   inherit (beam.packages.erlang)
-    ex_doc erlang-ls erlfmt elvis-erlang
+    ex_doc erlfmt elvis-erlang
     rebar rebar3 rebar3WithPlugins
     fetchHex
     lfe lfe_2_1;
+
+  inherit (beam.packages.erlang_26) erlang-ls;
+
   beamPackages = beam.packages.erlang // { __attrsFailEvaluation = true; };
 
   erlang_language_platform = callPackage ../by-name/er/erlang-language-platform/package.nix { };
@@ -10893,10 +10892,6 @@ with pkgs;
   };
 
   unixODBCDrivers = recurseIntoAttrs (callPackages ../development/libraries/unixODBCDrivers { });
-
-  v8 = callPackage ../development/libraries/v8 {
-    stdenv = if stdenv.hostPlatform.isDarwin then overrideSDK stdenv "11.0" else stdenv;
-  };
 
   valeStyles = recurseIntoAttrs (callPackages ../by-name/va/vale/styles.nix { });
 
@@ -16763,8 +16758,6 @@ with pkgs;
     openjfx = openjfx21;
   };
 
-  manaplus = callPackage ../games/manaplus { stdenv = gcc11Stdenv; };
-
   mindustry-wayland = callPackage ../by-name/mi/mindustry/package.nix {
     enableWayland = true;
   };
@@ -16779,11 +16772,8 @@ with pkgs;
   minecraftServers = import ../games/minecraft-servers { inherit callPackage lib javaPackages; };
   minecraft-server = minecraftServers.vanilla; # backwards compatibility
 
-  minetest = callPackage ../games/minetest {
-    inherit (darwin.apple_sdk.frameworks) OpenGL OpenAL Carbon Cocoa Kernel;
-  };
-  minetestclient = minetest.override { buildServer = false; };
-  minetestserver = minetest.override { buildClient = false; };
+  luanti-client = luanti.override { buildServer = false; };
+  luanti-server = luanti.override { buildClient = false; };
 
   mnemosyne = callPackage ../games/mnemosyne {
     python = python3;
@@ -17037,6 +17027,8 @@ with pkgs;
 
   wesnoth = callPackage ../games/wesnoth {
     inherit (darwin.apple_sdk.frameworks) Cocoa Foundation;
+    # fails to build against latest boost
+    boost = boost183;
     # wesnoth requires lua built with c++, see https://github.com/wesnoth/wesnoth/pull/8234
     lua = lua5_4.override {
       postConfigure = ''
@@ -18772,5 +18764,13 @@ with pkgs;
 
   clash-verge-rev = callPackage ../by-name/cl/clash-verge-rev/package.nix {
     libsoup = libsoup_3;
+  };
+
+  ejabberd = callPackage ../by-name/ej/ejabberd/package.nix {
+    erlang = erlang_26;
+  };
+
+  wings = callPackage ../by-name/wi/wings/package.nix {
+    erlang = erlang_25;
   };
 }

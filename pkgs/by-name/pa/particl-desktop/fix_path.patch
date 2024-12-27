@@ -1,5 +1,5 @@
 diff --git a/modules/particl-core/particlcore.js b/modules/particl-core/particlcore.js
-index 335ffbef9..c7cff88b7 100644
+index 335ffbef9..b1b1f86a3 100644
 --- a/modules/particl-core/particlcore.js
 +++ b/modules/particl-core/particlcore.js
 @@ -320,7 +320,7 @@ module.exports = class ParticlCore extends CoreInstance {
@@ -11,7 +11,26 @@ index 335ffbef9..c7cff88b7 100644
      this.#blockMainnet = appConfig.TESTING_MODE === true;
      this.#isDevelopmentEnvironment = appConfig.MODE === 'developer';
    }
-@@ -630,21 +630,7 @@ module.exports = class ParticlCore extends CoreInstance {
+@@ -494,17 +494,9 @@ module.exports = class ParticlCore extends CoreInstance {
+       const cfg = await this.#processBinaryConfig();
+ 
+       if (this.#cancelSignal.aborted) return;
+-      if (!(cfg.hash && cfg.version)) {
+-        this.#updateStatus({
+-          message: 'Failed to retrieve Particl Core binary details!',
+-          hasError: true,
+-          started: STARTED_STATUS.STOPPED
+-        });
+-        return;
+-      }
+ 
+       // 2. Search for and start core
+-      const isStarted = await this.#startCoreBinary(cfg.version, cfg.hash, cfg.downloadUrl);
++      const isStarted = await this.#startCoreBinary();
+ 
+       if (this.#cancelSignal.aborted) return;
+ 
+@@ -630,21 +622,7 @@ module.exports = class ParticlCore extends CoreInstance {
  
  
    #createBinariesDir() {
@@ -34,7 +53,16 @@ index 335ffbef9..c7cff88b7 100644
    }
  
  
-@@ -807,18 +793,6 @@ module.exports = class ParticlCore extends CoreInstance {
+@@ -781,7 +759,7 @@ module.exports = class ParticlCore extends CoreInstance {
+   }
+ 
+ 
+-  async #startCoreBinary(version, hash, downloadUrl) {
++  async #startCoreBinary() {
+ 
+     if (this.#cancelSignal.aborted) return false;
+ 
+@@ -807,18 +785,6 @@ module.exports = class ParticlCore extends CoreInstance {
  
      if (this.#cancelSignal.aborted) return false;
  

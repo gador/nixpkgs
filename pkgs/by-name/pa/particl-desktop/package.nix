@@ -1,4 +1,8 @@
 {
+  cacert,
+  cmake,
+  cctools,
+  curl,
   electron,
   fetchFromGitHub,
   fetchYarnDeps,
@@ -12,6 +16,7 @@
   substituteAll,
   sqlite,
   vips,
+  xcbuild,
   yarnConfigHook,
   yarnBuildHook,
 }:
@@ -49,14 +54,26 @@ stdenv.mkDerivation (finalAttrs: {
     (nodejs.python.withPackages (ps: [ ps.setuptools ]))
   ];
 
-  buildInputs = [
-    vips
-    sqlite
-  ];
+  dontUseCmakeConfigure = true;
+
+  buildInputs =
+    [
+      vips
+      sqlite
+    ]
+    # building sharp, zeromq and others from source on darwin
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
+      xcbuild
+      cctools
+      cacert
+      cmake
+      curl
+    ];
 
   # generate .node binaries
   preBuild = ''
-    npm rebuild --verbose --offline --nodedir=${nodejs} --sqlite=${lib.getDev sqlite}
+    npm rebuild --verbose --offline --nodedir=${nodejs} --sqlite=${lib.getDev sqlite} sharp
+    npm rebuild --verbose --offline --nodedir=${nodejs} --sqlite=${lib.getDev sqlite} zeromq
   '';
 
   # https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported
@@ -88,11 +105,16 @@ stdenv.mkDerivation (finalAttrs: {
       --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}}"
   '';
 
+  dontStrip = true;
+
   meta = {
     description = "GUI application for Particl Markeplace and PART coin wallet";
     homepage = "https://particl.io";
     license = lib.licenses.gpl2Only;
-    platforms = [ "x86_64-linux" ];
+    platforms = [
+      "aarch64-darwin"
+      "x86_64-linux"
+    ];
     maintainers = with lib.maintainers; [ gador ];
     mainProgram = "particl-desktop";
   };

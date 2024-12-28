@@ -39,6 +39,11 @@ stdenv.mkDerivation (finalAttrs: {
     })
   ];
 
+  postPatch = ''
+    substituteInPlace package.json \
+            --replace-fail '"afterSign": "build/notarize.js",' ""
+  '';
+
   offlineCache = fetchYarnDeps {
     yarnLock = "${finalAttrs.src}/yarn.lock";
     hash = "sha256-zDlhnAuJQVrI+A7dO5hiGRTo15YnNuDBKWGJ3hyxdzA=";
@@ -83,26 +88,40 @@ stdenv.mkDerivation (finalAttrs: {
 
   yarnBuildScript = "build:electron:prod";
 
+  postBuild = lib.optionalString stdenv.hostPlatform.isDarwin ''
+    cp -R ${electron.dist}/Electron.app Electron.app
+    chmod -R u+w Electron.app
+    CSC_IDENTITY_AUTO_DISCOVERY=false yarn --offline run electron-builder --dir \
+      -c.electronDist="." \
+      -c.electronVersion=${electron.version} \
+      -c.npmRebuild="false"
+  '';
+
   # install only the necessary files
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/lib/node_modules/particl-desktop
-    cp -r dist $out/lib/node_modules/particl-desktop/
-    cp *.js $out/lib/node_modules/particl-desktop/
-    cp -r modules $out/lib/node_modules/particl-desktop/
-    cp package.json $out/lib/node_modules/particl-desktop/
-    cp yarn.lock $out/lib/node_modules/particl-desktop/
-    cp -r node_modules $out/lib/node_modules/particl-desktop/
-    cp -r resources $out/lib/node_modules/particl-desktop/
+    ${lib.optionalString stdenv.hostPlatform.isDarwin ''
+      mkdir -p $out/{Applications,bin}
+      mv packages/mac*/Particl\ Desktop.app $out/Applications
+      makeWrapper $out/Applications/Particl\ Desktop.app/Contents/MacOS/Particl\ Desktop $out/bin/particl-desktop
+    ''}
 
-    runHook postInstall
-  '';
+      mkdir -p $out/bin
+      mkdir -p $out/lib/node_modules/particl-desktop
+      cp -r dist $out/lib/node_modules/particl-desktop/
+      cp *.js $out/lib/node_modules/particl-desktop/
+      cp -r modules $out/lib/node_modules/particl-desktop/
+      cp package.json $out/lib/node_modules/particl-desktop/
+      cp yarn.lock $out/lib/node_modules/particl-desktop/
+      cp -r node_modules $out/lib/node_modules/particl-desktop/
+      cp -r resources $out/lib/node_modules/particl-desktop/
 
-  postInstall = ''
-    makeWrapper ${electron}/bin/electron $out/bin/particl-desktop \
+      makeWrapper ${electron}/bin/electron $out/bin/particl-desktop \
       --add-flags $out/lib/node_modules/particl-desktop/main.js \
       --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}}"
+
+    runHook postInstall
   '';
 
   dontStrip = true;

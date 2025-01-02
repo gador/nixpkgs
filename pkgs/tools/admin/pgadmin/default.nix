@@ -16,14 +16,14 @@
 
 let
   pname = "pgadmin";
-  version = "8.12";
-  yarnHash = "sha256-C5CI8oP9vEana3OEs1yAsSSTvO2uLEuCU1nHhC7LerY=";
+  version = "8.14";
+  yarnHash = "sha256-2jHAGdgsgufDxguA3AxHG7o5al6Ba1YTOP5dexlsJx8=";
 
   src = fetchFromGitHub {
     owner = "pgadmin-org";
     repo = "pgadmin4";
     rev = "REL-${lib.versions.major version}_${lib.versions.minor version}";
-    hash = "sha256-OIFHaU+Ty0xJn42iqYhse8dfFJZpx8AV/10RNxp1Y4o=";
+    hash = "sha256-mJisxLNIzzIOR0IjejEwz3svKK39kmlBwIDf4bf99wM=";
   };
 
   # keep the scope, as it is used throughout the derivation and tests
@@ -78,7 +78,7 @@ pythonPackages.buildPythonApplication rec {
     sed 's|*|0|g' -i requirements.txt
     # remove packageManager from package.json so we can work without corepack
     substituteInPlace web/package.json \
-      --replace-fail "\"packageManager\": \"yarn@3.8.3\"" "\"\": \"\""
+      --replace-fail "\"packageManager\": \"yarn@3.8.7\"" "\"\": \"\""
     substituteInPlace pkg/pip/setup_pip.py \
       --replace-fail "req = req.replace('psycopg[c]', 'psycopg[binary]')" "req = req"
     ${lib.optionalString (!server-mode) ''
@@ -181,7 +181,6 @@ pythonPackages.buildPythonApplication rec {
     flask-babel
     gssapi
     flask-socketio
-    eventlet
     user-agents
     wheel
     authlib

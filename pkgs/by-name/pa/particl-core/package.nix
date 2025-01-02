@@ -14,6 +14,9 @@
   zlib,
   unixtools,
   python3,
+  libsForQt5,
+  qrencode,
+  withGui ? false,
 }:
 
 stdenv.mkDerivation rec {
@@ -35,22 +38,31 @@ stdenv.mkDerivation rec {
     })
   ];
 
+  # postPatch = ''
+  #   substituteInPlace build-aux/m4/bitcoin_qt4.m4 --replace-fail "lrelease], $qt_bin_path" "lrelease], ${libsForQt5.qttools.dev}/bin"
+  # '';
+
   nativeBuildInputs = [
     pkg-config
     autoreconfHook
-  ];
-  buildInputs = [
-    openssl
-    db48
-    boost
-    zlib
-    miniupnpc
-    libevent
-    zeromq
-    unixtools.hexdump
-    python3
-  ];
-
+  ] ++ lib.optionals withGui [ libsForQt5.wrapQtAppsHook ];
+  buildInputs =
+    [
+      openssl
+      db48
+      boost
+      zlib
+      miniupnpc
+      libevent
+      zeromq
+      unixtools.hexdump
+      python3
+    ]
+    ++ lib.optionals withGui [
+      qrencode
+      libsForQt5.qtbase
+      libsForQt5.qttools
+    ];
   configureFlags =
     [
       "--disable-bench"
@@ -58,7 +70,16 @@ stdenv.mkDerivation rec {
     ]
     ++ lib.optionals (!doCheck) [
       "--enable-tests=no"
+    ]
+    ++ lib.optionals withGui [
+      "--with-gui=qt5"
+      "--with-qt-bindir=${libsForQt5.qtbase.dev}/bin:${libsForQt5.qttools.dev}/bin"
     ];
+
+  checkFlags =
+    # QT_PLUGIN_PATH needs to be set when executing QT, which is needed when testing Bitcoin's GUI.
+    # See also https://github.com/NixOS/nixpkgs/issues/24256
+    lib.optional withGui "QT_PLUGIN_PATH=${libsForQt5.qtbase}/${libsForQt5.qtbase.qtPluginPrefix}";
 
   # Always check during Hydra builds
   doCheck = true;

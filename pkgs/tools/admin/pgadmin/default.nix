@@ -10,23 +10,42 @@
   yarnBerry3ConfigHook,
   nodejs,
   stdenv,
+  stdenvNoCC,
   server-mode ? true,
 }:
 
 let
   pname = "pgadmin";
-  version = "8.12";
-  yarnHash = "sha256-S8+9hvTyfWpjmoCAo6cJb5Eu8JJVoIvZ4UTnf/QfyUs=";
+  version = "8.14";
+  yarnHash = "sha256-r2BfbmqENvVoNd2aEEVL1HKwd+kybzT5Z1hmyTooUXc=";
 
   src = fetchFromGitHub {
     owner = "pgadmin-org";
     repo = "pgadmin4";
     rev = "REL-${lib.versions.major version}_${lib.versions.minor version}";
-    hash = "sha256-OIFHaU+Ty0xJn42iqYhse8dfFJZpx8AV/10RNxp1Y4o=";
+    hash = "sha256-mJisxLNIzzIOR0IjejEwz3svKK39kmlBwIDf4bf99wM=";
+  };
+
+  fixedYarnLock = stdenvNoCC.mkDerivation {
+    pname = "fixedYarnLock";
+    inherit src version;
+
+    dontBuild = true;
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p $out
+      cp -f web/yarn.lock web/package.json $out/
+      sed -i 's/- checksum: e9fa1fd1f4203d399a5264e8612f9a64d9daf4ea7c926f346e11f6c8137acc6e29386c171c6b4085950ce714243be1627f60e76e5bd135124e226ce55309380f//' $out/yarn.lock
+      sed -i 's/5786d5/cef18b/' $out/yarn.lock
+
+      runHook postInstall
+    '';
   };
 
   yarnOfflineCache = fetchYarnDeps {
-    yarnLock = "${src}/web/yarn.lock";
+    yarnLock = "${fixedYarnLock}/yarn.lock";
     yarnVersion = 3;
     hash = yarnHash;
   };

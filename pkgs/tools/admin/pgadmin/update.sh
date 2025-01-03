@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash -p curl wget jq yq common-updater-scripts yarn-berry_3
+#!nix-shell -I nixpkgs=/home/wogan/software/git/nixpkgs -i bash -p curl wget jq yq common-updater-scripts yarn-berry_3
 
 set -eu -o pipefail
 
@@ -51,7 +51,8 @@ export YARN_ENABLE_TELEMETRY=0
 yarn config set enableGlobalCache false
 yarn config set cacheFolder cache
 yarn config set supportedArchitectures --json "$(cat $nixpkgs/pkgs/build-support/node/fetch-yarn-deps/yarn-berry-supported-archs.json)"
-
+sed -i 's/- checksum: e9fa1fd1f4203d399a5264e8612f9a64d9daf4ea7c926f346e11f6c8137acc6e29386c171c6b4085950ce714243be1627f60e76e5bd135124e226ce55309380f//' yarn.lock
+sed -i 's/5786d5/cef18b/' yarn.lock
 yarn install --immutable --mode skip-build
 printf "Done\n"
 

@@ -592,8 +592,13 @@ self: super:
   });
 
   xf86videonouveau = super.xf86videonouveau.overrideAttrs (attrs: {
-    nativeBuildInputs = attrs.nativeBuildInputs ++ [ autoreconfHook ];
-    buildInputs =  attrs.buildInputs ++ [ xorg.utilmacros ];
+    nativeBuildInputs = attrs.nativeBuildInputs ++ [
+      autoreconfHook
+      buildPackages.xorg.utilmacros # For xorg-utils.m4 macros
+      buildPackages.xorg.xorgserver # For xorg-server.m4 macros
+    ];
+    # fixes `implicit declaration of function 'wfbScreenInit'; did you mean 'fbScreenInit'?
+    NIX_CFLAGS_COMPILE = "-Wno-error=implicit-function-declaration";
   });
 
   xf86videoglint = super.xf86videoglint.overrideAttrs (attrs: {

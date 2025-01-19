@@ -351,6 +351,16 @@ self: super: {
   ghc-datasize = disableLibraryProfiling super.ghc-datasize;
   ghc-vis = disableLibraryProfiling super.ghc-vis;
 
+  # Fix 32bit struct being used for 64bit syscall on 32bit platforms
+  # https://github.com/haskellari/lukko/issues/15
+  lukko = appendPatches [
+    (fetchpatch {
+      name = "lukko-ofd-locking-32bit.patch";
+      url = "https://github.com/haskellari/lukko/pull/32/commits/4e69ffad996c3771f50017b97375af249dd17c85.patch";
+      sha256 = "0n8vig48irjz0jckc20dzc23k16fl5hznrc0a81y02ms72msfwi1";
+    })
+  ] super.lukko;
+
   # Fixes compilation for basement on i686 for GHC >= 9.4
   # https://github.com/haskell-foundation/foundation/pull/573
   # Patch would not work for GHC >= 9.2 where it breaks compilation on x86_64
@@ -1185,6 +1195,21 @@ self: super: {
       done
     '';
   }) super.cryptol;
+
+  # Z3 removed aliases for boolean types in 4.12
+  inherit (
+    let
+      fixZ3 = appendConfigureFlags [
+        "--hsc2hs-option=-DZ3_Bool=bool"
+        "--hsc2hs-option=-DZ3_TRUE=true"
+        "--hsc2hs-option=-DZ3_FALSE=false"
+      ];
+    in
+    {
+      z3 = fixZ3 super.z3;
+      hz3 = fixZ3 super.hz3;
+    }
+  ) z3 hz3;
 
   # Tests try to invoke external process and process == 1.4
   grakn = dontCheck (doJailbreak super.grakn);

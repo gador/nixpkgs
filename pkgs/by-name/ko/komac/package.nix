@@ -13,15 +13,16 @@
   installShellFiles,
   versionCheckHook,
   nix-update-script,
+  bzip2,
 }:
 
 let
-  version = "2.8.0";
+  version = "2.10.0";
   src = fetchFromGitHub {
     owner = "russellbanks";
     repo = "Komac";
     tag = "v${version}";
-    hash = "sha256-yAf89GtKu500VPn+CKF6sGC+TPhJcGz2lR7C30/YBRI=";
+    hash = "sha256-qlaNJ9pgQe1gjPW4gjEJys/SqgKzpO3H8SenowsUi4o=";
   };
 in
 rustPlatform.buildRustPackage {
@@ -29,7 +30,7 @@ rustPlatform.buildRustPackage {
 
   pname = "komac";
 
-  cargoHash = "sha256-wgOZoKsbYkbbCKS+2pfqgsHD5Azw72gPJXHhfw5mNqo=";
+  cargoHash = "sha256-PhqfgrbR3FlHK5kPwUdAlNv/vtbSHXdr06ww0rv956g=";
 
   nativeBuildInputs =
     [
@@ -44,6 +45,7 @@ rustPlatform.buildRustPackage {
       dbus
       openssl
       zstd
+      bzip2
     ]
     ++ lib.optionals stdenv.hostPlatform.isDarwin [
       darwin.apple_sdk.frameworks.Security

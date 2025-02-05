@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2025.1.2";
+  version = "2025.1.4";
   components = {
     "3_day_blinds" =
       ps: with ps; [
@@ -3419,7 +3419,8 @@
       ];
     "mfi" =
       ps: with ps; [
-      ]; # missing inputs: mficlient
+        mficlient
+      ];
     "microbees" =
       ps: with ps; [
       ]; # missing inputs: microBeesPy
@@ -3822,7 +3823,8 @@
       ];
     "nmbs" =
       ps: with ps; [
-      ]; # missing inputs: pyrail
+        pyrail
+      ];
     "no_ip" =
       ps: with ps; [
       ];
@@ -3893,7 +3895,8 @@
       ];
     "nyt_games" =
       ps: with ps; [
-      ]; # missing inputs: nyt_games
+        nyt-games
+      ];
     "nzbget" =
       ps: with ps; [
       ]; # missing inputs: pynzbgetapi
@@ -4081,7 +4084,8 @@
       ]; # missing inputs: pyosoenergyapi
     "osramlightify" =
       ps: with ps; [
-      ]; # missing inputs: lightify
+        lightify
+      ];
     "otbr" =
       ps: with ps; [
         aiohasupervisor
@@ -4102,7 +4106,8 @@
       ];
     "ourgroceries" =
       ps: with ps; [
-      ]; # missing inputs: ourgroceries
+        ourgroceries
+      ];
     "overkiz" =
       ps: with ps; [
         pyoverkiz
@@ -6964,6 +6969,7 @@
     "meteo_france"
     "meteoclimatic"
     "metoffice"
+    "mfi"
     "microsoft_face"
     "microsoft_face_detect"
     "microsoft_face_identify"
@@ -7035,6 +7041,7 @@
     "nut"
     "nws"
     "nx584"
+    "nyt_games"
     "obihai"
     "octoprint"
     "ohme"
@@ -7063,6 +7070,7 @@
     "oralb"
     "otbr"
     "otp"
+    "ourgroceries"
     "overkiz"
     "ovo_energy"
     "owntracks"

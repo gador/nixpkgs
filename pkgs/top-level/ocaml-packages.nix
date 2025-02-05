@@ -793,7 +793,7 @@ let
       then import ../development/ocaml-modules/janestreet/0.17.nix
          {
            inherit self;
-           inherit (pkgs) bash fzf lib openssl zstd;
+           inherit (pkgs) bash fetchpatch fzf lib openssl zstd;
          }
       else if lib.versionOlder "4.13.1" ocaml.version
       then import ../development/ocaml-modules/janestreet/0.16.nix {
@@ -962,7 +962,9 @@ let
     lambda-term = callPackage ../development/ocaml-modules/lambda-term { };
 
     lambdapi = callPackage ../development/ocaml-modules/lambdapi {
-      why3 = pkgs.why3.override { ocamlPackages = self; };
+      why3 = pkgs.why3.override { ocamlPackages = self;
+        version = "1.7.2"; coqPackages = pkgs.coqPackages_8_18;
+      };
     };
 
     lambdasoup = callPackage ../development/ocaml-modules/lambdasoup { };
@@ -1084,6 +1086,8 @@ let
     memprof-limits = callPackage ../development/ocaml-modules/memprof-limits { };
 
     memtrace = callPackage ../development/ocaml-modules/memtrace { };
+
+    mem_usage = callPackage ../development/ocaml-modules/mem_usage { };
 
     menhir = callPackage ../development/ocaml-modules/menhir { };
 
@@ -1673,6 +1677,8 @@ let
     readline = callPackage ../development/ocaml-modules/readline {
       readline = pkgs.readline;
     };
+
+    reanalyze = callPackage ../development/tools/ocaml/reanalyze { };
 
     reason = callPackage ../development/compilers/reason { };
 

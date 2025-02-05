@@ -95,7 +95,7 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = "zed-editor";
-  version = "0.169.2";
+  version = "0.171.6";
 
   outputs = [ "out" ] ++ lib.optional buildRemoteServer "remote_server";
 
@@ -103,7 +103,7 @@ rustPlatform.buildRustPackage rec {
     owner = "zed-industries";
     repo = "zed";
     tag = "v${version}";
-    hash = "sha256-IdJVWsHWMzE0AZxFy6jOmquc2jFeozNDdAhbB3fFMwk=";
+    hash = "sha256-OQE/6bNGogcDpZOEUXq33E98/t1HKelTTX48X4wo2MI=";
   };
 
   patches = [
@@ -123,7 +123,7 @@ rustPlatform.buildRustPackage rec {
   '';
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-0zH5J3nvBpqD22nFzX98MBoTtNDpWS4NSSMcT1DB2SM=";
+  cargoHash = "sha256-lucQTqTc63a3HvqwWVosqxMzy4TgC+Mj77rFzVbwBR8=";
 
   nativeBuildInputs =
     [
@@ -292,16 +292,6 @@ rustPlatform.buildRustPackage rec {
   versionCheckProgramArg = [ "--version" ];
   doInstallCheck = true;
 
-  # The darwin Applications directory is not stripped by default, see
-  # https://github.com/NixOS/nixpkgs/issues/367169
-  # This setting is not platform-guarded as it doesn't do any harm on Linux,
-  # where this directory simply does not exist.
-  stripDebugList = [
-    "bin"
-    "libexec"
-    "Applications"
-  ];
-
   passthru = {
     updateScript = gitUpdater {
       rev-prefix = "v";
@@ -309,12 +299,16 @@ rustPlatform.buildRustPackage rec {
     };
     fhs = fhs { };
     fhsWithPackages = f: fhs { additionalPkgs = f; };
-    tests = {
-      remoteServerVersion = testers.testVersion {
-        package = zed-editor.remote_server;
-        command = "zed-remote-server-stable-${version} version";
+    tests =
+      {
+        remoteServerVersion = testers.testVersion {
+          package = zed-editor.remote_server;
+          command = "zed-remote-server-stable-${version} version";
+        };
+      }
+      // lib.optionalAttrs stdenv.hostPlatform.isLinux {
+        withGles = zed-editor.override { withGLES = true; };
       };
-    };
   };
 
   meta = {

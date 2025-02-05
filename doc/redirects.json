@@ -1,6 +1,12 @@
 {
+  "chap-build-helpers-finalAttrs": [
+    "index.html#chap-build-helpers-finalAttrs"
+  ],
   "chap-release-notes": [
     "release-notes.html#chap-release-notes"
+  ],
+  "ex-build-helpers-extendMkDerivation": [
+    "index.html#ex-build-helpers-extendMkDerivation"
   ],
   "neovim": [
     "index.html#neovim"
@@ -40,6 +46,9 @@
   ],
   "sec-allow-insecure": [
     "index.html#sec-allow-insecure"
+  ],
+  "sec-build-helper-extendMkDerivation": [
+    "index.html#sec-build-helper-extendMkDerivation"
   ],
   "sec-modify-via-packageOverrides": [
     "index.html#sec-modify-via-packageOverrides"
@@ -817,6 +826,12 @@
   ],
   "set-source-date-epoch-to-latest.sh": [
     "index.html#set-source-date-epoch-to-latest.sh"
+  ],
+  "add-bin-to-path.sh": [
+    "index.html#add-bin-to-path.sh"
+  ],
+  "writable-tmpdir-as-home.sh": [
+    "index.html#writable-tmpdir-as-home.sh"
   ],
   "bintools-wrapper": [
     "index.html#bintools-wrapper"
@@ -2333,6 +2348,12 @@
   ],
   "using-predefined-android-package-compositions": [
     "index.html#using-predefined-android-package-compositions"
+  ],
+  "astal": [
+    "index.html#astal"
+  ],
+  "astal-bundling": [
+    "index.html#astal-bundling"
   ],
   "spawning-emulator-instances": [
     "index.html#spawning-emulator-instances"

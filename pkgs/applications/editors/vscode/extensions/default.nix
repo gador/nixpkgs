@@ -309,6 +309,8 @@ let
         };
       };
 
+      anweber.vscode-httpyac = callPackage ./anweber.vscode-httpyac { };
+
       apollographql.vscode-apollo = buildVscodeMarketplaceExtension {
         mktplcRef = {
           name = "vscode-apollo";
@@ -1313,6 +1315,18 @@ let
           maintainers = [ lib.maintainers.datafoo ];
         };
       };
+
+      dendron.adjust-heading-level = callPackage ./dendron.adjust-heading-level { };
+
+      dendron.dendron = callPackage ./dendron.dendron { };
+
+      dendron.dendron-markdown-preview-enhanced =
+        callPackage ./dendron.dendron-markdown-preview-enhanced
+          { };
+
+      dendron.dendron-paste-image = callPackage ./dendron.dendron-paste-image { };
+
+      dendron.dendron-snippet-maker = callPackage ./dendron.dendron-snippet-maker { };
 
       denoland.vscode-deno = buildVscodeMarketplaceExtension {
         mktplcRef = {
@@ -2381,6 +2395,22 @@ let
           homepage = "https://github.com/hediet/vscode-drawio";
           license = lib.licenses.gpl3Only;
           maintainers = [ lib.maintainers.themaxmur ];
+        };
+      };
+
+      hirse.vscode-ungit = buildVscodeMarketplaceExtension {
+        mktplcRef = {
+          name = "vscode-ungit";
+          publisher = "hirse";
+          version = "2.5.2";
+          hash = "sha256-0CFYL6rBecB8rNnk4IAtg03ZPdSJ9qxwnVdhdQedxsQ=";
+        };
+        meta = {
+          description = "Ungit in Visual Studio Code.";
+          downloadPage = "https://marketplace.visualstudio.com/items?itemName=Hirse.vscode-ungit";
+          homepage = "https://github.com/hirse/vscode-ungit";
+          license = lib.licenses.mit;
+          maintainers = [ lib.maintainers.therobot2105 ];
         };
       };
 
@@ -3907,8 +3937,6 @@ let
         };
       };
 
-      nvarner.typst-lsp = callPackage ./nvarner.typst-lsp { };
-
       ocamllabs.ocaml-platform = buildVscodeMarketplaceExtension {
         meta = {
           changelog = "https://marketplace.visualstudio.com/items/ocamllabs.ocaml-platform/changelog";
@@ -4024,6 +4052,8 @@ let
           license = lib.licenses.mit;
         };
       };
+
+      platformio.platformio-vscode-ide = callPackage ./platformio.platformio-vscode-ide { };
 
       pollywoggames.pico8-ls = buildVscodeMarketplaceExtension {
         mktplcRef = {
@@ -5383,8 +5413,8 @@ let
         mktplcRef = {
           name = "vscode-icons";
           publisher = "vscode-icons-team";
-          version = "12.10.0";
-          hash = "sha256-GNDLuszuJN3P0V25F4gm7yUJsFEQgFMMPMTFLWLIvSo=";
+          version = "12.11.0";
+          hash = "sha256-RpuCHJBLqhAXAdvC0qGDUJIy5ww1yqlSb7hKwCALidM=";
         };
         meta = {
           description = "Bring real icons to your Visual Studio Code";

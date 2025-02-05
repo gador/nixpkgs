@@ -23,7 +23,8 @@
   libXt,
   libdrm,
   libtirpc,
-  withLibunwind ? true,
+  # Disable withLibunwind as LLVM's libunwind will conflict and does not support the right symbols.
+  withLibunwind ? !(stdenv.hostPlatform.useLLVM or false),
   libunwind,
   libxcb,
   libxkbfile,
@@ -99,7 +100,7 @@ stdenv.mkDerivation rec {
       libxkbfile
       libxshmfence
       libxcvt
-      mesa
+      mesa # uses dri_interface.h
       openssl
       pixman
       systemd

@@ -40,14 +40,14 @@
 
 buildPythonPackage rec {
   pname = "sagemaker";
-  version = "2.237.2";
+  version = "2.239.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "aws";
     repo = "sagemaker-python-sdk";
     tag = "v${version}";
-    hash = "sha256-cNBPuXoViHy03ZMBrF3+xeMSUpovi1lloXizBvgNJmw=";
+    hash = "sha256-KE3EWCxl4Q90pChswYjmBwtPazAjVw2MaAjNesQoWiM=";
   };
 
   build-system = [

@@ -78,6 +78,7 @@
   ./hardware/keyboard/zsa.nix
   ./hardware/ksm.nix
   ./hardware/ledger.nix
+  ./hardware/libftdi.nix
   ./hardware/logitech.nix
   ./hardware/mcelog.nix
   ./hardware/network/ath-user-regd.nix
@@ -85,6 +86,7 @@
   ./hardware/network/eg25-manager.nix
   ./hardware/network/intel-2200bg.nix
   ./hardware/new-lg4ff.nix
+  ./hardware/nfc-nci.nix
   ./hardware/nitrokey.nix
   ./hardware/onlykey/default.nix
   ./hardware/openrazer.nix
@@ -198,6 +200,7 @@
   ./programs/firefox.nix
   ./programs/firejail.nix
   ./programs/fish.nix
+  ./programs/flashprog.nix
   ./programs/flashrom.nix
   ./programs/flexoptix-app.nix
   ./programs/foot
@@ -208,6 +211,7 @@
   ./programs/gamescope.nix
   ./programs/gdk-pixbuf.nix
   ./programs/geary.nix
+  ./programs/ghidra.nix
   ./programs/git.nix
   ./programs/git-worktree-switcher.nix
   ./programs/gnome-disks.nix
@@ -509,6 +513,7 @@
   ./services/databases/redis.nix
   ./services/databases/surrealdb.nix
   ./services/databases/tigerbeetle.nix
+  ./services/databases/victorialogs.nix
   ./services/databases/victoriametrics.nix
   ./services/desktops/accountsservice.nix
   ./services/desktops/ayatana-indicators.nix
@@ -566,6 +571,7 @@
   ./services/development/lorri.nix
   ./services/development/nixseparatedebuginfod.nix
   ./services/development/rstudio-server/default.nix
+  ./services/development/vsmartcard-vpcd.nix
   ./services/development/zammad.nix
   ./services/display-managers/default.nix
   ./services/display-managers/greetd.nix
@@ -736,7 +742,6 @@
   ./services/matrix/hebbot.nix
   ./services/matrix/hookshot.nix
   ./services/matrix/maubot.nix
-  ./services/matrix/mautrix-facebook.nix
   ./services/matrix/mautrix-meta.nix
   ./services/matrix/mautrix-signal.nix
   ./services/matrix/mautrix-telegram.nix
@@ -955,6 +960,7 @@
   ./services/monitoring/opentelemetry-collector.nix
   ./services/monitoring/osquery.nix
   ./services/monitoring/parsedmarc.nix
+  ./services/monitoring/prometheus/alertmanager-gotify-bridge.nix
   ./services/monitoring/prometheus/alertmanager-irc-relay.nix
   ./services/monitoring/prometheus/alertmanager-webhook-logger.nix
   ./services/monitoring/prometheus/alertmanager.nix
@@ -1241,6 +1247,7 @@
   ./services/networking/robustirc-bridge.nix
   ./services/networking/rosenpass.nix
   ./services/networking/routedns.nix
+  ./services/networking/routinator.nix
   ./services/networking/rpcbind.nix
   ./services/networking/rxe.nix
   ./services/networking/sabnzbd.nix
@@ -1421,6 +1428,7 @@
   ./services/system/userborn.nix
   ./services/system/zram-generator.nix
   ./services/torrent/bitmagnet.nix
+  ./services/torrent/cross-seed.nix
   ./services/torrent/deluge.nix
   ./services/torrent/flexget.nix
   ./services/torrent/flood.nix
@@ -1492,6 +1500,7 @@
   ./services/web-apps/glance.nix
   ./services/web-apps/gotify-server.nix
   ./services/web-apps/gotosocial.nix
+  ./services/web-apps/grav.nix
   ./services/web-apps/grocy.nix
   ./services/web-apps/pixelfed.nix
   ./services/web-apps/goatcounter.nix
@@ -1606,6 +1615,7 @@
   ./services/web-servers/darkhttpd.nix
   ./services/web-servers/fcgiwrap.nix
   ./services/web-servers/garage.nix
+  ./services/web-servers/h2o/default.nix
   ./services/web-servers/hitch/default.nix
   ./services/web-servers/jboss/default.nix
   ./services/web-servers/keter

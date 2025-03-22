@@ -264,7 +264,7 @@ in {
   cinnamon = handleTest ./cinnamon.nix {};
   cinnamon-wayland = handleTest ./cinnamon-wayland.nix {};
   cjdns = handleTest ./cjdns.nix {};
-  clatd = handleTest ./clatd.nix {};
+  clatd = runTest ./clatd.nix;
   clickhouse = handleTest ./clickhouse.nix {};
   cloud-init = handleTest ./cloud-init.nix {};
   cloud-init-hostname = handleTest ./cloud-init-hostname.nix {};
@@ -353,7 +353,7 @@ in {
   early-mount-options = handleTest ./early-mount-options.nix {};
   ec2-config = (handleTestOn ["x86_64-linux"] ./ec2.nix {}).boot-ec2-config or {};
   ec2-nixops = (handleTestOn ["x86_64-linux"] ./ec2.nix {}).boot-ec2-nixops or {};
-  echoip = handleTest ./echoip.nix {};
+  echoip = runTest ./echoip.nix;
   ecryptfs = handleTest ./ecryptfs.nix {};
   fscrypt = handleTest ./fscrypt.nix {};
   fastnetmon-advanced = runTest ./fastnetmon-advanced.nix;
@@ -425,6 +425,7 @@ in {
   firewall = handleTest ./firewall.nix { nftables = false; };
   firewall-nftables = handleTest ./firewall.nix { nftables = true; };
   fish = runTest ./fish.nix;
+  firezone = handleTest ./firezone/firezone.nix {};
   flannel = handleTestOn ["x86_64-linux"] ./flannel.nix {};
   flaresolverr = handleTest ./flaresolverr.nix {};
   flood = handleTest ./flood.nix {};
@@ -432,6 +433,7 @@ in {
     imports = [ ./firefox.nix ] ;
     _module.args.firefoxPackage = pkgs.floorp;
   };
+  fluent-bit = handleTest ./fluent-bit.nix {};
   fluentd = handleTest ./fluentd.nix {};
   fluidd = handleTest ./fluidd.nix {};
   fontconfig-default-fonts = handleTest ./fontconfig-default-fonts.nix {};
@@ -479,6 +481,7 @@ in {
   gobgpd = handleTest ./gobgpd.nix {};
   gocd-agent = handleTest ./gocd-agent.nix {};
   gocd-server = handleTest ./gocd-server.nix {};
+  gokapi = runTest ./gokapi.nix;
   gollum = handleTest ./gollum.nix {};
   gonic = handleTest ./gonic.nix {};
   google-oslogin = handleTest ./google-oslogin {};
@@ -634,6 +637,7 @@ in {
   limesurvey = handleTest ./limesurvey.nix {};
   limine = import ./limine { inherit runTest; };
   listmonk = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./listmonk.nix {};
+  litellm = runTest ./litellm.nix;
   litestream = handleTest ./litestream.nix {};
   lldap = handleTest ./lldap.nix {};
   localsend = handleTest ./localsend.nix {};
@@ -874,6 +878,7 @@ in {
   opentelemetry-collector = handleTest ./opentelemetry-collector.nix {};
   open-web-calendar = handleTest ./web-apps/open-web-calendar.nix {};
   ocsinventory-agent = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./ocsinventory-agent.nix {};
+  orthanc = runTest ./orthanc.nix;
   owncast = handleTest ./owncast.nix {};
   outline = handleTest ./outline.nix {};
   image-contents = handleTest ./image-contents.nix {};
@@ -892,6 +897,7 @@ in {
   pam-u2f = handleTest ./pam/pam-u2f.nix {};
   pam-ussh = handleTest ./pam/pam-ussh.nix {};
   pam-zfs-key = handleTest ./pam/zfs-key.nix {};
+  paretosecurity = runTest ./paretosecurity.nix;
   pass-secret-service = handleTest ./pass-secret-service.nix {};
   patroni = handleTestOn ["x86_64-linux"] ./patroni.nix {};
   pantalaimon = handleTest ./matrix/pantalaimon.nix {};
@@ -914,11 +920,26 @@ in {
   phosh = handleTest ./phosh.nix {};
   photonvision = handleTest ./photonvision.nix {};
   photoprism = handleTest ./photoprism.nix {};
-  php = handleTest ./php {};
-  php81 = handleTest ./php { php = pkgs.php81; };
-  php82 = handleTest ./php { php = pkgs.php82; };
-  php83 = handleTest ./php { php = pkgs.php83; };
-  php84 = handleTest ./php { php = pkgs.php84; };
+  php = import ./php/default.nix {
+    inherit runTest;
+    php = pkgs.php;
+  };
+  php81 = import ./php/default.nix {
+    inherit runTest;
+    php = pkgs.php81;
+  };
+  php82 = import ./php/default.nix {
+    inherit runTest;
+    php = pkgs.php82;
+  };
+  php83 = import ./php/default.nix {
+    inherit runTest;
+    php = pkgs.php83;
+  };
+  php84 = import ./php/default.nix {
+    inherit runTest;
+    php = pkgs.php84;
+  };
   phylactery = handleTest ./web-apps/phylactery.nix {};
   pict-rs = handleTest ./pict-rs.nix {};
   pingvin-share = handleTest ./pingvin-share.nix {} ;
@@ -950,6 +971,7 @@ in {
   pppd = handleTest ./pppd.nix {};
   predictable-interface-names = handleTest ./predictable-interface-names.nix {};
   pretalx = runTest ./web-apps/pretalx.nix;
+  prefect = runTest ./prefect.nix;
   pretix = runTest ./web-apps/pretix.nix;
   printing-socket = handleTest ./printing.nix { socket = true; listenTcp = true; };
   printing-service = handleTest ./printing.nix { socket = false; listenTcp = true; };
@@ -988,7 +1010,7 @@ in {
   radicle = runTest ./radicle.nix;
   ragnarwm = handleTest ./ragnarwm.nix {};
   rasdaemon = handleTest ./rasdaemon.nix {};
-  rathole = handleTest ./rathole.nix {};
+  rathole = runTest ./rathole.nix;
   readarr = handleTest ./readarr.nix {};
   realm = handleTest ./realm.nix {};
   readeck = runTest ./readeck.nix;
@@ -1030,7 +1052,7 @@ in {
   scaphandre = handleTest ./scaphandre.nix {};
   schleuder = handleTest ./schleuder.nix {};
   scion-freestanding-deployment = handleTest ./scion/freestanding-deployment {};
-  scrutiny = handleTest ./scrutiny.nix {};
+  scrutiny = runTest ./scrutiny.nix;
   sddm = handleTest ./sddm.nix {};
   sdl3 = handleTest ./sdl3.nix { };
   seafile = handleTest ./seafile.nix {};
@@ -1254,12 +1276,14 @@ in {
   vault-dev = handleTest ./vault-dev.nix {};
   vault-postgresql = handleTest ./vault-postgresql.nix {};
   vaultwarden = discoverTests (import ./vaultwarden.nix);
+  vdirsyncer = handleTest ./vdirsyncer.nix {};
   vector = handleTest ./vector {};
   velocity = runTest ./velocity.nix;
   vengi-tools = handleTest ./vengi-tools.nix {};
   victoriametrics = handleTest ./victoriametrics {};
   vikunja = handleTest ./vikunja.nix {};
   virtualbox = handleTestOn ["x86_64-linux"] ./virtualbox.nix {};
+  vm-variant = handleTest ./vm-variant.nix {};
   vscode-remote-ssh = handleTestOn ["x86_64-linux"] ./vscode-remote-ssh.nix {};
   vscodium = discoverTests (import ./vscodium.nix);
   vsftpd = handleTest ./vsftpd.nix {};
@@ -1285,26 +1309,26 @@ in {
   wrappers = handleTest ./wrappers.nix {};
   writefreely = handleTest ./web-apps/writefreely.nix {};
   wstunnel = runTest ./wstunnel.nix;
-  xandikos = handleTest ./xandikos.nix {};
-  xautolock = handleTest ./xautolock.nix {};
-  xfce = handleTest ./xfce.nix {};
-  xfce-wayland = handleTest ./xfce-wayland.nix {};
-  xmonad = handleTest ./xmonad.nix {};
-  xmonad-xdg-autostart = handleTest ./xmonad-xdg-autostart.nix {};
-  xpadneo = handleTest ./xpadneo.nix {};
-  xrdp = handleTest ./xrdp.nix {};
-  xrdp-with-audio-pulseaudio = handleTest ./xrdp-with-audio-pulseaudio.nix {};
+  xandikos = runTest ./xandikos.nix;
+  xautolock = runTest ./xautolock.nix;
+  xfce = runTest ./xfce.nix;
+  xfce-wayland = runTest ./xfce-wayland.nix;
+  xmonad = runTest ./xmonad.nix;
+  xmonad-xdg-autostart = runTest ./xmonad-xdg-autostart.nix;
+  xpadneo = runTest ./xpadneo.nix;
+  xrdp = runTest ./xrdp.nix;
+  xrdp-with-audio-pulseaudio = runTest ./xrdp-with-audio-pulseaudio.nix;
   xscreensaver = handleTest ./xscreensaver.nix {};
-  xss-lock = handleTest ./xss-lock.nix {};
-  xterm = handleTest ./xterm.nix {};
-  xxh = handleTest ./xxh.nix {};
-  yabar = handleTest ./yabar.nix {};
+  xss-lock = runTest ./xss-lock.nix;
+  xterm = runTest ./xterm.nix;
+  xxh = runTest ./xxh.nix;
+  yabar = runTest ./yabar.nix;
   ydotool = handleTest ./ydotool.nix {};
-  yggdrasil = handleTest ./yggdrasil.nix {};
-  your_spotify = handleTest ./your_spotify.nix {};
-  zammad = handleTest ./zammad.nix {};
-  zenohd = handleTest ./zenohd.nix {};
-  zeronet-conservancy = handleTest ./zeronet-conservancy.nix {};
+  yggdrasil = runTest ./yggdrasil.nix;
+  your_spotify = runTest ./your_spotify.nix;
+  zammad = runTest ./zammad.nix;
+  zenohd = runTest ./zenohd.nix;
+  zeronet-conservancy = runTest ./zeronet-conservancy.nix;
   zfs = handleTest ./zfs.nix {};
   zigbee2mqtt_1 = runTest {
     imports = [ ./zigbee2mqtt.nix ];
@@ -1314,12 +1338,12 @@ in {
     imports = [ ./zigbee2mqtt.nix ];
     _module.args.package = pkgs.zigbee2mqtt_2;
   };
-  zipline = handleTest ./zipline.nix {};
-  zoneminder = handleTest ./zoneminder.nix {};
-  zookeeper = handleTest ./zookeeper.nix {};
-  zram-generator = handleTest ./zram-generator.nix {};
-  zrepl = handleTest ./zrepl.nix {};
-  zsh-history = handleTest ./zsh-history.nix {};
-  zwave-js = handleTest ./zwave-js.nix {};
-  zwave-js-ui = handleTest ./zwave-js-ui.nix {};
+  zipline = runTest ./zipline.nix;
+  zoneminder = runTest ./zoneminder.nix;
+  zookeeper = runTest ./zookeeper.nix;
+  zram-generator = runTest ./zram-generator.nix;
+  zrepl = runTest ./zrepl.nix;
+  zsh-history = runTest ./zsh-history.nix;
+  zwave-js = runTest ./zwave-js.nix;
+  zwave-js-ui = runTest ./zwave-js-ui.nix;
 }

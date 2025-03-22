@@ -19,16 +19,29 @@ buildGoModule rec {
 
   vendorHash = "sha256-I/umXgVm9a+0Ay3ARuaa4Dua4Zhc5p2TONHvhCt3Qtk=";
 
-  checkFlags = [
-    # TestHTTPChecker requires internet
-    # TestS3DriverPathStyle requires s3 credentials/urls
-    "-skip TestHTTPChecker|TestS3DriverPathStyle"
-  ];
+  checkFlags =
+    let
+      skippedTests = [
+        # requires internet
+        "TestHTTPChecker"
+        # requires s3 credentials/urls
+        "TestS3DriverPathStyle"
+        # flaky
+        "TestPurgeAll"
+      ];
+    in
+    [ "-skip=^${builtins.concatStringsSep "$|^" skippedTests}$" ];
 
   meta = with lib; {
     description = "GitLab Docker toolset to pack, ship, store, and deliver content";
     license = licenses.asl20;
-    maintainers = with maintainers; [ yayayayaka ] ++ teams.cyberus.members;
+    maintainers =
+      with maintainers;
+      [
+        leona
+        yayayayaka
+      ]
+      ++ teams.cyberus.members;
     platforms = platforms.unix;
   };
 }

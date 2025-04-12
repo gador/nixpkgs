@@ -98,7 +98,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "zed-editor";
-  version = "0.178.5";
+  version = "0.181.5";
 
   outputs =
     [ "out" ]
@@ -110,7 +110,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "zed-industries";
     repo = "zed";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-YkoIOBoR5hMt99D1bJ1yWLv7C/rY6VKC5J/7c5SMUFs=";
+    hash = "sha256-wp8CoWEOSScQP2Q+lQJgstzTNNwiy0ONHOy6PjIlFBo=";
   };
 
   patches = [
@@ -118,19 +118,17 @@ rustPlatform.buildRustPackage (finalAttrs: {
     # but builds fine with our standard linker.
     # This patch removes their linker override from the cargo config.
     ./0001-linux-linker.patch
-
-    # See https://github.com/zed-industries/zed/pull/21661#issuecomment-2524161840
-    "script/patches/use-cross-platform-livekit.patch"
   ];
 
-  # Dynamically link WebRTC instead of static
-  postPatch = ''
-    substituteInPlace $cargoDepsCopy/webrtc-sys-*/build.rs \
-      --replace-fail "cargo:rustc-link-lib=static=webrtc" "cargo:rustc-link-lib=dylib=webrtc"
-  '';
+  postPatch =
+    # Dynamically link WebRTC instead of static
+    ''
+      substituteInPlace $cargoDepsCopy/webrtc-sys-*/build.rs \
+        --replace-fail "cargo:rustc-link-lib=static=webrtc" "cargo:rustc-link-lib=dylib=webrtc"
+    '';
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-xJaiHngsm74RdcEUXaDrc/Hwy4ywZrEiJt7JYTc/NpM=";
+  cargoHash = "sha256-FATdeVwbSUA/zfWV9TdoS4/fT9KWsekKGjQ34HJW4rk=";
 
   nativeBuildInputs =
     [

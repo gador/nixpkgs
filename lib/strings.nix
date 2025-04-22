@@ -998,7 +998,11 @@ rec {
 
     :::
   */
-  escapeC = list: replaceStrings list (map (c: "\\x${toLower (lib.toHexString (charToInt c))}") list);
+  escapeC =
+    list:
+    replaceStrings list (
+      map (c: "\\x${fixedWidthString 2 "0" (toLower (lib.toHexString (charToInt c)))}") list
+    );
 
   /**
     Escape the `string` so it can be safely placed inside a URL
@@ -1881,7 +1885,7 @@ rec {
     : The type of the feature to be set, as described in
       https://cmake.org/cmake/help/latest/command/set.html
       the possible values (case insensitive) are:
-      BOOL FILEPATH PATH STRING INTERNAL
+      BOOL FILEPATH PATH STRING INTERNAL LIST
 
     `value`
     : The desired value
@@ -1911,6 +1915,7 @@ rec {
         "PATH"
         "STRING"
         "INTERNAL"
+        "LIST"
       ];
     in
     type: feature: value:

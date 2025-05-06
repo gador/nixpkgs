@@ -1457,6 +1457,14 @@ in
     passthru.python3Dependencies = ps: [ ps.jupytext ];
   };
 
+  kanagawa-paper-nvim = super.kanagawa-paper-nvim.overrideAttrs {
+    nvimSkipModules = [
+      # skipping wezterm theme switcher since it relies on a wezterm module
+      # that does not seem to be available, tried to build setting wezterm-nvim as a dep
+      "wezterm.theme_switcher"
+    ];
+  };
+
   kulala-nvim = super.kulala-nvim.overrideAttrs {
     dependencies = with self; [
       nvim-treesitter
@@ -2623,6 +2631,10 @@ in
     ];
   };
 
+  oil-git-status-nvim = super.oil-git-status-nvim.overrideAttrs {
+    dependencies = [ self.oil-nvim ];
+  };
+
   ollama-nvim = super.ollama-nvim.overrideAttrs {
     dependencies = [ self.plenary-nvim ];
   };
@@ -2743,6 +2755,16 @@ in
       self.nvim-cmp
     ];
   };
+
+  peek-nvim = super.peek-nvim.overrideAttrs (old: {
+    patches = [
+      # Patch peek-nvim to run using nixpkgs deno
+      # This means end-users have to build peek-nvim the first time they use it...
+      (replaceVars ./patches/peek-nvim/cmd.patch {
+        deno = lib.getExe deno;
+      })
+    ];
+  });
 
   persisted-nvim = super.persisted-nvim.overrideAttrs {
     nvimSkipModules = [
@@ -3865,6 +3887,15 @@ in
 
   wtf-nvim = super.wtf-nvim.overrideAttrs {
     dependencies = [ self.nui-nvim ];
+  };
+
+  xmake-nvim = super.xmake-nvim.overrideAttrs {
+    nvimSkipModule = [
+      # attempt to index upvalue 'options' (a nil value)
+      "xmake.action"
+      "xmake.command"
+      "xmake.runner_wrapper"
+    ];
   };
 
   yanky-nvim = super.yanky-nvim.overrideAttrs {

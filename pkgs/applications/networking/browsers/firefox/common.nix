@@ -76,7 +76,7 @@ in
   gnum4,
   gtk3,
   icu73,
-  icu77,
+  icu77, # if you fiddle with the icu parameters, please check Thunderbird's overrides
   libGL,
   libGLU,
   libevent,
@@ -310,12 +310,14 @@ buildStdenv.mkDerivation {
       ./no-buildconfig-ffx121.patch
     ]
     ++ lib.optionals (lib.versionAtLeast version "136") [ ./no-buildconfig-ffx136.patch ]
-    ++ [
+    ++ lib.optionals (lib.versionAtLeast version "139") [ ./139-relax-apple-sdk.patch ]
+    ++ lib.optionals (lib.versionOlder version "139") [
       # Fix for missing vector header on macOS
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1959377
       # Fixed on Firefox 139
       ./firefox-mac-missing-vector-header.patch
-
+    ]
+    ++ lib.optionals (lib.versionOlder version "140") [
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1962497
       # https://phabricator.services.mozilla.com/D246545
       # Fixed on Firefox 140

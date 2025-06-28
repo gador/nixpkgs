@@ -630,6 +630,7 @@ with lib.maintainers;
       leona
       theCapypara
       thiagokokada
+      jamesward
     ];
     shortName = "Jetbrains";
     scope = "Maintainers of the Jetbrains IDEs in nixpkgs";
@@ -755,6 +756,20 @@ with lib.maintainers;
     members = [ OPNA2608 ];
     scope = "Maintain Lomiri desktop environment and related packages.";
     shortName = "Lomiri";
+    enableFeatureFreezePing = true;
+  };
+
+  loongarch64 = {
+    members = [
+      aleksana
+      Cryolitia
+      darkyzhou
+      dramforever
+      wegank
+    ];
+    githubTeams = [ "loongarch64" ];
+    scope = "Maintain LoongArch64 related packages and code";
+    shortName = "LoongArch64";
     enableFeatureFreezePing = true;
   };
 

@@ -1042,6 +1042,8 @@ let
 
         linol = callPackage ../development/ocaml-modules/linol { };
 
+        linol-eio = callPackage ../development/ocaml-modules/linol/eio.nix { };
+
         linol-lwt = callPackage ../development/ocaml-modules/linol/lwt.nix { };
 
         llvm = callPackage ../development/ocaml-modules/llvm {
@@ -1882,6 +1884,10 @@ let
         simple-diff = callPackage ../development/ocaml-modules/simple-diff { };
 
         slug = callPackage ../development/ocaml-modules/slug { };
+
+        smtml = callPackage ../development/ocaml-modules/smtml {
+          mdx = mdx.override { inherit logs; };
+        };
 
         sodium = callPackage ../development/ocaml-modules/sodium { };
 

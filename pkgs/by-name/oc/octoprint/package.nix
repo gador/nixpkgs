@@ -19,6 +19,7 @@ let
       (
 
         self: super: {
+          # fix tornado.httputil.HTTPInputError: Multiple host headers not allowed
           tornado = super.tornado.overridePythonAttrs (oldAttrs: {
             version = "6.4.2";
             format = "setuptools";
@@ -37,6 +38,7 @@ let
         octoprint-filecheck = self.buildPythonPackage rec {
           pname = "OctoPrint-FileCheck";
           version = "2024.11.12";
+          format = "setuptools";
 
           src = fetchFromGitHub {
             owner = "OctoPrint";
@@ -53,6 +55,7 @@ let
         octoprint-firmwarecheck = self.buildPythonPackage rec {
           pname = "OctoPrint-FirmwareCheck";
           version = "2021.10.11";
+          format = "setuptools";
 
           src = fetchFromGitHub {
             owner = "OctoPrint";
@@ -90,6 +93,7 @@ let
         octoprint = self.buildPythonPackage rec {
           pname = "OctoPrint";
           version = "1.11.2";
+          format = "setuptools";
 
           src = fetchFromGitHub {
             owner = "OctoPrint";

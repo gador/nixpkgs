@@ -34,14 +34,14 @@ let
 in
 python.pkgs.buildPythonApplication rec {
   pname = "esphome";
-  version = "2025.7.0";
+  version = "2025.7.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "esphome";
     repo = "esphome";
     tag = version;
-    hash = "sha256-EUnptlO9Ya6GWLP7FU3gWOAs2O5xzrHhyHr8LpomapY=";
+    hash = "sha256-3hhFY6qi8xOuTb8WXuVaTNpCqXXdSg3DXubnj+FG73A=";
   };
 
   build-system = with python.pkgs; [

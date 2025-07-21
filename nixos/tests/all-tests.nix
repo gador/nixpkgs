@@ -311,6 +311,7 @@ in
   cfssl = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./cfssl.nix;
   cgit = runTest ./cgit.nix;
   charliecloud = runTest ./charliecloud.nix;
+  chhoto-url = runTest ./chhoto-url.nix;
   chromadb = runTest ./chromadb.nix;
   chromium = (handleTestOn [ "aarch64-linux" "x86_64-linux" ] ./chromium.nix { }).stable or { };
   chrony = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./chrony.nix;
@@ -790,6 +791,11 @@ in
   leaps = runTest ./leaps.nix;
   lemmy = runTest ./lemmy.nix;
   libinput = runTest ./libinput.nix;
+  lemurs = runTest ./lemurs/lemurs.nix;
+  lemurs-wayland = runTest ./lemurs/lemurs-wayland.nix;
+  lemurs-wayland-script = runTest ./lemurs/lemurs-wayland-script.nix;
+  lemurs-xorg = runTest ./lemurs/lemurs-xorg.nix;
+  lemurs-xorg-script = runTest ./lemurs/lemurs-xorg-script.nix;
   librenms = runTest ./librenms.nix;
   libresprite = runTest ./libresprite.nix;
   libreswan = runTest ./libreswan.nix;
@@ -859,6 +865,7 @@ in
   matrix-continuwuity = runTest ./matrix/continuwuity.nix;
   matrix-synapse = runTest ./matrix/synapse.nix;
   matrix-synapse-workers = runTest ./matrix/synapse-workers.nix;
+  matrix-tuwunel = runTest ./matrix/tuwunel.nix;
   mautrix-discord = runTest ./matrix/mautrix-discord.nix;
   mattermost = handleTest ./mattermost { };
   mautrix-meta-postgres = runTest ./matrix/mautrix-meta-postgres.nix;
@@ -1324,7 +1331,7 @@ in
   ssh-audit = runTest ./ssh-audit.nix;
   sssd = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./sssd.nix { };
   sssd-ldap = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./sssd-ldap.nix { };
-  stalwart-mail = runTest ./stalwart-mail.nix;
+  stalwart-mail = runTest ./stalwart/stalwart-mail.nix;
   stargazer = runTest ./web-servers/stargazer.nix;
   starship = runTest ./starship.nix;
   stash = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./stash.nix { };

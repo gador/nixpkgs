@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2025.7.1";
+  version = "2025.8.0";
   components = {
     "3_day_blinds" =
       ps: with ps; [
@@ -95,6 +95,7 @@
       ps: with ps; [
         hassil
         home-assistant-intents
+        pyturbojpeg
       ];
     "air_quality" =
       ps: with ps; [
@@ -111,6 +112,9 @@
       ps: with ps; [
         pyairnow
       ];
+    "airos" =
+      ps: with ps; [
+      ]; # missing inputs: airos
     "airq" =
       ps: with ps; [
         aioairq
@@ -544,6 +548,9 @@
       ps: with ps; [
         mozart-api
       ];
+    "bauknecht" =
+      ps: with ps; [
+      ];
     "bayesian" =
       ps: with ps; [
       ];
@@ -933,7 +940,8 @@
       ];
     "coinbase" =
       ps: with ps; [
-      ]; # missing inputs: coinbase coinbase-advanced-py
+        coinbase-advanced-py
+      ]; # missing inputs: coinbase
     "color_extractor" =
       ps: with ps; [
         colorthief
@@ -2291,7 +2299,8 @@
       ];
     "hko" =
       ps: with ps; [
-      ]; # missing inputs: hko
+        hko
+      ];
     "hlk_sw16" =
       ps: with ps; [
         hlk-sw16
@@ -2851,7 +2860,8 @@
       ++ hdate.optional-dependencies.astral;
     "joaoapps_join" =
       ps: with ps; [
-      ]; # missing inputs: python-join-api
+        python-join-api
+      ];
     "juicenet" =
       ps: with ps; [
       ];
@@ -2868,7 +2878,8 @@
       ];
     "kaiterra" =
       ps: with ps; [
-      ]; # missing inputs: kaiterra-async-client
+        kaiterra-async-client
+      ];
     "kaleidescape" =
       ps: with ps; [
         pykaleidescape
@@ -3321,7 +3332,8 @@
       ];
     "london_underground" =
       ps: with ps; [
-      ]; # missing inputs: london-tube-status
+        london-tube-status
+      ];
     "lookin" =
       ps: with ps; [
         aiolookin
@@ -3402,7 +3414,8 @@
       ];
     "marytts" =
       ps: with ps; [
-      ]; # missing inputs: speak2mary
+        speak2mary
+      ];
     "mastodon" =
       ps: with ps; [
         mastodon-py
@@ -3680,19 +3693,22 @@
       ];
     "moehlenhoff_alpha2" =
       ps: with ps; [
-      ]; # missing inputs: moehlenhoff-alpha2
+        moehlenhoff-alpha2
+      ];
     "mold_indicator" =
       ps: with ps; [
       ];
     "monarch_money" =
       ps: with ps; [
-      ]; # missing inputs: typedmonarchmoney
+        typedmonarchmoney
+      ];
     "monessen" =
       ps: with ps; [
       ];
     "monoprice" =
       ps: with ps; [
-      ]; # missing inputs: pymonoprice
+        pymonoprice
+      ];
     "monzo" =
       ps: with ps; [
         monzopy
@@ -4011,7 +4027,8 @@
       ];
     "nsw_fuel_station" =
       ps: with ps; [
-      ]; # missing inputs: nsw-fuel-api-client
+        nsw-fuel-api-client
+      ];
     "nsw_rural_fire_service_feed" =
       ps: with ps; [
         aio-geojson-nsw-rfs-incidents
@@ -4058,7 +4075,8 @@
       ];
     "nzbget" =
       ps: with ps; [
-      ]; # missing inputs: pynzbgetapi
+        pynzbgetapi
+      ];
     "oasa_telematics" =
       ps: with ps; [
         oasatelematics
@@ -4136,7 +4154,8 @@
       ];
     "onkyo" =
       ps: with ps; [
-        pyeiscp
+        aioonkyo
+        ifaddr
       ];
     "onvif" =
       ps: with ps; [
@@ -4147,6 +4166,17 @@
     "open_meteo" =
       ps: with ps; [
         open-meteo
+      ];
+    "open_router" =
+      ps: with ps; [
+        ha-ffmpeg
+        hassil
+        home-assistant-intents
+        mutagen
+        openai
+        pymicro-vad
+        pyspeex-noise
+        python-open-router
       ];
     "openai_conversation" =
       ps: with ps; [
@@ -4459,8 +4489,9 @@
       ];
     "playstation_network" =
       ps: with ps; [
+        psnawp
         pyrate-limiter
-      ]; # missing inputs: PSNAWP
+      ];
     "plex" =
       ps: with ps; [
         plexapi
@@ -5090,7 +5121,8 @@
       ];
     "schluter" =
       ps: with ps; [
-      ]; # missing inputs: py-schluter
+        py-schluter
+      ];
     "scl" =
       ps: with ps; [
       ];
@@ -5656,7 +5688,8 @@
       ];
     "supla" =
       ps: with ps; [
-      ]; # missing inputs: asyncpysupla
+        asyncpysupla
+      ];
     "surepetcare" =
       ps: with ps; [
         surepy
@@ -5744,7 +5777,8 @@
       ];
     "synology_srm" =
       ps: with ps; [
-      ]; # missing inputs: synology-srm
+        synology-srm
+      ];
     "syslog" =
       ps: with ps; [
       ];
@@ -6005,7 +6039,8 @@
       ];
     "tilt_pi" =
       ps: with ps; [
-      ]; # missing inputs: tilt-pi
+        tilt-pi
+      ];
     "time" =
       ps: with ps; [
       ];
@@ -6149,7 +6184,8 @@
       ];
     "triggercmd" =
       ps: with ps; [
-      ]; # missing inputs: triggercmd
+        triggercmd
+      ];
     "tts" =
       ps: with ps; [
         ha-ffmpeg
@@ -6255,6 +6291,10 @@
     "uptime" =
       ps: with ps; [
       ];
+    "uptime_kuma" =
+      ps: with ps; [
+        pythonkuma
+      ];
     "uptimerobot" =
       ps: with ps; [
         pyuptimerobot
@@ -6296,7 +6336,8 @@
       ];
     "vegehub" =
       ps: with ps; [
-      ]; # missing inputs: vegehub
+        vegehub
+      ];
     "velbus" =
       ps: with ps; [
         aiousbwatcher
@@ -6387,6 +6428,9 @@
       ps: with ps; [
         pyvolumio
       ];
+    "volvo" =
+      ps: with ps; [
+      ]; # missing inputs: volvocarsapi
     "volvooncall" =
       ps: with ps; [
         volvooncall
@@ -6501,7 +6545,8 @@
       ];
     "wirelesstag" =
       ps: with ps; [
-      ]; # missing inputs: wirelesstagpy
+        wirelesstagpy
+      ];
     "withings" =
       ps: with ps; [
         aiohasupervisor
@@ -6734,6 +6779,9 @@
     "zamg" =
       ps: with ps; [
         zamg
+      ];
+    "zbox_hub" =
+      ps: with ps; [
       ];
     "zengge" =
       ps: with ps; [
@@ -7130,6 +7178,7 @@
     "history"
     "history_stats"
     "hive"
+    "hko"
     "hlk_sw16"
     "holiday"
     "home_connect"
@@ -7262,6 +7311,7 @@
     "logentries"
     "logger"
     "london_air"
+    "london_underground"
     "lookin"
     "loqed"
     "lovelace"
@@ -7274,6 +7324,7 @@
     "mailgun"
     "manual"
     "manual_mqtt"
+    "marytts"
     "mastodon"
     "matrix"
     "matter"
@@ -7311,7 +7362,10 @@
     "modbus"
     "modem_callerid"
     "modern_forms"
+    "moehlenhoff_alpha2"
     "mold_indicator"
+    "monarch_money"
+    "monoprice"
     "monzo"
     "moon"
     "mopeka"
@@ -7362,6 +7416,7 @@
     "notify"
     "notify_events"
     "notion"
+    "nsw_fuel_station"
     "nsw_rural_fire_service_feed"
     "ntfy"
     "nuheat"
@@ -7371,6 +7426,7 @@
     "nws"
     "nx584"
     "nyt_games"
+    "nzbget"
     "obihai"
     "octoprint"
     "ohme"
@@ -7384,6 +7440,7 @@
     "onkyo"
     "onvif"
     "open_meteo"
+    "open_router"
     "openai_conversation"
     "openalpr_cloud"
     "openerz"
@@ -7424,6 +7481,7 @@
     "ping"
     "plaato"
     "plant"
+    "playstation_network"
     "plex"
     "plugwise"
     "point"
@@ -7637,6 +7695,7 @@
     "tibber"
     "tile"
     "tilt_ble"
+    "tilt_pi"
     "time"
     "time_date"
     "timer"
@@ -7663,6 +7722,7 @@
     "transmission"
     "transport_nsw"
     "trend"
+    "triggercmd"
     "tts"
     "tuya"
     "twentemilieu"
@@ -7679,6 +7739,7 @@
     "update"
     "upnp"
     "uptime"
+    "uptime_kuma"
     "uptimerobot"
     "usb"
     "usgs_earthquakes_feed"
@@ -7688,6 +7749,7 @@
     "vacuum"
     "vallox"
     "valve"
+    "vegehub"
     "velbus"
     "velux"
     "venstar"

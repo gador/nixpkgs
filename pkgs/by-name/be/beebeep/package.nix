@@ -2,10 +2,11 @@
   lib,
   fetchzip,
   autoPatchelfHook,
-  libsForQt5,
+  stdenv,
+  qt5,
 }:
 
-libsForQt5.mkDerivation rec {
+stdenv.mkDerivation rec {
   pname = "beebeep";
   version = "5.8.6";
 
@@ -15,11 +16,11 @@ libsForQt5.mkDerivation rec {
   };
 
   nativeBuildInputs = [
-    libsForQt5.wrapQtAppsHook
+    qt5.wrapQtAppsHook
     autoPatchelfHook
   ];
 
-  buildInputs = with libsForQt5; [
+  buildInputs = with qt5; [
     qtbase
     qtmultimedia
     qtx11extras
@@ -32,7 +33,7 @@ libsForQt5.mkDerivation rec {
 
   meta = {
     homepage = "https://www.beebeep.net/";
-    description = "BeeBEEP is the free office messenger that is indispensable in all those places where privacy and security are an essential requirement";
+    description = "Free office messenger that is indispensable in all those places where privacy and security are an essential requirement";
     mainProgram = "beebeep";
     platforms = lib.platforms.linux;
     license = lib.licenses.gpl2Only;

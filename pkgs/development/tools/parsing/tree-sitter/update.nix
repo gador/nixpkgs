@@ -183,6 +183,10 @@ let
       orga = "stsewd";
       repo = "tree-sitter-rst";
     };
+    "tree-sitter-sml" = {
+      orga = "MatthewFluet";
+      repo = "tree-sitter-sml";
+    };
     "tree-sitter-svelte" = {
       orga = "Himujjal";
       repo = "tree-sitter-svelte";
@@ -339,6 +343,10 @@ let
     "tree-sitter-gemini" = {
       orga = "blessanabraham";
       repo = "tree-sitter-gemini";
+    };
+    "tree-sitter-go-template" = {
+      orga = "ngalaiko";
+      repo = "tree-sitter-go-template";
     };
     "tree-sitter-godot-resource" = {
       orga = "prestonknopp";

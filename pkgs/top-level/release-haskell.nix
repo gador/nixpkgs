@@ -66,16 +66,9 @@ let
     ghc8107
     ghc902
     ghc928
-    ghc947
     ghc948
     ghc963
-    ghc964
-    ghc965
-    ghc966
     ghc967
-    ghc981
-    ghc982
-    ghc983
     ghc984
     ghc9101
     ghc9102
@@ -238,24 +231,7 @@ let
   jobs = recursiveUpdateMany [
     (mapTestOn {
       haskellPackages = packagePlatforms pkgs.haskellPackages;
-      haskell.compiler =
-        packagePlatforms pkgs.haskell.compiler
-        // (lib.genAttrs
-          [
-            "ghcjs"
-            "ghcjs810"
-          ]
-          (ghcjsName: {
-            # We can't build ghcjs itself, since it exceeds 3GB (Hydra's output limit) due
-            # to the size of its bundled libs. We can however save users a bit of compile
-            # time by building the bootstrap ghcjs on Hydra. For this reason, we overwrite
-            # the ghcjs attributes in haskell.compiler with a reference to the bootstrap
-            # ghcjs attribute in their bootstrap package set (exposed via passthru) which
-            # would otherwise be ignored by Hydra.
-            bootGhcjs = (packagePlatforms pkgs.haskell.compiler.${ghcjsName}.passthru).bootGhcjs;
-          })
-        );
-
+      haskell.compiler = packagePlatforms pkgs.haskell.compiler;
       tests.haskell = packagePlatforms pkgs.tests.haskell;
 
       nixosTests = {
@@ -341,7 +317,6 @@ let
         nix-delegate
         nix-deploy
         nix-diff
-        nix-linter
         nix-output-monitor
         nix-script
         nix-tree
@@ -384,7 +359,6 @@ let
         xmonadctl
         xmonad-with-packages
         yi
-        zsh-git-prompt
         ;
 
       # Members of the elmPackages set that are Haskell derivations
@@ -410,14 +384,7 @@ let
             "aarch64-darwin"
           ]
           {
-            haskell.compiler = lib.recursiveUpdate (packagePlatforms pkgs.pkgsMusl.haskell.compiler) {
-              # remove musl ghc865Binary since it is known to be broken and
-              # causes an evaluation error on darwin.
-              ghc865Binary = { };
-
-              ghcjs = { };
-              ghcjs810 = { };
-            };
+            haskell.compiler = packagePlatforms pkgs.pkgsMusl.haskell.compiler;
 
             # Get some cache going for MUSL-enabled GHC.
             haskellPackages = {
@@ -479,6 +446,26 @@ let
           };
 
       pkgsCross = {
+        aarch64-android-prebuilt.pkgsStatic =
+          removePlatforms
+            [
+              # Android NDK package doesn't support building on
+              "aarch64-darwin"
+              "aarch64-linux"
+
+              "x86_64-darwin"
+            ]
+            {
+              haskell.packages.ghc912 = {
+                inherit
+                  (packagePlatforms pkgs.pkgsCross.aarch64-android-prebuilt.pkgsStatic.haskell.packages.ghc912)
+                  ghc
+                  hello
+                  microlens
+                  ;
+              };
+            };
+
         ghcjs =
           removePlatforms
             [
@@ -512,14 +499,6 @@ let
                   ;
               };
 
-              haskell.packages.ghc910 = {
-                inherit (packagePlatforms pkgs.pkgsCross.aarch64-android-prebuilt.haskell.packages.ghc910)
-                  ghc
-                  hello
-                  microlens
-                  ;
-              };
-
               haskell.packages.ghcHEAD = {
                 inherit (packagePlatforms pkgs.pkgsCross.ghcjs.haskell.packages.ghcHEAD)
                   ghc
@@ -528,6 +507,14 @@ let
                   ;
               };
             };
+
+        ucrt64.haskell.packages.ghc912 = {
+          inherit (packagePlatforms pkgs.pkgsCross.ucrt64.haskell.packages.ghc912)
+            ghc
+            # hello # executables don't build yet
+            microlens
+            ;
+        };
 
         riscv64 = {
           # Cross compilation of GHC
@@ -571,7 +558,6 @@ let
         compilerNames.ghc8107
         compilerNames.ghc902
         compilerNames.ghc928
-        compilerNames.ghc947
         compilerNames.ghc948
       ] released;
       Cabal_3_10_3_0 = lib.subtractLists [
@@ -631,7 +617,7 @@ let
       semaphore-compat = [
         # Compiler < 9.8 don't have the semaphore-compat core package, but
         # requires unix >= 2.8.1.0 which implies GHC >= 9.6 for us.
-        compilerNames.ghc966
+        compilerNames.ghc967
       ];
       weeder = lib.subtractLists [
         compilerNames.ghc9101

@@ -8,18 +8,18 @@
 
 buildGoModule (finalAttrs: {
   pname = "parca-agent";
-  version = "0.39.3";
+  version = "0.41.0";
 
   src = fetchFromGitHub {
     owner = "parca-dev";
     repo = "parca-agent";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-dtDC0TlyYnoYpKiZ9gb9Dm75LA1r8040IUurnalkO4M=";
+    hash = "sha256-lWAdi6bgXZ5w68fZpAEUmWvbKmAdz9n92q80gzj21s8=";
     fetchSubmodules = true;
   };
 
   proxyVendor = true;
-  vendorHash = "sha256-10cfmMbNvaX2VksX0WOOHQAMgqfOXbkLXeXAy3b3fhU=";
+  vendorHash = "sha256-//a6hjQ+pqhNsuj76gqsJ7QKkbyktfY780i5Rmax7Ls=";
 
   buildInputs = [
     stdenv.cc.libc.static
@@ -43,7 +43,10 @@ buildGoModule (finalAttrs: {
     homepage = "https://github.com/parca-dev/parca-agent";
     changelog = "https://github.com/parca-dev/parca-agent/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.asl20;
-    maintainers = with lib.maintainers; [ jnsgruk ];
+    maintainers = with lib.maintainers; [
+      brancz
+      metalmatze
+    ];
     platforms = lib.platforms.linux;
     mainProgram = "parca-agent";
   };

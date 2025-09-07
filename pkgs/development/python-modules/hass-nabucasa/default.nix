@@ -26,7 +26,7 @@
 
 buildPythonPackage rec {
   pname = "hass-nabucasa";
-  version = "0.111.1";
+  version = "1.1.0";
   pyproject = true;
 
   disabled = pythonOlder "3.13";
@@ -35,14 +35,20 @@ buildPythonPackage rec {
     owner = "nabucasa";
     repo = "hass-nabucasa";
     tag = version;
-    hash = "sha256-WmsLn/pHI3KJSmX5U20eNUEs0Q1upuwkkzcHIYPNYjY=";
+    hash = "sha256-rQHXidzlxIXG+TIrbdM1oxnOwfi0MFZb7HIDIW6D4Jk=";
   };
+
+  postPatch = ''
+    substituteInPlace pyproject.toml \
+      --replace-fail "0.0.0" "${version}"
+  '';
 
   build-system = [ setuptools ];
 
   pythonRelaxDeps = [
     "acme"
     "josepy"
+    "snitun"
   ];
 
   dependencies = [

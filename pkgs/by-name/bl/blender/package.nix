@@ -95,7 +95,10 @@ let
   vulkanSupport = !stdenv.hostPlatform.isDarwin;
 
   python3 = python3Packages.python;
-  pyPkgsOpenusd = python3Packages.openusd.override { withOsl = false; };
+  pyPkgsOpenusd = python3Packages.openusd.override (old: {
+    opensubdiv = old.opensubdiv.override { inherit cudaSupport; };
+    withOsl = false;
+  });
 
   libdecor' = libdecor.overrideAttrs (old: {
     # Blender uses private APIs, need to patch to expose them
@@ -115,12 +118,12 @@ in
 
 stdenv'.mkDerivation (finalAttrs: {
   pname = "blender";
-  version = "4.5.1";
+  version = "4.5.2";
 
   src = fetchzip {
     name = "source";
     url = "https://download.blender.org/source/blender-${finalAttrs.version}.tar.xz";
-    hash = "sha256-x1zeBQ0aTBFUpB7c4XfP6b2p+ENRFEnTGa4m/7Pl24k=";
+    hash = "sha256-6blXwp3DeWNM5Q6M5gWj4O+K/gFxEOj41lzlc5biEYQ=";
   };
 
   postPatch =

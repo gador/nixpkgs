@@ -64,6 +64,7 @@ with lib.maintainers;
     # Edits to this list should only be done by an already existing member.
     members = [
       DutchGerman
+      friedow
     ];
   };
 
@@ -316,7 +317,7 @@ with lib.maintainers;
   };
 
   deepin = {
-    members = [ rewine ];
+    members = [ wineee ];
     scope = "Maintain deepin desktop environment and related packages.";
     shortName = "DDE";
     enableFeatureFreezePing = true;
@@ -736,6 +737,7 @@ with lib.maintainers;
   llvm = {
     members = [
       dtzWill
+      emily
       ericson2314
       lovek323
       qyliss

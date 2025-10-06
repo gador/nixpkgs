@@ -13,7 +13,7 @@ let
   # linux distros are supposed to provide pillow and pycryptodome
   requiredPythonPath =
     with kodi.pythonPackages;
-    makePythonPath ([
+    makePythonPath [
       pillow
       pycryptodomex
     ]);

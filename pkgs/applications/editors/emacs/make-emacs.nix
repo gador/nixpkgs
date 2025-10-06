@@ -172,7 +172,7 @@ stdenv.mkDerivation (finalAttrs: {
         {
           backendPath = (
             lib.concatStringsSep " " (
-              builtins.map (x: ''"-B${x}"'') (
+              map (x: ''"-B${x}"'') (
                 [
                   # Paths necessary so the JIT compiler finds its libraries:
                   "${lib.getLib libgccjit}/lib"
@@ -356,6 +356,9 @@ stdenv.mkDerivation (finalAttrs: {
     sigtool
   ]
   ++ lib.optionals withNS [
+    librsvg
+  ]
+  ++ lib.optionals (variant == "macport") [
     librsvg
   ];
 

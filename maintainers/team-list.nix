@@ -45,6 +45,17 @@ with lib.maintainers;
     enableFeatureFreezePing = true;
   };
 
+  agda = {
+    members = [
+      alexarice
+      ncfavier
+      phijor
+      turion
+    ];
+    scope = "Maintain Agda-related packages and modules.";
+    shortName = "Agda";
+  };
+
   android = {
     members = [
       adrian-gierakowski
@@ -667,11 +678,11 @@ with lib.maintainers;
     members = [
       euank
       frederictobiasc
+      heywoodlh
       marcusramberg
       mic92
       rorosen
       wrmilling
-      yajo
     ];
     scope = "Maintain K3s package, NixOS module, NixOS tests, update script";
     shortName = "K3s";
@@ -1173,6 +1184,15 @@ with lib.maintainers;
     scope = "Maintain core SDL libraries.";
     shortName = "SDL";
     enableFeatureFreezePing = true;
+  };
+
+  secshell = {
+    members = [
+      felbinger
+      juli0604
+    ];
+    scope = "Maintain packages and modules created by members of Secure Shell Networks.";
+    shortName = "secshell";
   };
 
   serokell = {

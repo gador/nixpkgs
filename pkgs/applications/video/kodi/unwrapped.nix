@@ -35,7 +35,6 @@
   ncurses,
   spdlog,
   libxml2,
-  systemd,
   alsa-lib,
   libGLU,
   libGL,
@@ -263,14 +262,11 @@ stdenv.mkDerivation (
         url = "https://github.com/xbmc/xbmc/commit/269053ebbfd3cc4a3156a511f54ab7f08a09a730.patch";
         hash = "sha256-JzzrMJvAufrxTxtWnzknUS9JLJEed+qdtVnIYYe9LCw=";
       })
-      # Mire fixes for Pipwire. See https://github.com/xbmc/xbmc/pull/26441
+      # Backport to fix build with cURL 8.16
+      # FIXME: remove in the next update
       (fetchpatch {
-        url = "https://github.com/xbmc/xbmc/commit/821901f30469c56f3fff0604c7a8796b77d11fc1.patch";
-        hash = "sha256-XfAipqmYF8GCgEJNMjvQbaH0GWib/YE3jTMAMat4Xg8=";
-      })
-      (fetchpatch {
-        url = "https://github.com/xbmc/xbmc/commit/7d369dd07acae535d57aec412359406646d5fb86.patch";
-        hash = "sha256-5NnGwHf1FlKjDdbkCo4yTgl/aBbz+7+6FIJWVq+sF9E=";
+        url = "https://github.com/xbmc/xbmc/commit/957b4faa0b765bc91e64c6d33f07e853decae0d0.patch";
+        hash = "sha256-zsqcZSjsApcgs/oEdFFlcwldGCVZxCsDG02ogs+q2uw=";
       })
     ];
 
@@ -285,85 +281,83 @@ stdenv.mkDerivation (
       apache_commons_text
       ;
 
-    buildInputs =
-      [
-        gnutls
-        libidn2
-        libtasn1
-        nasm
-        p11-kit
-        libxml2
-        python3Packages.python
-        boost
-        libmicrohttpd
-        gettext
-        pcre-cpp
-        yajl
-        fribidi
-        libva
-        libdrm
-        openssl
-        gperf
-        tinyxml2
-        tinyxml-2
-        taglib
-        libssh
-        gtest
-        ncurses
-        spdlog
-        alsa-lib
-        libGL
-        libGLU
-        fontconfig
-        freetype
-        ftgl
-        libjpeg
-        libpng
-        libtiff
-        libmpeg2
-        libsamplerate
-        libmad
-        libogg
-        libvorbis
-        flac
-        libxslt
-        systemd
-        lzo
-        libcdio
-        libmodplug
-        libass
-        libbluray
-        libudfread
-        sqlite
-        libmysqlclient
-        avahi
-        lame
-        curl
-        bzip2
-        zip
-        unzip
-        mesa-demos
-        libcec
-        libcec_platform
-        dcadec
-        libuuid
-        libxcrypt
-        libgcrypt
-        libgpg-error
-        libunistring
-        libcrossguid
-        libplist
-        bluez
-        glib
-        harfbuzz
-        lcms2
-        libpthreadstubs
-        ffmpeg
-        flatbuffers
-        fstrcmp
-        rapidjson
-        lirc
-        mesa-gl-headers
+    buildInputs = [
+      gnutls
+      libidn2
+      libtasn1
+      nasm
+      p11-kit
+      libxml2
+      python3Packages.python
+      boost
+      libmicrohttpd
+      gettext
+      pcre-cpp
+      yajl
+      fribidi
+      libva
+      libdrm
+      openssl
+      gperf
+      tinyxml2
+      tinyxml-2
+      taglib
+      libssh
+      gtest
+      ncurses
+      spdlog
+      alsa-lib
+      libGL
+      libGLU
+      fontconfig
+      freetype
+      ftgl
+      libjpeg
+      libpng
+      libtiff
+      libmpeg2
+      libsamplerate
+      libmad
+      libogg
+      libvorbis
+      flac
+      libxslt
+      lzo
+      libcdio
+      libmodplug
+      libass
+      libbluray
+      libudfread
+      sqlite
+      libmysqlclient
+      avahi
+      lame
+      curl
+      bzip2
+      zip
+      unzip
+      mesa-demos
+      libcec
+      libcec_platform
+      dcadec
+      libuuid
+      libxcrypt
+      libgcrypt
+      libgpg-error
+      libunistring
+      libcrossguid
+      libplist
+      bluez
+      glib
+      harfbuzz
+      lcms2
+      libpthreadstubs
+      ffmpeg
+      flatbuffers
+      fstrcmp
+      rapidjson
+      lirc
+      mesa-gl-headers
 
         # Deps needed by TexturePacker, which is built and installed in normal
         # kodi build, however the one used during the build is not this one
@@ -493,7 +487,6 @@ stdenv.mkDerivation (
             lib.makeLibraryPath (
               [
                 curl
-                systemd
                 libmad
                 libcec
                 libcec_platform

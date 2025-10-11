@@ -109,6 +109,7 @@
   ./hardware/sheep-net.nix
   ./hardware/steam-hardware.nix
   ./hardware/system-76.nix
+  ./hardware/tenstorrent.nix
   ./hardware/tuxedo-drivers.nix
   ./hardware/ubertooth.nix
   ./hardware/uinput.nix
@@ -288,6 +289,7 @@
   ./programs/partition-manager.nix
   ./programs/pay-respects.nix
   ./programs/plotinus.nix
+  ./programs/pmount.nix
   ./programs/pqos-wrapper.nix
   ./programs/projecteur.nix
   ./programs/proxychains.nix
@@ -1294,7 +1296,6 @@
   ./services/networking/pangolin.nix
   ./services/networking/pdns-recursor.nix
   ./services/networking/pdnsd.nix
-  ./services/networking/peroxide.nix
   ./services/networking/picosnitch.nix
   ./services/networking/pihole-ftl.nix
   ./services/networking/pixiecore.nix
@@ -1628,6 +1629,7 @@
   ./services/web-apps/lemmy.nix
   ./services/web-apps/libretranslate.nix
   ./services/web-apps/limesurvey.nix
+  ./services/web-apps/linkwarden.nix
   ./services/web-apps/mainsail.nix
   ./services/web-apps/mastodon.nix
   ./services/web-apps/matomo.nix
@@ -1705,7 +1707,6 @@
   ./services/web-apps/suwayomi-server.nix
   ./services/web-apps/szurubooru.nix
   ./services/web-apps/trilium.nix
-  ./services/web-apps/tt-rss.nix
   ./services/web-apps/umami.nix
   ./services/web-apps/vikunja.nix
   ./services/web-apps/wakapi.nix

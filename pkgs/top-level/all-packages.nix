@@ -2225,8 +2225,6 @@ with pkgs;
 
   psrecord = python3Packages.callPackage ../tools/misc/psrecord { };
 
-  rare = python3Packages.callPackage ../games/rare { };
-
   renpy = callPackage ../by-name/re/renpy/package.nix { python3 = python312; };
 
   rmview = libsForQt5.callPackage ../applications/misc/remarkable/rmview { };
@@ -6809,6 +6807,8 @@ with pkgs;
   premake5 = callPackage ../development/tools/misc/premake/5.nix { };
 
   premake = premake4;
+
+  pycobertura = with python3Packages; toPythonApplication pycobertura;
 
   pycritty = with python3Packages; toPythonApplication pycritty;
 
@@ -12444,8 +12444,6 @@ with pkgs;
   sfxr-qt = libsForQt5.callPackage ../applications/audio/sfxr-qt { };
 
   spotify-qt = qt6Packages.callPackage ../applications/audio/spotify-qt { };
-
-  sonic-pi = libsForQt5.callPackage ../applications/audio/sonic-pi { };
 
   stag = callPackage ../applications/misc/stag {
     curses = ncurses;

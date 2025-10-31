@@ -9,7 +9,7 @@
   cmake,
   ninja,
   pkg-config,
-  curl,
+  curlFull, # Websocket support
   libavif,
   angle, # libEGL
   libjxl,
@@ -34,13 +34,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "ladybird";
-  version = "0-unstable-2025-09-19";
+  version = "0-unstable-2025-10-28";
 
   src = fetchFromGitHub {
     owner = "LadybirdBrowser";
     repo = "ladybird";
-    rev = "5bd867f1dcb1f1b1c1397c4615ce7f091c8370aa";
-    hash = "sha256-/SPWjgHiWgrLThgAxBt9gZVELH+rrJWkfhxnuKEIxd8=";
+    rev = "d2b2d573879a50d8f3d568f9c35b8c660bc43013";
+    hash = "sha256-OOqAYUXjyoZHdXOaPqddeUfYD/SNCNZh6a9ysnEseLA=";
   };
 
   postPatch = ''
@@ -80,7 +80,7 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   buildInputs = [
-    curl
+    curlFull
     fast-float
     ffmpeg
     fontconfig

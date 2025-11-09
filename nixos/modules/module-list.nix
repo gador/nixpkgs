@@ -902,7 +902,6 @@
   ./services/misc/packagekit.nix
   ./services/misc/paisa.nix
   ./services/misc/paperless.nix
-  ./services/misc/parsoid.nix
   ./services/misc/persistent-evdev.nix
   ./services/misc/pghero.nix
   ./services/misc/pinchflat.nix
@@ -992,6 +991,7 @@
   ./services/monitoring/gitwatch.nix
   ./services/monitoring/glances.nix
   ./services/monitoring/glpi-agent.nix
+  ./services/monitoring/go-csp-collector.nix
   ./services/monitoring/goss.nix
   ./services/monitoring/grafana-image-renderer.nix
   ./services/monitoring/grafana-reporter.nix
@@ -1319,7 +1319,6 @@
   ./services/networking/pyload.nix
   ./services/networking/quassel.nix
   ./services/networking/quicktun.nix
-  ./services/networking/quorum.nix
   ./services/networking/r53-ddns.nix
   ./services/networking/radicale.nix
   ./services/networking/radvd.nix
@@ -1460,6 +1459,7 @@
   ./services/security/certmgr.nix
   ./services/security/cfssl.nix
   ./services/security/clamav.nix
+  ./services/security/crowdsec-firewall-bouncer.nix
   ./services/security/crowdsec.nix
   ./services/security/e-imzo.nix
   ./services/security/endlessh-go.nix

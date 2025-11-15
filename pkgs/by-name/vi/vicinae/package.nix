@@ -20,13 +20,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "vicinae";
-  version = "0.16.1";
+  version = "0.16.5";
 
   src = fetchFromGitHub {
     owner = "vicinaehq";
     repo = "vicinae";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-PWfgR7wyQINl0Xy/AJAaaUo1WtrkznGcaL1aCACqI7U=";
+    hash = "sha256-smhbchRZmp7DwRLGA3QoI12kQuMVaxiNkhzfC+n19+4=";
   };
 
   apiDeps = fetchNpmDeps {
@@ -89,6 +89,8 @@ stdenv.mkDerivation (finalAttrs: {
       ]
     }"
   ];
+
+  passthru.updateScript = ./update.sh;
 
   meta = {
     description = "A focused launcher for your desktop — native, fast, extensible";

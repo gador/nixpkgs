@@ -519,6 +519,7 @@ with pkgs;
         protobuf = protobuf_25.override {
           abseil-cpp = abseil-cpp_202407;
         };
+        stdenv = if stdenv.cc.isClang then llvmPackages_19.stdenv else stdenv;
       };
     })
     mysql-shell_8
@@ -530,6 +531,7 @@ with pkgs;
     protobuf = protobuf_25.override {
       abseil-cpp = abseil-cpp_202407;
     };
+    stdenv = if stdenv.cc.isClang then llvmPackages_19.stdenv else stdenv;
   };
 
   # this is used by most `fetch*` functions
@@ -5427,16 +5429,12 @@ with pkgs;
       zulu11 = callPackage ../development/compilers/zulu/11.nix { };
       zulu17 = callPackage ../development/compilers/zulu/17.nix { };
       zulu21 = callPackage ../development/compilers/zulu/21.nix { };
-      zulu23 = callPackage ../development/compilers/zulu/23.nix { };
-      zulu24 = callPackage ../development/compilers/zulu/24.nix { };
       zulu25 = callPackage ../development/compilers/zulu/25.nix { };
     })
     zulu8
     zulu11
     zulu17
     zulu21
-    zulu23
-    zulu24
     zulu25
     ;
   zulu = zulu21;
@@ -6707,8 +6705,6 @@ with pkgs;
   sbt-with-scala-native = callPackage ../development/tools/build-managers/sbt/scala-native.nix { };
   simpleBuildTool = sbt;
 
-  scss-lint = callPackage ../development/tools/scss-lint { };
-
   shake =
     # TODO: Erroneous references to GHC on aarch64-darwin: https://github.com/NixOS/nixpkgs/issues/318013
     (
@@ -7334,11 +7330,7 @@ with pkgs;
 
   gsettings-qt = libsForQt5.callPackage ../development/libraries/gsettings-qt { };
 
-  gst_all_1 = recurseIntoAttrs (
-    callPackage ../development/libraries/gstreamer {
-      callPackage = newScope gst_all_1;
-    }
-  );
+  gst_all_1 = recurseIntoAttrs (callPackage ../development/libraries/gstreamer { });
 
   gnutls = callPackage ../development/libraries/gnutls {
     util-linux = util-linuxMinimal; # break the cyclic dependency
@@ -10739,6 +10731,7 @@ with pkgs;
 
   cmus = callPackage ../applications/audio/cmus {
     libjack = libjack2;
+    ffmpeg = ffmpeg_7;
   };
 
   cni = callPackage ../applications/networking/cluster/cni { };
@@ -11158,14 +11151,6 @@ with pkgs;
   );
 
   m32edit = callPackage ../applications/audio/midas/m32edit.nix { };
-
-  manim = python3Packages.toPythonApplication python3Packages.manim;
-
-  manim-slides =
-    (python3Packages.toPythonApplication python3Packages.manim-slides).overridePythonAttrs
-      (oldAttrs: {
-        dependencies = oldAttrs.dependencies ++ oldAttrs.optional-dependencies.pyqt6-full;
-      });
 
   manuskript = libsForQt5.callPackage ../applications/editors/manuskript { };
 
@@ -12784,6 +12769,7 @@ with pkgs;
   yt-dlp-light = yt-dlp.override {
     atomicparsleySupport = false;
     ffmpegSupport = false;
+    javascriptSupport = false;
     rtmpSupport = false;
   };
 
@@ -12938,11 +12924,6 @@ with pkgs;
   };
 
   arx-libertatis = libsForQt5.callPackage ../games/arx-libertatis { };
-
-  asc = callPackage ../games/asc {
-    lua = lua5_1;
-    physfs = physfs_2;
-  };
 
   beancount-ing-diba = callPackage ../applications/office/beancount/beancount-ing-diba.nix {
     inherit (python3Packages) beancount beangulp;
@@ -13345,6 +13326,7 @@ with pkgs;
     gnome46Extensions
     gnome47Extensions
     gnome48Extensions
+    gnome49Extensions
     ;
 
   gnome-extensions-cli = python3Packages.callPackage ../desktops/gnome/misc/gnome-extensions-cli { };
@@ -13390,8 +13372,6 @@ with pkgs;
     redshift
     gammastep
     ;
-
-  redshift-plasma-applet = libsForQt5.callPackage ../applications/misc/redshift-plasma-applet { };
 
   ### SCIENCE/CHEMISTY
 

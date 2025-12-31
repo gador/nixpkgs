@@ -42,7 +42,7 @@ rustPlatform.buildRustPackage rec {
   cargoHash = "sha256-DJtk8xLppXdl9sSt6GcaXwZ5MEIY/s/z/bdcdr8YdLw=";
 
   # Needed to get openssl-sys to use pkg-config
-  OPENSSL_NO_VENDOR = 1;
+  env.OPENSSL_NO_VENDOR = 1;
 
   nativeBuildInputs = [
     pkg-config
@@ -78,15 +78,15 @@ rustPlatform.buildRustPackage rec {
     "--skip=test_cli_subcommands" # panicking due to sandbox
   ];
 
-  meta = with lib; {
+  meta = {
     description = "Terminal e-mail client and e-mail client library";
     mainProgram = "meli";
     homepage = "https://meli.delivery";
-    license = licenses.gpl3;
-    maintainers = with maintainers; [
+    license = lib.licenses.gpl3;
+    maintainers = with lib.maintainers; [
       _0x4A6F
       matthiasbeyer
     ];
-    platforms = platforms.linux ++ platforms.darwin;
+    platforms = lib.platforms.linux ++ lib.platforms.darwin;
   };
 }

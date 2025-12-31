@@ -11,16 +11,15 @@
   makeWrapper,
   moreutils,
   nodejs,
-  pnpm_10,
+  fetchPnpmDeps,
+  pnpmConfigHook,
+  pnpm,
 
   _7zz,
   electron,
   voicevox-engine,
 }:
 
-let
-  pnpm = pnpm_10;
-in
 stdenv.mkDerivation (finalAttrs: {
   pname = "voicevox";
   version = "0.25.0";
@@ -41,12 +40,16 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   postPatch = ''
+    # don't fail if node version doesn't fit the constraint
+    substituteInPlace .npmrc \
+      --replace-fail "engine-strict=true" ""
+
     # unlock the overly specific pnpm package version pin
     # and also set version to a proper value
     jq "del(.packageManager) | .version = \"$version\"" package.json | sponge package.json
   '';
 
-  pnpmDeps = pnpm.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs)
       pname
       version
@@ -62,8 +65,8 @@ stdenv.mkDerivation (finalAttrs: {
       moreutils
     ];
 
-    fetcherVersion = 1;
-    hash = "sha256-no0oFhy7flet9QH4FEkPJdlwNq5YkjIx8Uat3M2ruKI=";
+    fetcherVersion = 2;
+    hash = "sha256-U1hW6j1WRyuh2rUgMxwF8LCRk7wgSlV6cqapBoXvAdU=";
   };
 
   nativeBuildInputs = [
@@ -72,7 +75,8 @@ stdenv.mkDerivation (finalAttrs: {
     makeWrapper
     moreutils
     nodejs
-    pnpm.configHook
+    pnpmConfigHook
+    pnpm
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
     copyDesktopItems

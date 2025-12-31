@@ -33,14 +33,14 @@ let
 in
 python.pkgs.buildPythonApplication rec {
   pname = "esphome";
-  version = "2025.11.4";
+  version = "2025.12.3";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "esphome";
     repo = "esphome";
     tag = version;
-    hash = "sha256-uV5lSlAFHTxIJqkvwRiDWcB2Hw+z+4+phBm2JHld4jA=";
+    hash = "sha256-XQBPx1FOvyd2TN3PNFYVfa+pJ+3Y/IsjCeOHVBDlvOM=";
   };
 
   patches = [
@@ -176,8 +176,6 @@ python.pkgs.buildPythonApplication rec {
     "test_clang_tidy_mode_full_scan"
     "test_clang_tidy_mode_targeted_scan"
   ];
-
-  versionCheckProgramArg = "--version";
 
   passthru = {
     dashboard = python.pkgs.esphome-dashboard;

@@ -9,7 +9,7 @@
 }:
 let
   pname = "tuya-device-sharing-sdk";
-  version = "0.2.6";
+  version = "0.2.7";
 in
 buildPythonPackage {
   inherit pname version;
@@ -35,10 +35,10 @@ buildPythonPackage {
 
   doCheck = false; # no tests
 
-  meta = with lib; {
+  meta = {
     description = "Tuya Device Sharing SDK";
     homepage = "https://github.com/tuya/tuya-device-sharing-sdk";
-    license = licenses.mit;
-    maintainers = with maintainers; [ aciceri ];
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [ aciceri ];
   };
 }

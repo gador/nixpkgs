@@ -14,16 +14,16 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "pixi";
-  version = "0.60.0";
+  version = "0.62.2";
 
   src = fetchFromGitHub {
     owner = "prefix-dev";
     repo = "pixi";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-JFXa72bPRYkNb/7XbBOnI1ay0WFVAoAssoNtGjSsW/s=";
+    hash = "sha256-HNXfcZuj+yLWatwdSOP0WDkX4y9pcVwrNjsaZdD3ZNo=";
   };
 
-  cargoHash = "sha256-aDWDJ0uGAa/gdV6aelBd6tlRssd75EzeGbnw7qPzLDY=";
+  cargoHash = "sha256-wmr1dOqV8IAhqmG4SjeCra+CEpajwZJWUlTNYVVgHVo=";
 
   nativeBuildInputs = [
     pkg-config
@@ -58,7 +58,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
   nativeInstallCheckInputs = [
     versionCheckHook
   ];
-  versionCheckProgramArg = "--version";
   doInstallCheck = true;
 
   passthru.updateScript = nix-update-script { };

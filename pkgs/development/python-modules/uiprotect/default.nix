@@ -39,14 +39,14 @@
 
 buildPythonPackage rec {
   pname = "uiprotect";
-  version = "7.33.2";
+  version = "7.33.3";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "uilibs";
     repo = "uiprotect";
     tag = "v${version}";
-    hash = "sha256-zGw77uP9Na+NnSzpxJ0Nf10L+nfbGuodVQNfomtaHhA=";
+    hash = "sha256-sVWgomaCrfZSlJpoLfYLkZXgJE0dw8ki8+VTbhkoDaE=";
   };
 
   build-system = [ poetry-core ];
@@ -92,11 +92,11 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "uiprotect" ];
 
-  meta = with lib; {
+  meta = {
     description = "Python API for UniFi Protect (Unofficial)";
     homepage = "https://github.com/uilibs/uiprotect";
     changelog = "https://github.com/uilibs/uiprotect/blob/${src.tag}/CHANGELOG.md";
-    license = licenses.mit;
-    maintainers = with maintainers; [ hexa ];
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [ hexa ];
   };
 }

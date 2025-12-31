@@ -14,14 +14,14 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "ty";
-  version = "0.0.1-alpha.32";
+  version = "0.0.8";
 
   src = fetchFromGitHub {
     owner = "astral-sh";
     repo = "ty";
     tag = finalAttrs.version;
     fetchSubmodules = true;
-    hash = "sha256-Kc5jxDpQv7bm4J7EdejkrUv/lz7hRc01riUIEdv+wmY=";
+    hash = "sha256-PSw+yRAj6i2qld+10FEMWRxOaqzqu+4CYJcO0PAgG0g=";
   };
 
   # For Darwin platforms, remove the integration test for file notifications,
@@ -35,7 +35,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   cargoBuildFlags = [ "--package=ty" ];
 
-  cargoHash = "sha256-GEf/gU2DXz+u7kPHAB1NRqkmn0f7NV3M5U9u17adtkI=";
+  cargoHash = "sha256-XRiIngGFG8j3zQd6QMAFoZ64M7X4NkXCwYiUKA6oefA=";
 
   nativeBuildInputs = [ installShellFiles ];
 
@@ -65,7 +65,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
   ];
 
   nativeInstallCheckInputs = [ versionCheckHook ];
-  versionCheckProgramArg = "--version";
   doInstallCheck = true;
 
   postInstall = lib.optionalString (stdenv.hostPlatform.emulatorAvailable buildPackages) (
@@ -81,7 +80,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   );
 
   passthru = {
-    updateScript = nix-update-script { extraArgs = [ "--version=unstable" ]; };
+    updateScript = nix-update-script { };
   };
 
   meta = {

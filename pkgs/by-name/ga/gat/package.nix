@@ -6,16 +6,16 @@
 
 buildGoModule rec {
   pname = "gat";
-  version = "0.25.8";
+  version = "0.26.0";
 
   src = fetchFromGitHub {
     owner = "koki-develop";
     repo = "gat";
     tag = "v${version}";
-    hash = "sha256-OT0TiYvbeybWPk2Sku38ip+qmUUuFRMu1wC9936EByY=";
+    hash = "sha256-aWGSn5eeFTfBrAsYj38jcf6Xsrz0X5crjjOe0fNu1Mo=";
   };
 
-  vendorHash = "sha256-LOim/rW8Uz5stpIQj2Ubx4F3bTv6nNAn2ZbWqW6B4rU=";
+  vendorHash = "sha256-C1Nm4czf6F2u/OU4jdRQLTXWKBo3mF0TqypbF1pO8yc=";
 
   env.CGO_ENABLED = 0;
 
@@ -25,11 +25,11 @@ buildGoModule rec {
     "-X github.com/koki-develop/gat/cmd.version=v${version}"
   ];
 
-  meta = with lib; {
+  meta = {
     description = "Cat alternative written in Go";
-    license = licenses.mit;
+    license = lib.licenses.mit;
     homepage = "https://github.com/koki-develop/gat";
-    maintainers = with maintainers; [ themaxmur ];
+    maintainers = with lib.maintainers; [ themaxmur ];
     mainProgram = "gat";
   };
 }

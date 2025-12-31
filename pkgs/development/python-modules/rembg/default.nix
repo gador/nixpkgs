@@ -84,7 +84,6 @@ buildPythonPackage rec {
 
   # not running python tests, as they require network access
   nativeCheckInputs = lib.optionals withCli [ versionCheckHook ];
-  versionCheckProgramArg = "--version";
 
   pythonImportsCheck = [ "rembg" ];
 
@@ -95,6 +94,5 @@ buildPythonPackage rec {
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ defelo ];
     mainProgram = "rembg";
-    platforms = [ "x86_64-linux" ];
   };
 }

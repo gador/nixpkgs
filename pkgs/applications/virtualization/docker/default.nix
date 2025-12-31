@@ -69,7 +69,6 @@ let
         maintainers = with lib.maintainers; [
           offline
           vdemeester
-          periklis
           teutat3s
         ];
       };
@@ -259,10 +258,9 @@ let
         ++ lib.optionals sbomSupport [ docker-sbom ]
         ++ lib.optionals initSupport [ docker-init ];
 
-      pluginsRef = symlinkJoin {
-        name = "docker-plugins";
-        paths = plugins;
-      };
+      dockerCliPluginsDirs = lib.strings.concatStringsSep ":" (
+        map (p: "${p}/libexec/docker/cli-plugins") plugins
+      );
     in
     buildGoModule (
       {
@@ -277,6 +275,15 @@ let
           rev = cliRev;
           hash = cliHash;
         };
+
+        patches = [
+          (
+            if lib.versionOlder version "26.0.0" then
+              ./cli-system-plugin-dir-from-env-25.patch
+            else
+              ./cli-system-plugin-dir-from-env.patch
+          )
+        ];
 
         vendorHash = null;
 
@@ -299,10 +306,6 @@ let
         postPatch = ''
           patchShebangs man scripts/build/
           substituteInPlace ./scripts/build/.variables --replace-fail "set -eu" ""
-        ''
-        + lib.optionalString (plugins != [ ]) ''
-          substituteInPlace ./cli-plugins/manager/manager_unix.go --replace-fail /usr/libexec/docker/cli-plugins \
-              "${pluginsRef}/libexec/docker/cli-plugins"
         '';
 
         # Keep eyes on BUILDTIME format - https://github.com/docker/cli/blob/${version}/scripts/build/.variables
@@ -331,7 +334,8 @@ let
           install -Dm755 ./build/docker $out/libexec/docker/docker
 
           makeWrapper $out/libexec/docker/docker $out/bin/docker \
-            --prefix PATH : "$out/libexec/docker:$extraPath"
+            --prefix PATH : "$out/libexec/docker:$extraPath" \
+            --prefix DOCKER_CLI_PLUGIN_DIRS : "${dockerCliPluginsDirs}"
         ''
         + lib.optionalString (!clientOnly) ''
           # symlink docker daemon to docker cli derivation
@@ -357,7 +361,6 @@ let
 
         doInstallCheck = true;
         nativeInstallCheckInputs = [ versionCheckHook ];
-        versionCheckProgramArg = "--version";
 
         passthru = {
           # Exposed for tarsum build on non-linux systems (build-support/docker/default.nix)
@@ -432,14 +435,14 @@ in
 
   docker_29 =
     let
-      version = "29.1.2";
+      version = "29.1.3";
     in
     callPackage dockerGen {
       inherit version;
       cliRev = "v${version}";
-      cliHash = "sha256-dmoCHxXOYalJCaqq32MdsAEJ+xq0aH/8fOpJHVnBxxU=";
+      cliHash = "sha256-8VpFDYn9mRFv7BnHek2+HvIu6jNPYNC1asozJvRX/A4=";
       mobyRev = "docker-v${version}";
-      mobyHash = "sha256-SRMaPAdg2nlWuKKQILZEGHZO6TGLh2Ci1UIWqcyo6IM=";
+      mobyHash = "sha256-yB6FF4tzi6R+wH6U0JS8PMZGVRl1gWCY2Cjb/JR+62w=";
       runcRev = "v1.3.4";
       runcHash = "sha256-1IfY08sBoDpbLrwz1AKBRSTuCZyOgQzYPHTDUI6fOZ8=";
       containerdRev = "v2.2.0";

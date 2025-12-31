@@ -9,17 +9,12 @@
 }:
 let
   pname = "models-dev";
-  version = "0-unstable-2025-12-09";
+  version = "0-unstable-2025-12-29";
   src = fetchFromGitHub {
     owner = "sst";
     repo = "models.dev";
-    rev = "597350692c84a6c32f86fde05e310566a417099e";
-    hash = "sha256-m3tegpyPT5yX6IqgJG9+YpmyQ7rBd9H+USS3YDLizsM=";
-    postFetch = lib.optionalString stdenvNoCC.hostPlatform.isLinux ''
-      # NOTE: Normalize case-sensitive directory names that cause issues on case-insensitive filesystems
-      cp -r "$out/providers/poe/models/openai"/* "$out/providers/poe/models/openAi/"
-      rm -rf "$out/providers/poe/models/openai"
-    '';
+    rev = "53afc6aefb7b7f777c7b708098e7dbf83bd3797a";
+    hash = "sha256-I79MLfT9rCJK7LOfJNN23wM9/lJsVL+fw3hBUPykIxM=";
   };
 
   node_modules = stdenvNoCC.mkDerivation {

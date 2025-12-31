@@ -291,7 +291,7 @@ let
   extraBuildInputs = extraPackages python.pkgs;
 
   # Don't forget to run update-component-packages.py after updating
-  hassVersion = "2025.12.2";
+  hassVersion = "2025.12.5";
 
 in
 python.pkgs.buildPythonApplication rec {
@@ -312,13 +312,13 @@ python.pkgs.buildPythonApplication rec {
     owner = "home-assistant";
     repo = "core";
     tag = version;
-    hash = "sha256-8JAI3urAl+RvAEV+C3sC0COSfK3oEGefT/dT6elIhRA=";
+    hash = "sha256-RSrWk7SZIOvOhvVXBwc10w9Yyqd2rcxdUVuq2snMm9g=";
   };
 
   # Secondary source is pypi sdist for translations
   sdist = fetchPypi {
     inherit pname version;
-    hash = "sha256-glipo0eX5NHK0S0ktRtY6g1YUMU31nJB1YlIxIitzyY=";
+    hash = "sha256-cl5kTpYhsZnf7etPRSgVWd/fH9zTc1OnkRTjbUp/M3U=";
   };
 
   build-system = with python.pkgs; [
@@ -526,13 +526,13 @@ python.pkgs.buildPythonApplication rec {
     };
   };
 
-  meta = with lib; {
+  meta = {
     homepage = "https://home-assistant.io/";
     changelog = "https://github.com/home-assistant/core/releases/tag/${src.tag}";
     description = "Open source home automation that puts local control and privacy first";
-    license = licenses.asl20;
-    teams = [ teams.home-assistant ];
-    platforms = platforms.linux;
+    license = lib.licenses.asl20;
+    teams = [ lib.teams.home-assistant ];
+    platforms = lib.platforms.linux;
     mainProgram = "hass";
   };
 }

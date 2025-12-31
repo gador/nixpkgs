@@ -151,6 +151,9 @@ in
       "services"
       "couchpotato"
     ] "The corresponding package was removed from nixpkgs.")
+    (mkRemovedOptionModule [ "services" "crabfit" ]
+      "The corresponding packages were removed from nixpkgs because they are unmaintained upstream and insecure."
+    )
     (mkRemovedOptionModule [ "services" "crowd" ]
       "Atlassian software has been removed, as support for the Atlassian Server products ended in February 2024 and there was insufficient interest in maintaining the Atlassian Data Center replacements"
     )
@@ -167,6 +170,9 @@ in
       moreover the NixOS module had to rely on an abandoned version of dnscrypt-proxy v1 for the rotation of keys.
 
       To wrap a resolver with DNSCrypt you can instead use dnsdist. See options `services.dnsdist.dnscrypt.*`
+    '')
+    (mkRemovedOptionModule [ "services" "ethercalc" ] ''
+      The ethercalc module has been removed from nixpkgs as the project was old, unmaintained, and could not be packaged well in nixpkgs.
     '')
     (mkRemovedOptionModule [
       "services"
@@ -251,6 +257,9 @@ in
     (mkRemovedOptionModule [ "services" "parsoid" ] ''
       The Javascript version of Parsoid configured through this module does not work with modern MediaWiki versions,
       and has been deprecated by upstream, so it has been removed. MediaWiki comes with a new PHP-based parser built-in, so there is no need for this module.
+    '')
+    (mkRemovedOptionModule [ "services" "pingvin-share" ] ''
+      The `pingvin-share.backend` package was broken and the project was archived upstream, so it was removed from nixpkgs.
     '')
     (mkRemovedOptionModule [ "services" "polipo" ] ''
       The polipo project is unmaintained and archived upstream.

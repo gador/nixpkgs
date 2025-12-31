@@ -3,6 +3,7 @@
   stdenv,
   fetchFromGitLab,
   nix-update-script,
+  nixosTests,
 
   # build
   cmake,
@@ -20,14 +21,14 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "kaidan";
-  version = "0.13.0-unstable-2025-12-09";
+  version = "0.13.0-unstable-2025-12-25";
 
   src = fetchFromGitLab {
     domain = "invent.kde.org";
     owner = "network";
     repo = "kaidan";
-    rev = "d160f34ce1fecb39f4c71530cf2d4ba57bfbd6f4";
-    hash = "sha256-/Nt6XjauaVKdLSZglk3qfd0wxW/VpwzMnVwuF/jGP0s=";
+    rev = "834d89c2115a48188e827089db05a88db5dc1f8f";
+    hash = "sha256-o7x6Ib9zL4akzjvz+mSACQHyj2xH6RzoCniumNjK1lw=";
   };
 
   patches = [
@@ -74,6 +75,7 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   passthru.updateScript = nix-update-script { extraArgs = [ "--version=branch" ]; };
+  passthru.tests.kaidan = nixosTests.kaidan;
 
   meta = {
     description = "User-friendly and modern chat app, using XMPP";

@@ -11,22 +11,26 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "zerofs";
-  version = "0.20.0";
+  version = "0.22.9";
 
   src = fetchFromGitHub {
     owner = "Barre";
     repo = "ZeroFS";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-8iPHIUESModoNFk8XEWjHZOGBOPxhOGM9gHaljWyqZg=";
+    hash = "sha256-eAH2zOM5FOUaLRfMQp2Dsa6ghKmOGVVbOz7JETnVRzU=";
   };
 
   sourceRoot = "${finalAttrs.src.name}/zerofs";
 
-  cargoHash = "sha256-JZerQne+jW6xjH13dQe3g1dD07BP3j+1DSF+a/SgGXc=";
+  cargoHash = "sha256-U/ZsjZ42PxTd/g2G1DfDazCSOIvsULtt/zufyBVZFyQ=";
 
   nativeBuildInputs = [ cmake ];
 
   buildInputs = [ rust-jemalloc-sys ];
+
+  env = {
+    RUSTFLAGS = "--cfg tokio_unstable";
+  };
 
   doInstallCheck = true;
   nativeInstallCheckInputs = [ versionCheckHook ];

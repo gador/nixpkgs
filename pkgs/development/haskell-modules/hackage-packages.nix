@@ -29283,8 +29283,6 @@ self: {
       ];
       description = "Library for using Mixed Integer Programming (MIP)";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -29345,6 +29343,7 @@ self: {
       description = "A GLPK backend to the MIP library";
       license = lib.licenses.gpl3Only;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { inherit (pkgs) glpk; };
 
@@ -239747,7 +239746,7 @@ self: {
           Cabal,
           directory,
           filepath,
-          fltk14,
+          fltk_1_4,
           libGL,
           libGLU,
           mtl,
@@ -239776,7 +239775,7 @@ self: {
             text
             vector
           ];
-          librarySystemDepends = [ fltk14 ];
+          librarySystemDepends = [ fltk_1_4 ];
           libraryPkgconfigDepends = [
             libGL
             libGLU
@@ -239801,7 +239800,7 @@ self: {
         }
       )
       {
-        inherit (pkgs) fltk14;
+        inherit (pkgs) fltk_1_4;
         inherit (pkgs) libGL;
         inherit (pkgs) libGLU;
         inherit (pkgs) pkg-config;

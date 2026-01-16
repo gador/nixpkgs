@@ -160,7 +160,6 @@
   ./misc/wordlist.nix
   ./programs/_1password-gui.nix
   ./programs/_1password.nix
-  ./programs/adb.nix
   ./programs/alvr.nix
   ./programs/amnezia-vpn.nix
   ./programs/appgate-sdp.nix
@@ -203,7 +202,6 @@
   ./programs/droidcam.nix
   ./programs/dsearch.nix
   ./programs/dublin-traceroute.nix
-  ./programs/ecryptfs.nix
   ./programs/ente-auth.nix
   ./programs/environment.nix
   ./programs/envision.nix
@@ -257,6 +255,7 @@
   ./programs/less.nix
   ./programs/liboping.nix
   ./programs/light.nix
+  ./programs/lix.nix
   ./programs/localsend.nix
   ./programs/mdevctl.nix
   ./programs/mepo.nix
@@ -1128,7 +1127,6 @@
   ./services/networking/cato-client.nix
   ./services/networking/centrifugo.nix
   ./services/networking/cgit.nix
-  ./services/networking/charybdis.nix
   ./services/networking/chisel-server.nix
   ./services/networking/cjdns.nix
   ./services/networking/clatd.nix
@@ -1351,7 +1349,7 @@
   ./services/networking/routinator.nix
   ./services/networking/rpcbind.nix
   ./services/networking/rxe.nix
-  ./services/networking/sabnzbd.nix
+  ./services/networking/sabnzbd
   ./services/networking/scion/scion-control.nix
   ./services/networking/scion/scion-daemon.nix
   ./services/networking/scion/scion-dispatcher.nix
@@ -1919,7 +1917,6 @@
   ./tasks/filesystems/bindfs.nix
   ./tasks/filesystems/btrfs.nix
   ./tasks/filesystems/cifs.nix
-  ./tasks/filesystems/ecryptfs.nix
   ./tasks/filesystems/envfs.nix
   ./tasks/filesystems/erofs.nix
   ./tasks/filesystems/exfat.nix

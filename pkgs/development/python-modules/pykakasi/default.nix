@@ -17,13 +17,11 @@ buildPythonPackage rec {
   version = "2.3.0";
   pyproject = true;
 
-  disabled = pythonOlder "3.8";
-
   src = fetchFromGitea {
     domain = "codeberg.org";
     owner = "miurahr";
     repo = "pykakasi";
-    rev = "refs/tags/v${version}";
+    tag = "v${version}";
     hash = "sha256-b2lYYdg1RW1xRD3hym7o1EnxzN/U5txVTWRifwZn3k0=";
   };
 

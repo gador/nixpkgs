@@ -254,9 +254,20 @@ let
 
         cohttp = callPackage ../development/ocaml-modules/cohttp { };
 
+        cohttp_5_3 = cohttp.overrideAttrs (_: {
+          version = "5.3.1";
+          __intentionallyOverridingVersion = true;
+        });
+
         cohttp-async = callPackage ../development/ocaml-modules/cohttp/async.nix { };
 
+        cohttp-async_5_3 = cohttp-async.override { cohttp = cohttp_5_3; };
+
+        cohttp-eio = callPackage ../development/ocaml-modules/cohttp/eio.nix { };
+
         cohttp-lwt = callPackage ../development/ocaml-modules/cohttp/lwt.nix { };
+
+        cohttp-lwt_5_3 = cohttp-lwt.override { cohttp = cohttp_5_3; };
 
         cohttp-lwt-jsoo = callPackage ../development/ocaml-modules/cohttp/lwt-jsoo.nix { };
 
@@ -660,6 +671,8 @@ let
 
         frama-c-lannotate = callPackage ../development/ocaml-modules/frama-c-lannotate { };
 
+        frama-c-luncov = callPackage ../development/ocaml-modules/frama-c-luncov { };
+
         frei0r = callPackage ../development/ocaml-modules/frei0r {
           inherit (pkgs) frei0r;
         };
@@ -790,6 +803,8 @@ let
         hmap = callPackage ../development/ocaml-modules/hmap { };
 
         hpack = callPackage ../development/ocaml-modules/hpack { };
+
+        http = callPackage ../development/ocaml-modules/cohttp/http.nix { };
 
         http-mirage-client = callPackage ../development/ocaml-modules/http-mirage-client { };
 
@@ -1147,7 +1162,9 @@ let
 
         magic-mime = callPackage ../development/ocaml-modules/magic-mime { };
 
-        magic-trace = callPackage ../development/ocaml-modules/magic-trace { };
+        magic-trace = callPackage ../development/ocaml-modules/magic-trace {
+          cohttp = cohttp_5_3; # due to cohttp_static_handler pulling in cohttp_5_3
+        };
 
         mariadb = callPackage ../development/ocaml-modules/mariadb {
           inherit (pkgs) mariadb;
@@ -1644,7 +1661,9 @@ let
 
         paf = callPackage ../development/ocaml-modules/paf { };
 
-        paf-cohttp = callPackage ../development/ocaml-modules/paf/cohttp.nix { };
+        paf-cohttp = callPackage ../development/ocaml-modules/paf/cohttp.nix {
+          cohttp-lwt = cohttp-lwt_5_3;
+        };
 
         parany = callPackage ../development/ocaml-modules/parany { };
 
@@ -2319,7 +2338,7 @@ rec {
 
   ocamlPackages_5_4 = mkOcamlPackages (callPackage ../development/compilers/ocaml/5.4.nix { });
 
-  ocamlPackages_latest = ocamlPackages_5_3;
+  ocamlPackages_latest = ocamlPackages_5_4;
 
   ocamlPackages = ocamlPackages_5_3;
 

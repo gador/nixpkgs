@@ -200,7 +200,7 @@ in
   activation-bashless-image = runTest ./activation/bashless-image.nix;
   activation-etc-overlay-immutable = runTest ./activation/etc-overlay-immutable.nix;
   activation-etc-overlay-mutable = runTest ./activation/etc-overlay-mutable.nix;
-  activation-lib = pkgs.callPackage ../modules/system/activation/lib/test.nix { };
+  activation-lib = pkgs.callPackage ../modules/system/activation/lib-test.nix { };
   activation-nix-channel = runTest ./activation/nix-channel.nix;
   activation-nixos-init = runTest ./activation/nixos-init.nix;
   activation-perlless = runTest ./activation/perlless.nix;
@@ -386,6 +386,7 @@ in
   collectd = runTest ./collectd.nix;
   commafeed = runTest ./commafeed.nix;
   connman = runTest ./connman.nix;
+  console-xkb-and-i18n = runTest ./console-xkb-and-i18n.nix;
   consul = runTest ./consul.nix;
   consul-template = runTest ./consul-template.nix;
   containers-bridge = runTest ./containers-bridge.nix;
@@ -446,6 +447,7 @@ in
   darling-dmg = runTest ./darling-dmg.nix;
   dashy = runTest ./web-apps/dashy.nix;
   davis = runTest ./davis.nix;
+  dawarich = runTest ./web-apps/dawarich.nix;
   db-rest = runTest ./db-rest.nix;
   dconf = runTest ./dconf.nix;
   ddns-updater = runTest ./ddns-updater.nix;
@@ -1029,10 +1031,15 @@ in
   nbd = runTest ./nbd.nix;
   ncdns = runTest ./ncdns.nix;
   ncps = runTest ./ncps.nix;
-  ncps-custom-cache-datapath = runTest {
+  ncps-custom-sqlite-directory = runTest {
     imports = [ ./ncps.nix ];
-    defaults.services.ncps.cache.dataPath = "/path/to/ncps";
+    defaults.services.ncps.cache.databaseURL = "sqlite:/path/to/ncps/db.sqlite";
   };
+  ncps-custom-storage-local = runTest {
+    imports = [ ./ncps.nix ];
+    defaults.services.ncps.cache.storage.local = "/path/to/ncps";
+  };
+  ncps-ha = runTest ./ncps-ha.nix;
   ndppd = runTest ./ndppd.nix;
   nebula-lighthouse-service = runTest ./nebula-lighthouse-service.nix;
   nebula.connectivity = runTest ./nebula/connectivity.nix;
@@ -1099,6 +1106,9 @@ in
   ] ./nixos-rebuild-install-bootloader.nix { };
   nixos-rebuild-specialisations = runTestOn [ "x86_64-linux" ] {
     imports = [ ./nixos-rebuild-specialisations.nix ];
+  };
+  nixos-rebuild-store-path = runTestOn [ "x86_64-linux" ] {
+    imports = [ ./nixos-rebuild-store-path.nix ];
   };
   nixos-rebuild-target-host = runTest {
     imports = [ ./nixos-rebuild-target-host.nix ];
@@ -1203,6 +1213,7 @@ in
   paperless = runTest ./paperless.nix;
   paretosecurity = runTest ./paretosecurity.nix;
   parsedmarc = handleTest ./parsedmarc { };
+  part-db = runTest ./web-apps/part-db.nix;
   pass-secret-service = runTest ./pass-secret-service.nix;
   password-option-override-ordering = runTest ./password-option-override-ordering.nix;
   patroni = handleTestOn [ "x86_64-linux" ] ./patroni.nix { };
@@ -1332,6 +1343,7 @@ in
   qtile = runTestOn [ "x86_64-linux" "aarch64-linux" ] ./qtile/default.nix;
   qtile-extras = runTestOn [ "x86_64-linux" "aarch64-linux" ] ./qtile-extras/default.nix;
   quake3 = runTest ./quake3.nix;
+  qui = runTest ./qui.nix;
   quicktun = runTest ./quicktun.nix;
   quickwit = runTest ./quickwit.nix;
   rabbitmq = runTest ./rabbitmq.nix;
@@ -1646,6 +1658,7 @@ in
   userborn-immutable-users = runTest ./userborn-immutable-users.nix;
   userborn-mutable-etc = runTest ./userborn-mutable-etc.nix;
   userborn-mutable-users = runTest ./userborn-mutable-users.nix;
+  userborn-static = runTest ./userborn-static.nix;
   ustreamer = runTest ./ustreamer.nix;
   uwsgi = runTest ./uwsgi.nix;
   v2ray = runTest ./v2ray.nix;

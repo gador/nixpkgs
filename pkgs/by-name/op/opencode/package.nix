@@ -14,12 +14,12 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "opencode";
-  version = "1.1.21";
+  version = "1.1.30";
   src = fetchFromGitHub {
     owner = "anomalyco";
     repo = "opencode";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-8ykONBWMiq9EACHOsdx1AFPoj53Tsxi3EbUDVciH5Ok=";
+    hash = "sha256-RTj64yrVLTFNpVc8MvPAJISOlBo/j2MnuL5jo4VtKWM=";
   };
 
   node_modules = stdenvNoCC.mkDerivation {
@@ -44,6 +44,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       bun install \
         --cpu="*" \
         --frozen-lockfile \
+        --filter ./packages/opencode \
+        --filter ./packages/desktop \
         --ignore-scripts \
         --no-progress \
         --os="*"
@@ -66,7 +68,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     # NOTE: Required else we get errors that our fixed-output derivation references store paths
     dontFixup = true;
 
-    outputHash = "sha256-gl/5eA4nPLQ2clOcAf0D8/ocjRO4xBm5AQtqrcSdkTw=";
+    outputHash = "sha256-37pmIiJzPEWeA7+5u5lz39vlFPI+N13Qw9weHrAaGW4=";
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
   };
@@ -80,11 +82,16 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   ];
 
   patches = [
-    # NOTE: Relax Bun version check to be a warning instead of an error
-    ./relax-bun-version-check.patch
     # NOTE: Remove special and windows build targes
     ./remove-special-and-windows-build-targets.patch
   ];
+
+  postPatch = ''
+    # NOTE: Relax Bun version check to be a warning instead of an error
+    substituteInPlace packages/script/src/index.ts \
+      --replace-fail 'throw new Error(`This script requires bun@''${expectedBunVersionRange}' \
+                     'console.warn(`Warning: This script requires bun@''${expectedBunVersionRange}'
+  '';
 
   configurePhase = ''
     runHook preConfigure
@@ -164,7 +171,10 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     description = "AI coding agent built for the terminal";
     homepage = "https://github.com/anomalyco/opencode";
     license = lib.licenses.mit;
-    maintainers = with lib.maintainers; [ delafthi ];
+    maintainers = with lib.maintainers; [
+      delafthi
+      graham33
+    ];
     sourceProvenance = with lib.sourceTypes; [ fromSource ];
     platforms = [
       "aarch64-linux"

@@ -8,7 +8,7 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "zensical";
-  version = "0.0.15";
+  version = "0.0.18";
   pyproject = true;
 
   # We fetch from PyPi, because GitHub repo does not contain all sources.
@@ -16,12 +16,12 @@ python3Packages.buildPythonApplication rec {
   # We could combine sources, but then nix-update won't work.
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-syAMkbMDcGccULi0qkHCDlX/KBS5AD7iPJtvkjoMGb4=";
+    hash = "sha256-H7ERAygza6RFliocZhV74Wmhz+fRxO3//7GEw/iE3wc=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit pname version src;
-    hash = "sha256-Sg4gl23aK6yPZ3Hdi+IzTGnx8wEAkSL0SrKGVdMRJ2s=";
+    hash = "sha256-r8X8td94+0wd4/riE+YCBBIe417xh0IK4vvPwPuRsGg=";
   };
 
   nativeBuildInputs = with rustPlatform; [
@@ -51,7 +51,7 @@ python3Packages.buildPythonApplication rec {
       use, with powerful customization options.
     '';
     homepage = "https://zensical.org";
-    changelog = "https://github.com/zensical/zensical/releases/tag/${version}";
+    changelog = "https://github.com/zensical/zensical/releases/tag/v${version}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ aljazerzen ];
     mainProgram = "zensical";

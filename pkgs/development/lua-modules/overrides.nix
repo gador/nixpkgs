@@ -17,7 +17,6 @@
   fetchurl,
   fzf,
   glib,
-  glibc,
   gmp,
   gnulib,
   gnum4,
@@ -25,6 +24,7 @@
   imagemagick,
   installShellFiles,
   lib,
+  libc,
   libevent,
   libiconv,
   libmpack,
@@ -416,7 +416,7 @@ in
 
   lrexlib-posix = prev.lrexlib-posix.overrideAttrs (old: {
     buildInputs = old.buildInputs ++ [
-      glibc.dev
+      (lib.getDev libc)
     ];
   });
 
@@ -479,6 +479,13 @@ in
     buildInputs = old.buildInputs ++ [
       yajl
     ];
+    luarocksConfig = old.luarocksConfig // {
+      variables = {
+        # Since yajl's outputs are split, we need to help luarocks find the
+        # include directory.
+        YAJL_INCDIR = "${lib.getDev yajl}/include";
+      };
+    };
   });
 
   lua-zlib = prev.lua-zlib.overrideAttrs (old: {
@@ -697,7 +704,7 @@ in
 
   luasystem = prev.luasystem.overrideAttrs (
     lib.optionalAttrs stdenv.hostPlatform.isLinux {
-      buildInputs = [ glibc.out ];
+      buildInputs = [ libc.out ];
     }
   );
 
@@ -1173,9 +1180,12 @@ in
       ++ [
         lua.pkgs.luarocks-build-treesitter-parser-cpp
       ];
+
+    meta.broken = lua.luaversion != "5.1";
   });
 
   tree-sitter-orgmode = prev.tree-sitter-orgmode.overrideAttrs (old: {
+    strictDeps = true; # can be removed after february 2026
     propagatedBuildInputs =
       let
         # HACK: luarocks-nix puts rockspec build dependencies in the nativeBuildInputs,
@@ -1185,11 +1195,14 @@ in
       old.propagatedBuildInputs
       ++ [
         lua.pkgs.luarocks-build-treesitter-parser
-        tree-sitter
       ];
     nativeBuildInputs = old.nativeBuildInputs or [ ] ++ [
       writableTmpDirAsHomeHook
+      tree-sitter
     ];
+
+    # should be fixed upstream
+    meta.broken = lua.luaversion != "5.1";
   });
 
   vstruct = prev.vstruct.overrideAttrs (_: {

@@ -38,11 +38,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "calibre";
-  version = "8.15.0";
+  version = "8.16.2";
 
   src = fetchurl {
     url = "https://download.calibre-ebook.com/${finalAttrs.version}/calibre-${finalAttrs.version}.tar.xz";
-    hash = "sha256-Wnv+S/4ajebu87+R+pft9Ka//sD12SsH6+1nXVx/XrQ=";
+    hash = "sha256-AYfQQ1T1PMB0EUHaAml37jCnfvoMN7GDm94FiCIsHGw=";
   };
 
   patches =
@@ -60,6 +60,22 @@ stdenv.mkDerivation (finalAttrs: {
         name = "0007-Hardening-Qt-code.patch";
         url = "https://github.com/debian-calibre/calibre/raw/refs/tags/debian/${finalAttrs.version}+${debian-source}/debian/patches/hardening/0007-Hardening-Qt-code.patch";
         hash = "sha256-lKp/omNicSBiQUIK+6OOc8ysM6LImn5GxWhpXr4iX+U=";
+      })
+      # Fix CVE-2026-25636
+      # http://tracker.security.nixos.org/issues/NIXPKGS-2026-0160
+      # https://github.com/NixOS/nixpkgs/issues/488052
+      # Fixed upstream in 9.1.0.
+      #
+      # Both patches appear to be needed to fix the CVE.
+      (fetchpatch {
+        name = "CVE-2026-25636.1.patch";
+        url = "https://github.com/kovidgoyal/calibre/commit/267bfd34020a4f297c2de9cc0cde50ebe5d024d4.patch";
+        hash = "sha256-5CKlJG0e0v/VXiIeAqiByThRgMs+gwRdgOzPHupB8A8=";
+      })
+      (fetchpatch {
+        name = "CVE-2026-25636.2.patch";
+        url = "https://github.com/kovidgoyal/calibre/commit/9484ea82c6ab226c18e6ca5aa000fa16de598726.patch";
+        hash = "sha256-hpWFSQXyOAVRqou0v+5oT5zIrBbyP2Uv2z1Vg811ZG0=";
       })
     ]
     ++ lib.optional (!unrarSupport) ./dont_build_unrar_plugin.patch;
@@ -135,6 +151,8 @@ stdenv.mkDerivation (finalAttrs: {
         regex
         sip
         setuptools
+        tzdata
+        tzlocal
         zeroconf
         jeepney
         pycryptodome
@@ -212,6 +230,7 @@ stdenv.mkDerivation (finalAttrs: {
         wrapProgram $program \
           ''${qtWrapperArgs[@]} \
           ''${gappsWrapperArgs[@]} \
+          --set QTWEBENGINE_CHROMIUM_FLAGS "--disable-gpu" \
           --prefix PATH : ${
             lib.makeBinPath [
               libjpeg

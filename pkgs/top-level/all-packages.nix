@@ -407,18 +407,21 @@ with pkgs;
   dotnet-sdk_8 = dotnetCorePackages.sdk_8_0;
   dotnet-sdk_9 = dotnetCorePackages.sdk_9_0;
   dotnet-sdk_10 = dotnetCorePackages.sdk_10_0;
+  dotnet-sdk_11 = dotnetCorePackages.sdk_11_0;
 
   dotnet-runtime_6 = dotnetCorePackages.runtime_6_0-bin;
   dotnet-runtime_7 = dotnetCorePackages.runtime_7_0-bin;
   dotnet-runtime_8 = dotnetCorePackages.runtime_8_0;
   dotnet-runtime_9 = dotnetCorePackages.runtime_9_0;
   dotnet-runtime_10 = dotnetCorePackages.runtime_10_0;
+  dotnet-runtime_11 = dotnetCorePackages.runtime_11_0;
 
   dotnet-aspnetcore_6 = dotnetCorePackages.aspnetcore_6_0-bin;
   dotnet-aspnetcore_7 = dotnetCorePackages.aspnetcore_7_0-bin;
   dotnet-aspnetcore_8 = dotnetCorePackages.aspnetcore_8_0;
   dotnet-aspnetcore_9 = dotnetCorePackages.aspnetcore_9_0;
   dotnet-aspnetcore_10 = dotnetCorePackages.aspnetcore_10_0;
+  dotnet-aspnetcore_11 = dotnetCorePackages.aspnetcore_11_0;
 
   dotnet-sdk = dotnetCorePackages.sdk_8_0;
   dotnet-runtime = dotnetCorePackages.runtime_8_0;
@@ -681,6 +684,8 @@ with pkgs;
   fetchRadiclePatch = callPackage ../build-support/fetchradiclepatch { };
 
   fetchgx = callPackage ../build-support/fetchgx { };
+
+  fetchItchIo = callPackage ../build-support/fetchitchio { };
 
   fetchPypi = callPackage ../build-support/fetchpypi { };
 
@@ -971,10 +976,6 @@ with pkgs;
   actdiag = with python3.pkgs; toPythonApplication actdiag;
 
   opnplug = adlplug.override { type = "OPN"; };
-
-  acme-client = callPackage ../tools/networking/acme-client {
-    stdenv = gccStdenv;
-  };
 
   aflplusplus = callPackage ../tools/security/aflplusplus { wine = null; };
 
@@ -1790,8 +1791,6 @@ with pkgs;
 
   intensity-normalization = with python3Packages; toPythonApplication intensity-normalization;
 
-  jellyfin-desktop = kdePackages.callPackage ../applications/video/jellyfin-desktop { };
-
   jellyfin-mpv-shim = python3Packages.callPackage ../applications/video/jellyfin-mpv-shim { };
 
   klaus = with python3Packages; toPythonApplication klaus;
@@ -2039,8 +2038,6 @@ with pkgs;
   collectd-data = callPackage ../tools/system/collectd/data.nix { };
 
   unify = with python3Packages; toPythonApplication unify;
-
-  persistent-evdev = python3Packages.callPackage ../servers/persistent-evdev { };
 
   inherit (import ../development/libraries/libsbsms pkgs)
     libsbsms
@@ -2685,8 +2682,6 @@ with pkgs;
     isl_0_27
     ;
 
-  jackett = callPackage ../servers/jackett { };
-
   jamesdsp-pulse = callPackage ../by-name/ja/jamesdsp/package.nix {
     usePipewire = false;
     usePulseaudio = true;
@@ -2698,7 +2693,7 @@ with pkgs;
 
   jl = haskellPackages.jl;
 
-  jkqtplotter = libsForQt5.callPackage ../development/libraries/jkqtplotter { };
+  jkqtplotter = callPackage ../development/libraries/jkqtplotter { };
 
   jpylyzer = with python3Packages; toPythonApplication jpylyzer;
 
@@ -2969,8 +2964,6 @@ with pkgs;
   miniupnpd = callPackage ../tools/networking/miniupnpd { };
 
   miniupnpd-nftables = callPackage ../tools/networking/miniupnpd { firewall = "nftables"; };
-
-  minijail = callPackage ../tools/system/minijail { };
 
   mir-qualia = callPackage ../tools/text/mir-qualia {
     pythonPackages = python3Packages;
@@ -3292,8 +3285,6 @@ with pkgs;
 
   tabview = with python3Packages; toPythonApplication tabview;
 
-  tautulli = python3Packages.callPackage ../servers/tautulli { };
-
   inherit (callPackage ../development/tools/pnpm { })
     pnpm_8
     pnpm_9
@@ -3307,10 +3298,6 @@ with pkgs;
     ;
 
   po4a = perlPackages.Po4a;
-
-  polaris = callPackage ../servers/polaris { };
-
-  polaris-web = callPackage ../servers/polaris/web.nix { };
 
   proxmark3 = libsForQt5.callPackage ../tools/security/proxmark3/default.nix { };
 
@@ -3436,10 +3423,6 @@ with pkgs;
 
   # aka., pgp-tools
   simplescreenrecorder = libsForQt5.callPackage ../applications/video/simplescreenrecorder { };
-
-  sks = callPackage ../servers/sks {
-    ocamlPackages = ocaml-ng.ocamlPackages_4_12;
-  };
 
   snapcast = callPackage ../applications/audio/snapcast {
     pulseaudioSupport = config.pulseaudio or stdenv.hostPlatform.isLinux;
@@ -4609,7 +4592,9 @@ with pkgs;
     mlton20130715
     mlton20180207Binary
     mlton20180207
+    mlton20210117Binary
     mlton20210117
+    mlton20241230Binary
     mlton20241230
     mltonHEAD
     ;
@@ -5253,7 +5238,6 @@ with pkgs;
   pythonInterpreters = callPackage ./../development/interpreters/python { };
   inherit (pythonInterpreters)
     python27
-    python310
     python311
     python312
     python313
@@ -5270,7 +5254,6 @@ with pkgs;
 
   # Python package sets.
   python27Packages = python27.pkgs;
-  python310Packages = python310.pkgs;
   python311Packages = python311.pkgs;
   python312Packages = python312.pkgs;
   python313Packages = recurseIntoAttrs python313.pkgs;
@@ -6735,10 +6718,6 @@ with pkgs;
     '';
   });
 
-  isso = callPackage ../servers/isso {
-    nodejs = nodejs_20;
-  };
-
   itk_5_2 = callPackage ../development/libraries/itk/5.2.x.nix {
     enableRtk = false;
   };
@@ -6761,7 +6740,6 @@ with pkgs;
 
   libappindicator-gtk2 = libappindicator.override { gtkVersion = "2"; };
   libappindicator-gtk3 = libappindicator.override { gtkVersion = "3"; };
-  libasn1c = callPackage ../servers/osmocom/libasn1c/default.nix { };
 
   libbass = (callPackage ../development/libraries/audio/libbass { }).bass;
   libbass_fx = (callPackage ../development/libraries/audio/libbass { }).bass_fx;
@@ -7394,35 +7372,7 @@ with pkgs;
     python3 = null;
   };
 
-  qt5 = recurseIntoAttrs (
-    makeOverridable (import ../development/libraries/qt-5/5.15) {
-      inherit (__splicedPackages)
-        makeScopeWithSplicing'
-        generateSplicesForMkScope
-        lib
-        stdenv
-        gcc14Stdenv
-        fetchurl
-        fetchpatch
-        fetchgit
-        fetchFromGitHub
-        makeSetupHook
-        makeWrapper
-        bison
-        cups
-        dconf
-        harfbuzz
-        libGL
-        perl
-        gtk3
-        python3
-        llvmPackages_19
-        darwin
-        ;
-      inherit (__splicedPackages.gst_all_1) gstreamer gst-plugins-base;
-      inherit config;
-    }
-  );
+  qt5 = recurseIntoAttrs (__splicedPackages.callPackage ../development/libraries/qt-5/5.15 { });
 
   libsForQt5 = recurseIntoAttrs (
     import ./qt5-packages.nix {
@@ -8201,8 +8151,6 @@ with pkgs;
     erlang = beamMinimalPackages.erlang;
   };
 
-  dcnnt = python3Packages.callPackage ../servers/dcnnt { };
-
   dict = callPackage ../servers/dict {
     flex = flex_2_5_35;
     libmaa = callPackage ../servers/dict/libmaa.nix { };
@@ -8213,11 +8161,6 @@ with pkgs;
   dictDBCollector = callPackage ../servers/dict/dictd-db-collector.nix { };
 
   dodgy = with python3Packages; toPythonApplication dodgy;
-
-  prosody = callPackage ../servers/xmpp/prosody {
-    withExtraLibs = [ ];
-    withExtraLuaPackages = _: [ ];
-  };
 
   inherit (callPackages ../servers/firebird { })
     firebird_4
@@ -8342,8 +8285,6 @@ with pkgs;
       xclip
     ];
   };
-
-  minio = callPackage ../servers/minio { };
 
   mkchromecast = libsForQt5.callPackage ../applications/networking/mkchromecast { };
 
@@ -8506,8 +8447,6 @@ with pkgs;
 
   qboot = pkgsi686Linux.callPackage ../applications/virtualization/qboot { };
 
-  rust-hypervisor-firmware = callPackage ../applications/virtualization/rust-hypervisor-firmware { };
-
   OVMF = callPackage ../applications/virtualization/OVMF {
     inherit (python3Packages) pexpect;
   };
@@ -8518,10 +8457,6 @@ with pkgs;
     tpmSupport = true;
     tlsSupport = true;
     msVarsTemplate = stdenv.hostPlatform.isx86_64 || stdenv.hostPlatform.isAarch64;
-  };
-
-  tang = callPackage ../servers/tang {
-    asciidoc = asciidoc-full;
   };
 
   inherit (import ../servers/sql/postgresql pkgs)
@@ -8668,8 +8603,6 @@ with pkgs;
 
   pypiserver = with python3Packages; toPythonApplication pypiserver;
 
-  qremotecontrol-server = libsForQt5.callPackage ../servers/misc/qremotecontrol-server { };
-
   rethinkdb = callPackage ../servers/nosql/rethinkdb {
     stdenv = clangStdenv;
     libtool = cctools;
@@ -8695,8 +8628,6 @@ with pkgs;
 
   scalene = with python3Packages; toPythonApplication scalene;
 
-  shairplay = callPackage ../servers/shairplay { avahi = avahi-compat; };
-
   shairport-sync-airplay2 = shairport-sync.override {
     enableAirplay2 = true;
   };
@@ -8713,11 +8644,6 @@ with pkgs;
     sensu-go-backend
     sensu-go-cli
     ;
-
-  shishi = callPackage ../servers/shishi {
-    pam = if stdenv.hostPlatform.isLinux then pam else null;
-    # see also openssl, which has/had this same trick
-  };
 
   spacecookie = haskell.lib.compose.justStaticExecutables haskellPackages.spacecookie;
 
@@ -9317,11 +9243,7 @@ with pkgs;
 
   ### DATA
 
-  adwaita-qt = libsForQt5.callPackage ../data/themes/adwaita-qt { };
-
-  adwaita-qt6 = qt6Packages.callPackage ../data/themes/adwaita-qt {
-    useQt6 = true;
-  };
+  adwaita-qt6 = adwaita-qt.override { useQt6 = true; };
 
   dejavu_fonts = lowPrio (callPackage ../data/fonts/dejavu-fonts { });
 
@@ -10689,8 +10611,6 @@ with pkgs;
 
   qbittorrent-enhanced-nox = qbittorrent-enhanced.override { guiSupport = false; };
 
-  qcad = libsForQt5.callPackage ../applications/misc/qcad { };
-
   qctools = libsForQt5.callPackage ../applications/video/qctools { };
 
   qelectrotech = libsForQt5.callPackage ../applications/misc/qelectrotech { };
@@ -11900,11 +11820,11 @@ with pkgs;
 
   ### SCIENCE/CHEMISTY
 
-  avogadrolibs = libsForQt5.callPackage ../development/libraries/science/chemistry/avogadrolibs { };
+  avogadrolibs = callPackage ../development/libraries/science/chemistry/avogadrolibs { };
 
   molequeue = libsForQt5.callPackage ../development/libraries/science/chemistry/molequeue { };
 
-  avogadro2 = libsForQt5.callPackage ../applications/science/chemistry/avogadro2 { };
+  avogadro2 = callPackage ../applications/science/chemistry/avogadro2 { };
 
   libxc_7 = pkgs.libxc.override { version = "7.0.0"; };
 
@@ -12419,18 +12339,9 @@ with pkgs;
     ;
   kops = kops_1_33;
 
-  lilypond = callPackage ../misc/lilypond { };
-
-  lilypond-unstable = callPackage ../misc/lilypond/unstable.nix { };
-
-  lilypond-unstable-with-fonts = callPackage ../misc/lilypond/with-fonts.nix {
+  lilypond-unstable-with-fonts = lilypond-with-fonts.override {
     lilypond = lilypond-unstable;
-    openlilylib-fonts = openlilylib-fonts.override {
-      lilypond = lilypond-unstable;
-    };
   };
-
-  lilypond-with-fonts = callPackage ../misc/lilypond/with-fonts.nix { };
 
   openlilylib-fonts = recurseIntoAttrs (callPackage ../misc/lilypond/fonts.nix { });
 
@@ -12702,31 +12613,7 @@ with pkgs;
 
   wibo = pkgsi686Linux.callPackage ../applications/emulators/wibo { };
 
-  winePackagesFor =
-    wineBuild:
-    lib.makeExtensible (
-      self: with self; {
-        callPackage = newScope self;
-
-        inherit wineBuild;
-
-        inherit (callPackage ./wine-packages.nix { })
-          minimal
-          base
-          full
-          stable
-          stableFull
-          unstable
-          unstableFull
-          staging
-          stagingFull
-          wayland
-          waylandFull
-          yabridge
-          fonts
-          ;
-      }
-    );
+  winePackagesFor = wineBuild: callPackage ./wine-packages.nix { inherit wineBuild; };
 
   winePackages = recurseIntoAttrs (winePackagesFor (config.wine.build or "wine32"));
   wine64Packages = recurseIntoAttrs (winePackagesFor "wine64");
@@ -12767,6 +12654,13 @@ with pkgs;
   zncModules = recurseIntoAttrs (callPackage ../applications/networking/znc/modules.nix { });
 
   dart = callPackage ../development/compilers/dart { };
+
+  inherit
+    ({
+      dart-source = callPackage ../development/compilers/dart/source { };
+    })
+    dart-source
+    ;
 
   pub2nix = recurseIntoAttrs (callPackage ../build-support/dart/pub2nix { });
 

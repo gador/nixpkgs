@@ -257,6 +257,7 @@ in
   authelia = runTest ./authelia.nix;
   auto-cpufreq = runTest ./auto-cpufreq.nix;
   autobrr = runTest ./autobrr.nix;
+  autosuspend = runTest ./autosuspend.nix;
   avahi = runTest {
     imports = [ ./avahi.nix ];
     _module.args.networkd = false;
@@ -382,6 +383,7 @@ in
   };
   cockpit = runTest ./cockpit.nix;
   cockroachdb = runTestOn [ "x86_64-linux" ] ./cockroachdb.nix;
+  cocoon = runTest ./cocoon.nix;
   code-server = runTest ./code-server.nix;
   coder = runTest ./coder.nix;
   collectd = runTest ./collectd.nix;
@@ -1388,6 +1390,7 @@ in
   redlib = runTest ./redlib.nix;
   redmine = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./redmine.nix { };
   refind = runTest ./refind.nix;
+  remark42 = runTest ./remark42.nix;
   renovate = runTest ./renovate.nix;
   replace-dependencies = handleTest ./replace-dependencies { };
   reposilite = runTest ./reposilite.nix;

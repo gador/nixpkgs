@@ -27,12 +27,12 @@ let
 
   hash =
     {
-      x86_64-linux = "sha256-vijpAKlBP0dS40YlKMRCPZsgu7T+FiPgLJAgpE39BHA=";
-      x86_64-darwin = "sha256-EQDLzLJwVQFWe+aez3PLS2uJXgYyocjH28R7v/n86sY=";
-      aarch64-linux = "sha256-Or1SLzmaqCwde71e9AfQkQDUV4tAA8cYFBk5iqi562M=";
-      aarch64-darwin = "sha256-j8gbLW+czhFkaPOmcJBTaeWm7cxAYtvebGihQ9tWVC8=";
-      armv7l-linux = "sha256-7L9Pu+roEietJlwNoh7uEIkr2q5Mi8Y1uorv3TkvE3M=";
-      loongarch64-linux = "sha256-/KEKLDaRPX2ZM3qn3T2nqV16aG5wtuzpDWs2EdLtzZU=";
+      x86_64-linux = "sha256-x2Un085IBlTTu98fv1Z+INu8UDRttbbNJMZJ3ReHPNE=";
+      x86_64-darwin = "sha256-3CzZlPCNHy9XtfTSh18Up/iJL0+X16O047UelMkpl10=";
+      aarch64-linux = "sha256-5prZ9RO8sPv4PunAqwo5Wjc7+ApfGF5FfWEai0Biaqw=";
+      aarch64-darwin = "sha256-jnAqT3KmQ590eTP4EHEIu03TeRcYDU+bLc/yuJ+Qx/s=";
+      armv7l-linux = "sha256-PVQ3UVmp8QQL1702kSRSSdh3QYNrD81/3ldFEPMwMKM=";
+      loongarch64-linux = "sha256-J+YIZbGjMJnHVrOmlML1wpGiwBbwcPJkMdtjxfAgT8w=";
     }
     .${system} or throwSystem;
 
@@ -43,7 +43,7 @@ buildVscode rec {
 
   # Please backport all compatible updates to the stable release.
   # This is important for the extension ecosystem.
-  version = "1.109.31074";
+  version = "1.110.11631";
   pname = "vscodium";
 
   executableName = "codium";
@@ -55,7 +55,7 @@ buildVscode rec {
     inherit hash;
   };
 
-  tests = nixosTests.vscodium;
+  tests = nixosTests.vscodium.xorg;
 
   updateScript = ./update-vscodium.sh;
 

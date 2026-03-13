@@ -5,16 +5,16 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "ducker";
-  version = "0.6.2";
+  version = "0.6.4";
 
   src = fetchFromGitHub {
     owner = "robertpsoane";
     repo = "ducker";
     tag = "v${finalAttrs.version}";
-    sha256 = "sha256-/IFOMVCHoR+DxYkH4I2zml4wh8AEdWmdzl86+kTekFA=";
+    sha256 = "sha256-3o6uA3g1v4PiRYl6J4sOAllgwkEou7kS9E8us4DIZb0=";
   };
 
-  cargoHash = "sha256-jlxhf4CLw7ZxDXM6YvtIAvub0dAJlQm1LxAeAuhQE9g=";
+  cargoHash = "sha256-GUbRNXphkbm0oSjC8wKJgIhigtB4dbUwNuMSvCJUyaA=";
 
   meta = {
     description = "Terminal app for managing docker containers, inspired by K9s";

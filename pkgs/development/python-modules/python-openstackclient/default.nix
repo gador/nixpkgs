@@ -3,6 +3,7 @@
   buildPythonPackage,
   fetchFromGitHub,
   ddt,
+  installShellFiles,
   openstackdocstheme,
   osc-lib,
   osc-placement,
@@ -19,7 +20,6 @@
   python-mistralclient,
   python-neutronclient,
   python-octaviaclient,
-  python-openstackclient,
   python-watcherclient,
   python-zaqarclient,
   python-zunclient,
@@ -28,8 +28,9 @@
   setuptools,
   sphinxHook,
   sphinxcontrib-apidoc,
-  stestr,
-  testers,
+  stdenv,
+  stestrCheckHook,
+  versionCheckHook,
 }:
 
 buildPythonPackage (finalAttrs: {
@@ -69,19 +70,19 @@ buildPythonPackage (finalAttrs: {
   # to support proxy envs like ALL_PROXY in requests
   ++ requests.optional-dependencies.socks;
 
+  nativeBuildInputs = [
+    installShellFiles
+  ];
+
   nativeCheckInputs = [
     ddt
     requests-mock
-    stestr
+    stestrCheckHook
   ];
 
-  # test_module failures under python 3.14: https://bugs.launchpad.net/python-openstackclient/+bug/2137223
-  checkPhase = ''
-    runHook preCheck
-    stestr run -E \
-      "openstackclient.tests.unit.common.test_module.TestModuleList.(test_module_list_no_options|test_module_list_all)"
-    runHook postCheck
-  '';
+  disabledTestsRegex = [
+    "openstackclient.tests.unit.common.test_module.TestModuleList*"
+  ];
 
   pythonImportsCheck = [
     "openstackclient"
@@ -116,12 +117,15 @@ buildPythonPackage (finalAttrs: {
     ];
   };
 
-  passthru = {
-    tests.version = testers.testVersion {
-      package = python-openstackclient;
-      command = "openstack --version";
-    };
-  };
+  nativeInstallCheckInputs = [
+    versionCheckHook
+  ];
+  doInstallCheck = true;
+
+  postInstall = lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
+    installShellCompletion --cmd openstack \
+      --bash <($out/bin/openstack complete)
+  '';
 
   meta = {
     description = "OpenStack Command-line Client";

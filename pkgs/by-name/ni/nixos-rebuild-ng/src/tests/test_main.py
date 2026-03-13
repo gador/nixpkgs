@@ -166,8 +166,15 @@ def test_parse_args() -> None:
     {"NIXOS_REBUILD_I_UNDERSTAND_THE_CONSEQUENCES_PLEASE_BREAK_MY_SYSTEM": "1"},
     clear=True,
 )
+@patch("uuid.uuid4")
 @patch("subprocess.run", autospec=True)
-def test_execute_nix_boot(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_nix_boot(
+    mock_popen: Mock, mock_run: Mock, mock_uuid4: Mock, tmp_path: Path
+) -> None:
+    test_uuid = uuid.UUID("58fe9784-f60a-42bc-aa94-eb8f1a7e5c17")
+    mock_uuid4.return_value = test_uuid
+
     nixpkgs_path = tmp_path / "nixpkgs"
     (nixpkgs_path / ".git").mkdir(parents=True)
     config_path = tmp_path / "test"
@@ -238,7 +245,8 @@ def test_execute_nix_boot(mock_run: Mock, tmp_path: Path) -> None:
             ),
             call(
                 [
-                    *nr.nix.SWITCH_TO_CONFIGURATION_CMD_PREFIX,
+                    *nr.nix.SYSTEMD_RUN_CMD_PREFIX,
+                    f"--unit={nr.nix.SYSTEMD_RUN_UNIT_PREFIX}-{test_uuid.hex[:8]}",
                     config_path / "bin/switch-to-configuration",
                     "boot",
                 ],
@@ -248,7 +256,6 @@ def test_execute_nix_boot(mock_run: Mock, tmp_path: Path) -> None:
                     | {
                         "env": {
                             "NIXOS_INSTALL_BOOTLOADER": "0",
-                            "NIXOS_REBUILD_I_UNDERSTAND_THE_CONSEQUENCES_PLEASE_BREAK_MY_SYSTEM": "1",
                         }
                     }
                 ),
@@ -260,7 +267,8 @@ def test_execute_nix_boot(mock_run: Mock, tmp_path: Path) -> None:
 # https://github.com/NixOS/nixpkgs/issues/437872
 @patch.dict(os.environ, {}, clear=True)
 @patch("subprocess.run", autospec=True)
-def test_execute_nix_build(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_nix_build(mock_popen: Mock, mock_run: Mock, tmp_path: Path) -> None:
     config_path = tmp_path / "test"
     config_path.touch()
 
@@ -302,7 +310,8 @@ def test_execute_nix_build(mock_run: Mock, tmp_path: Path) -> None:
 
 @patch.dict(os.environ, {}, clear=True)
 @patch("subprocess.run", autospec=True)
-def test_execute_nix_build_vm(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_nix_build_vm(mock_popen: Mock, mock_run: Mock, tmp_path: Path) -> None:
     config_path = tmp_path / "test"
     config_path.touch()
 
@@ -351,7 +360,10 @@ def test_execute_nix_build_vm(mock_run: Mock, tmp_path: Path) -> None:
 
 @patch.dict(os.environ, {}, clear=True)
 @patch("subprocess.run", autospec=True)
-def test_execute_nix_build_image_flake(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_nix_build_image_flake(
+    mock_popen: Mock, mock_run: Mock, tmp_path: Path
+) -> None:
     config_path = tmp_path / "test"
     config_path.touch()
 
@@ -433,10 +445,17 @@ def test_execute_nix_build_image_flake(mock_run: Mock, tmp_path: Path) -> None:
     {"NIXOS_REBUILD_I_UNDERSTAND_THE_CONSEQUENCES_PLEASE_BREAK_MY_SYSTEM": "1"},
     clear=True,
 )
+@patch("uuid.uuid4")
 @patch("subprocess.run", autospec=True)
-def test_execute_nix_switch_flake(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_nix_switch_flake(
+    mock_popen: Mock, mock_run: Mock, mock_uuid4: Mock, tmp_path: Path
+) -> None:
     config_path = tmp_path / "test"
     config_path.touch()
+
+    test_uuid = uuid.UUID("58fe9784-f60a-42bc-aa94-eb8f1a7e5c17")
+    mock_uuid4.return_value = test_uuid
 
     def run_side_effect(args: list[str], **kwargs: Any) -> CompletedProcess[str]:
         if args[0] == "nix":
@@ -487,7 +506,6 @@ def test_execute_nix_switch_flake(mock_run: Mock, tmp_path: Path) -> None:
             call(
                 [
                     "sudo",
-                    "--preserve-env",
                     "nix-env",
                     "-p",
                     Path("/nix/var/nix/profiles/system"),
@@ -505,21 +523,16 @@ def test_execute_nix_switch_flake(mock_run: Mock, tmp_path: Path) -> None:
             call(
                 [
                     "sudo",
-                    "--preserve-env",
-                    *nr.nix.SWITCH_TO_CONFIGURATION_CMD_PREFIX,
+                    "env",
+                    "-i",
+                    "NIXOS_INSTALL_BOOTLOADER=1",
+                    *nr.nix.SYSTEMD_RUN_CMD_PREFIX,
+                    f"--unit={nr.nix.SYSTEMD_RUN_UNIT_PREFIX}-{test_uuid.hex[:8]}",
                     config_path / "bin/switch-to-configuration",
                     "switch",
                 ],
                 check=True,
-                **(
-                    DEFAULT_RUN_KWARGS
-                    | {
-                        "env": {
-                            "NIXOS_INSTALL_BOOTLOADER": "1",
-                            "NIXOS_REBUILD_I_UNDERSTAND_THE_CONSEQUENCES_PLEASE_BREAK_MY_SYSTEM": "1",
-                        }
-                    }
-                ),
+                **DEFAULT_RUN_KWARGS,
             ),
         ]
     )
@@ -531,11 +544,13 @@ def test_execute_nix_switch_flake(mock_run: Mock, tmp_path: Path) -> None:
     clear=True,
 )
 @patch("subprocess.run", autospec=True)
+@patch("subprocess.Popen")
 @patch("uuid.uuid4", autospec=True)
 @patch(get_qualified_name(nr.services.cleanup_ssh), autospec=True)
 def test_execute_nix_switch_build_target_host(
     mock_cleanup_ssh: Mock,
     mock_uuid4: Mock,
+    mock_popen: Mock,
     mock_run: Mock,
     tmp_path: Path,
 ) -> None:
@@ -559,7 +574,8 @@ def test_execute_nix_switch_build_target_host(
             return CompletedProcess([], 0)
 
     mock_run.side_effect = run_side_effect
-    mock_uuid4.return_value = uuid.UUID(int=0)
+    test_uuid = uuid.UUID("58fe9784-f60a-42bc-aa94-eb8f1a7e5c17")
+    mock_uuid4.side_effect = [uuid.UUID(int=0), uuid.UUID(int=1), test_uuid]
 
     nr.execute(
         [
@@ -625,6 +641,10 @@ def test_execute_nix_switch_build_target_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@build-host",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "mktemp",
                     "-d",
                     "-t",
@@ -640,11 +660,15 @@ def test_execute_nix_switch_build_target_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@build-host",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "nix-store",
                     "--realise",
                     str(config_path),
                     "--add-root",
-                    "/tmp/tmpdir/00000000000000000000000000000000",
+                    "/tmp/tmpdir/00000000000000000000000000000001",
                 ],
                 check=True,
                 stdout=PIPE,
@@ -656,6 +680,10 @@ def test_execute_nix_switch_build_target_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@build-host",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "readlink",
                     "-f",
                     "/tmp/tmpdir/config",
@@ -670,6 +698,10 @@ def test_execute_nix_switch_build_target_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@build-host",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "rm",
                     "-rf",
                     "/tmp/tmpdir",
@@ -699,6 +731,10 @@ def test_execute_nix_switch_build_target_host(
                     "user@target-host",
                     "--",
                     "sudo",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "nix-env",
                     "-p",
                     "/nix/var/nix/profiles/system",
@@ -714,6 +750,10 @@ def test_execute_nix_switch_build_target_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@target-host",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "test",
                     "-d",
                     "/run/systemd/system",
@@ -728,9 +768,12 @@ def test_execute_nix_switch_build_target_host(
                     "user@target-host",
                     "--",
                     "sudo",
-                    "env",
-                    "NIXOS_INSTALL_BOOTLOADER=0",
-                    *nr.nix.SWITCH_TO_CONFIGURATION_CMD_PREFIX,
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" LOCALE_ARCHIVE="${LOCALE_ARCHIVE-}" NIXOS_NO_CHECK="${NIXOS_NO_CHECK-}" NIXOS_INSTALL_BOOTLOADER=0 "$@"'""",
+                    "sh",
+                    *nr.nix.SYSTEMD_RUN_CMD_PREFIX,
+                    f"--unit={nr.nix.SYSTEMD_RUN_UNIT_PREFIX}-{test_uuid.hex[:8]}",
                     str(config_path / "bin/switch-to-configuration"),
                     "switch",
                 ],
@@ -746,13 +789,20 @@ def test_execute_nix_switch_build_target_host(
     {"NIXOS_REBUILD_I_UNDERSTAND_THE_CONSEQUENCES_PLEASE_BREAK_MY_SYSTEM": "1"},
     clear=True,
 )
+@patch("uuid.uuid4")
 @patch("subprocess.run", autospec=True)
+@patch("subprocess.Popen")
 @patch(get_qualified_name(nr.services.cleanup_ssh), autospec=True)
 def test_execute_nix_switch_flake_target_host(
     mock_cleanup_ssh: Mock,
+    mock_popen: Mock,
     mock_run: Mock,
+    mock_uuid4: Mock,
     tmp_path: Path,
 ) -> None:
+    test_uuid = uuid.UUID("58fe9784-f60a-42bc-aa94-eb8f1a7e5c17")
+    mock_uuid4.return_value = test_uuid
+
     config_path = tmp_path / "test"
     config_path.touch()
 
@@ -806,6 +856,10 @@ def test_execute_nix_switch_flake_target_host(
                     "user@localhost",
                     "--",
                     "sudo",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "nix-env",
                     "-p",
                     "/nix/var/nix/profiles/system",
@@ -821,6 +875,10 @@ def test_execute_nix_switch_flake_target_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@localhost",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "test",
                     "-d",
                     "/run/systemd/system",
@@ -835,9 +893,12 @@ def test_execute_nix_switch_flake_target_host(
                     "user@localhost",
                     "--",
                     "sudo",
-                    "env",
-                    "NIXOS_INSTALL_BOOTLOADER=0",
-                    *nr.nix.SWITCH_TO_CONFIGURATION_CMD_PREFIX,
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" LOCALE_ARCHIVE="${LOCALE_ARCHIVE-}" NIXOS_NO_CHECK="${NIXOS_NO_CHECK-}" NIXOS_INSTALL_BOOTLOADER=0 "$@"'""",
+                    "sh",
+                    *nr.nix.SYSTEMD_RUN_CMD_PREFIX,
+                    f"--unit={nr.nix.SYSTEMD_RUN_UNIT_PREFIX}-{test_uuid.hex[:8]}",
                     str(config_path / "bin/switch-to-configuration"),
                     "switch",
                 ],
@@ -853,13 +914,20 @@ def test_execute_nix_switch_flake_target_host(
     {"NIXOS_REBUILD_I_UNDERSTAND_THE_CONSEQUENCES_PLEASE_BREAK_MY_SYSTEM": "1"},
     clear=True,
 )
+@patch("uuid.uuid4")
 @patch("subprocess.run", autospec=True)
+@patch("subprocess.Popen")
 @patch(get_qualified_name(nr.services.cleanup_ssh), autospec=True)
 def test_execute_nix_switch_flake_build_host(
     mock_cleanup_ssh: Mock,
+    mock_popen: Mock,
     mock_run: Mock,
+    mock_uuid4: Mock,
     tmp_path: Path,
 ) -> None:
+    test_uuid = uuid.UUID("58fe9784-f60a-42bc-aa94-eb8f1a7e5c17")
+    mock_uuid4.return_value = test_uuid
+
     config_path = tmp_path / "test"
     config_path.touch()
 
@@ -912,6 +980,10 @@ def test_execute_nix_switch_flake_build_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@localhost",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "nix",
                     "--extra-experimental-features",
                     "'nix-command flakes'",
@@ -952,7 +1024,8 @@ def test_execute_nix_switch_flake_build_host(
             ),
             call(
                 [
-                    *nr.nix.SWITCH_TO_CONFIGURATION_CMD_PREFIX,
+                    *nr.nix.SYSTEMD_RUN_CMD_PREFIX,
+                    f"--unit={nr.nix.SYSTEMD_RUN_UNIT_PREFIX}-{test_uuid.hex[:8]}",
                     config_path / "bin/switch-to-configuration",
                     "switch",
                 ],
@@ -964,7 +1037,10 @@ def test_execute_nix_switch_flake_build_host(
 
 
 @patch("subprocess.run", autospec=True)
-def test_execute_switch_rollback(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_switch_rollback(
+    mock_popen: Mock, mock_run: Mock, tmp_path: Path
+) -> None:
     nixpkgs_path = tmp_path / "nixpkgs"
     (nixpkgs_path / ".git").mkdir(parents=True)
 
@@ -1041,7 +1117,8 @@ def test_execute_switch_rollback(mock_run: Mock, tmp_path: Path) -> None:
 
 
 @patch("subprocess.run", autospec=True)
-def test_execute_build(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_build(mock_popen: Mock, mock_run: Mock, tmp_path: Path) -> None:
     config_path = tmp_path / "test"
     config_path.touch()
     mock_run.side_effect = [
@@ -1070,8 +1147,9 @@ def test_execute_build(mock_run: Mock, tmp_path: Path) -> None:
 
 
 @patch("subprocess.run", autospec=True)
+@patch("subprocess.Popen")
 def test_execute_build_dry_run_build_and_target_remote(
-    mock_run: Mock, tmp_path: Path
+    mock_popen: Mock, mock_run: Mock, tmp_path: Path
 ) -> None:
     config_path = tmp_path / "test"
     config_path.touch()
@@ -1121,6 +1199,10 @@ def test_execute_build_dry_run_build_and_target_remote(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@build-host",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "nix",
                     "--extra-experimental-features",
                     "'nix-command flakes'",
@@ -1138,7 +1220,8 @@ def test_execute_build_dry_run_build_and_target_remote(
 
 
 @patch("subprocess.run", autospec=True)
-def test_execute_test_flake(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_test_flake(mock_popen: Mock, mock_run: Mock, tmp_path: Path) -> None:
     config_path = tmp_path / "test"
     config_path.touch()
 
@@ -1188,11 +1271,13 @@ def test_execute_test_flake(mock_run: Mock, tmp_path: Path) -> None:
 
 
 @patch("subprocess.run", autospec=True)
+@patch("subprocess.Popen")
 @patch("pathlib.Path.exists", autospec=True, return_value=True)
 @patch("pathlib.Path.mkdir", autospec=True)
 def test_execute_test_rollback(
     mock_path_mkdir: Mock,
     mock_path_exists: Mock,
+    mock_popen: Mock,
     mock_run: Mock,
 ) -> None:
     def run_side_effect(args: list[str], **kwargs: Any) -> CompletedProcess[str]:
@@ -1255,8 +1340,15 @@ def test_execute_test_rollback(
     {"NIXOS_REBUILD_I_UNDERSTAND_THE_CONSEQUENCES_PLEASE_BREAK_MY_SYSTEM": "1"},
     clear=True,
 )
+@patch("uuid.uuid4", autospec=True)
 @patch("subprocess.run", autospec=True)
-def test_execute_switch_store_path(mock_run: Mock, tmp_path: Path) -> None:
+@patch("subprocess.Popen")
+def test_execute_switch_store_path(
+    mock_popen: Mock, mock_run: Mock, mock_uuid4: Mock, tmp_path: Path
+) -> None:
+    test_uuid = uuid.UUID("58fe9784-f60a-42bc-aa94-eb8f1a7e5c17")
+    mock_uuid4.return_value = test_uuid
+
     config_path = tmp_path / "test-system"
     config_path.mkdir()
 
@@ -1294,7 +1386,8 @@ def test_execute_switch_store_path(mock_run: Mock, tmp_path: Path) -> None:
             ),
             call(
                 [
-                    *nr.nix.SWITCH_TO_CONFIGURATION_CMD_PREFIX,
+                    *nr.nix.SYSTEMD_RUN_CMD_PREFIX,
+                    f"--unit={nr.nix.SYSTEMD_RUN_UNIT_PREFIX}-{test_uuid.hex[:8]}",
                     config_path / "bin/switch-to-configuration",
                     "switch",
                 ],
@@ -1304,7 +1397,6 @@ def test_execute_switch_store_path(mock_run: Mock, tmp_path: Path) -> None:
                     | {
                         "env": {
                             "NIXOS_INSTALL_BOOTLOADER": "0",
-                            "NIXOS_REBUILD_I_UNDERSTAND_THE_CONSEQUENCES_PLEASE_BREAK_MY_SYSTEM": "1",
                         }
                     }
                 ),
@@ -1314,13 +1406,20 @@ def test_execute_switch_store_path(mock_run: Mock, tmp_path: Path) -> None:
 
 
 @patch.dict(os.environ, {}, clear=True)
+@patch("uuid.uuid4")
 @patch("subprocess.run", autospec=True)
 @patch(get_qualified_name(nr.services.cleanup_ssh), autospec=True)
+@patch("subprocess.Popen")
 def test_execute_switch_store_path_target_host(
+    mock_popen: Mock,
     mock_cleanup_ssh: Mock,
     mock_run: Mock,
+    mock_uuid4: Mock,
     tmp_path: Path,
 ) -> None:
+    test_uuid = uuid.UUID("58fe9784-f60a-42bc-aa94-eb8f1a7e5c17")
+    mock_uuid4.return_value = test_uuid
+
     config_path = tmp_path / "test-system"
     config_path.mkdir()
 
@@ -1354,6 +1453,10 @@ def test_execute_switch_store_path_target_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@remote-host",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "test",
                     "-f",
                     str(config_path / "nixos-version"),
@@ -1368,6 +1471,10 @@ def test_execute_switch_store_path_target_host(
                     "user@remote-host",
                     "--",
                     "sudo",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "nix-env",
                     "-p",
                     "/nix/var/nix/profiles/system",
@@ -1383,6 +1490,10 @@ def test_execute_switch_store_path_target_host(
                     *nr.process.SSH_DEFAULT_OPTS,
                     "user@remote-host",
                     "--",
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" "$@"'""",
+                    "sh",
                     "test",
                     "-d",
                     "/run/systemd/system",
@@ -1397,9 +1508,12 @@ def test_execute_switch_store_path_target_host(
                     "user@remote-host",
                     "--",
                     "sudo",
-                    "env",
-                    "NIXOS_INSTALL_BOOTLOADER=0",
-                    *nr.nix.SWITCH_TO_CONFIGURATION_CMD_PREFIX,
+                    "/bin/sh",
+                    "-c",
+                    """'exec env -i PATH="${PATH-}" LOCALE_ARCHIVE="${LOCALE_ARCHIVE-}" NIXOS_NO_CHECK="${NIXOS_NO_CHECK-}" NIXOS_INSTALL_BOOTLOADER=0 "$@"'""",
+                    "sh",
+                    *nr.nix.SYSTEMD_RUN_CMD_PREFIX,
+                    f"--unit={nr.nix.SYSTEMD_RUN_UNIT_PREFIX}-{test_uuid.hex[:8]}",
                     str(config_path / "bin/switch-to-configuration"),
                     "switch",
                 ],

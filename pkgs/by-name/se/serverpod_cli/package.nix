@@ -8,14 +8,14 @@
 }:
 buildDartApplication rec {
   pname = "serverpod_cli";
-  version = "3.3.1";
+  version = "3.4.2";
 
   # Fetch the whole monorepo
   src = fetchFromGitHub {
     owner = "serverpod";
     repo = "serverpod";
-    rev = version;
-    hash = "sha256-4vpZiqvzhcAziElfzssw4bLYTO5/dhai3C8LEpn0eAo=";
+    tag = version;
+    hash = "sha256-u2YQRUMebfk2/GXll0uIgr0Lyh8DrBD7h6fo8laXgpE=";
   };
 
   sourceRoot = "${src.name}/tools/serverpod_cli";
@@ -50,7 +50,7 @@ buildDartApplication rec {
 
   passthru.updateScript = ./update.sh;
 
-  meta = with lib; {
+  meta = {
     mainProgram = "serverpod";
     homepage = "https://serverpod.dev";
     description = "Command line tools for Serverpod";
@@ -63,7 +63,7 @@ buildDartApplication rec {
       and you can host your server anywhere.
     '';
     changelog = "https://raw.githubusercontent.com/serverpod/serverpod/${version}/CHANGELOG.md";
-    license = licenses.bsd3;
+    license = lib.licenses.bsd3;
     maintainers = with lib.maintainers; [ KristijanZic ];
   };
 }

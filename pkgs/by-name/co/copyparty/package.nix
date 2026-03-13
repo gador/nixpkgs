@@ -71,11 +71,11 @@ in
 
 python3Packages.buildPythonApplication rec {
   pname = "copyparty${nameSuffix}";
-  version = "1.20.7";
+  version = "1.20.12";
 
   src = fetchurl {
     url = "https://github.com/9001/copyparty/releases/download/v${version}/copyparty-${version}.tar.gz";
-    hash = "sha256-oFrgImxhcVUdCvDo27u/bWwy+hnsBkRrX1ZybczhuMQ=";
+    hash = "sha256-OsuY6cV3JFUX25LndRnK6sij44LbyHBOxKhwHH1YunY=";
   };
 
   pyproject = true;

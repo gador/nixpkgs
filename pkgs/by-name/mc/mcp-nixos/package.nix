@@ -6,14 +6,14 @@
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "mcp-nixos";
-  version = "2.1.1";
+  version = "2.3.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "utensils";
     repo = "mcp-nixos";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-ZScQ79z7SwjpI5ZnrwXhRNqOnYQTI9MayvPjv00hiyY=";
+    hash = "sha256-ogAug05ChGLSJ+KvmP5xXreDhkLHau15Wnp0ry7Ck88=";
   };
 
   build-system = [ python3Packages.hatchling ];
@@ -29,6 +29,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     anthropic
     pytestCheckHook
     pytest-asyncio
+    pytest-cov
     python-dotenv
   ];
 

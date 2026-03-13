@@ -23,7 +23,7 @@
   libxaw,
   aquaterm ? false,
   withWxGTK ? false,
-  wxGTK32,
+  wxwidgets_3_2,
   fontconfig,
   gnused,
   coreutils,
@@ -77,7 +77,7 @@ stdenv.mkDerivation rec {
     qtbase
     qtsvg
   ]
-  ++ lib.optional withWxGTK wxGTK32;
+  ++ lib.optional withWxGTK wxwidgets_3_2;
 
   postPatch = ''
     # lrelease is in qttools, not in qtbase.
@@ -128,7 +128,7 @@ stdenv.mkDerivation rec {
     description = "Portable command-line driven graphing utility for many platforms";
     platforms = lib.platforms.linux ++ lib.platforms.darwin;
     license = lib.licenses.gnuplot;
-    maintainers = with lib.maintainers; [ lovek323 ];
+    maintainers = [ ];
     mainProgram = "gnuplot";
   };
 }

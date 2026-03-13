@@ -9,10 +9,10 @@
 }:
 let
   pname = "beeper";
-  version = "4.2.564";
+  version = "4.2.605";
   src = fetchurl {
     url = "https://beeper-desktop.download.beeper.com/builds/Beeper-${version}-x86_64.AppImage";
-    hash = "sha256-AvcERjQizf/8MsFjC9NtkMne/2ZFLPxiL0HMQsyo8TE=";
+    hash = "sha256-c+ISP/6kWR7RMV55LR8Ap4CIn9y1h6Vo9A92+7tpVL8=";
   };
   appimageContents = appimageTools.extract {
     inherit pname version src;
@@ -48,7 +48,8 @@ appimageTools.wrapAppImage {
     . ${makeWrapper}/nix-support/setup-hook
     wrapProgram $out/bin/beeper \
       --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}} --no-update" \
-      --set APPIMAGE beeper
+      --set APPIMAGE beeper \
+      --run 'exec >/dev/null' # as recommended in #486164
   '';
 
   passthru = {

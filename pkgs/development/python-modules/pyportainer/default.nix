@@ -10,19 +10,20 @@
   pytest-cov-stub,
   pytestCheckHook,
   syrupy,
+  tenacity,
   yarl,
 }:
 
 buildPythonPackage (finalAttrs: {
   pname = "pyportainer";
-  version = "1.0.27";
+  version = "1.0.33";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "erwindouna";
     repo = "pyportainer";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-h/z4CUPxOmcA57gkclEJdIWRFGfsG8v6VS8vNLneS3A=";
+    hash = "sha256-DWfe/N/YMiD5/4CnkVnWhgWoLE5tx1iaU93hQdmwXSQ=";
   };
 
   build-system = [ hatchling ];
@@ -31,6 +32,7 @@ buildPythonPackage (finalAttrs: {
     aiohttp
     mashumaro
     orjson
+    tenacity
     yarl
   ];
 

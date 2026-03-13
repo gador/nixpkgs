@@ -18,16 +18,16 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "asusctl";
-  version = "6.3.2";
+  version = "6.3.4";
 
   src = fetchFromGitLab {
     owner = "asus-linux";
     repo = "asusctl";
     tag = finalAttrs.version;
-    hash = "sha256-6dZkQ8cPL8dbtvfuc/a5G1BxEaZyNbvy3eRBctFFwVU=";
+    hash = "sha256-1B4uKX8Aqorxh+QMsUEmSnO56zqYhUb6wLMXPAR5HQo=";
   };
 
-  cargoHash = "sha256-FlEuv/iaNlfXLhHRSmZedPwroCozaEqIvYRqbgJhgEw=";
+  cargoHash = "sha256-aRsrA1j4nYp2rbQM2FbTfWVDkVfKFFa6L+DtW8mKcmk=";
 
   postPatch = ''
     files="
@@ -49,9 +49,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
     substituteInPlace data/asusd.service \
       --replace-fail /usr/bin/asusd $out/bin/asusd \
       --replace-fail /bin/sleep ${lib.getExe' coreutils "sleep"}
-    substituteInPlace data/asusd-user.service \
-      --replace-fail /usr/bin/asusd-user $out/bin/asusd-user \
-      --replace-fail /usr/bin/sleep ${lib.getExe' coreutils "sleep"}
 
     substituteInPlace Makefile \
       --replace-fail /usr/bin/grep ${lib.getExe gnugrep}

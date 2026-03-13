@@ -19,16 +19,17 @@
   stdenv,
   wayland,
   libxml2,
+  udevCheckHook,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "vicinae";
-  version = "0.19.9";
+  version = "0.20.3";
 
   src = fetchFromGitHub {
     owner = "vicinaehq";
     repo = "vicinae";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-y4Z5QknWJ18jU8BiZlYvmhhSB0h3A2ZL7hMjQdgGdgk=";
+    hash = "sha256-9xE2izQakApB+cgibErwyY3KAlc6F26UhgCw/Tak43c=";
   };
 
   apiDeps = fetchNpmDeps {
@@ -70,6 +71,7 @@ stdenv.mkDerivation (finalAttrs: {
     glaze
     kdePackages.layer-shell-qt
     kdePackages.qtkeychain
+    kdePackages.syntax-highlighting
     libqalculate
     minizip
     nodejs
@@ -102,6 +104,9 @@ stdenv.mkDerivation (finalAttrs: {
       --replace-fail "/bin/kill" "${lib.getExe' coreutils "kill"}"\
       --replace-fail "ExecStart=vicinae" "ExecStart=$out/bin/vicinae"
   '';
+
+  doInstallCheck = true;
+  nativeInstallCheckInputs = [ udevCheckHook ];
 
   passthru.updateScript = ./update.sh;
 

@@ -100,12 +100,6 @@ buildPythonApplication rec {
     # Test always returns 3 plugin updates, but needs >=5 to not fail
     # May be an upstream bug, see: https://github.com/nicolargo/glances/issues/3430
     "test_perf_update"
-  ]
-  ++ lib.optionals (stdenv.hostPlatform.isLinux && stdenv.hostPlatform.isAarch64) [
-    # returns False on "aarch64-linux"
-    "test_phys_core_returns_int"
-    # tests api and requires network
-    "test_001_all"
   ];
 
   meta = {

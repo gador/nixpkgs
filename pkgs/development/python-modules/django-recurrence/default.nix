@@ -6,45 +6,43 @@
   python-dateutil,
   pytest-django,
   pytestCheckHook,
-  pytest-cov,
-  pytest-sugar,
-  setuptools-scm,
-  pythonOlder,
+  pytest-cov-stub,
+  pdm-backend,
 }:
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = "django-recurrence";
-  version = "1.11.1";
+  version = "1.14";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "jazzband";
     repo = "django-recurrence";
-    tag = version;
-    hash = "sha256-Ytf4fFTVFIQ+6IBhwRMtCkonP0POivv4TrYok37nghA=";
+    tag = finalAttrs.version;
+    hash = "sha256-Hw9QebQuQfhooa6rhJ1+y7DTgPgaVF9kZzQ9H7NshmM=";
   };
 
-  disabled = pythonOlder "3.7";
+  build-system = [
+    pdm-backend
+  ];
 
   dependencies = [
     django
     python-dateutil
   ];
 
-  build-system = [ setuptools-scm ];
-  doCheck = true;
   pythonImportsCheck = [ "recurrence" ];
+
   nativeCheckInputs = [
     pytest-django
-    pytest-cov
-    pytest-sugar
+    pytest-cov-stub
     pytestCheckHook
   ];
 
-  meta = with lib; {
-    description = "Utility for working with recurring dates in Django.";
+  meta = {
+    description = "Utility for working with recurring dates in Django";
     homepage = "https://github.com/jazzband/django-recurrence";
-    changelog = "https://github.com/jazzband/django-recurrence/releases/tag/${version}";
-    license = licenses.bsd3;
-    maintainers = with maintainers; [ kurogeek ];
+    changelog = "https://github.com/jazzband/django-recurrence/blob/${finalAttrs.src.tag}/CHANGES.rst";
+    license = lib.licenses.bsd3;
+    maintainers = with lib.maintainers; [ kurogeek ];
   };
-}
+})

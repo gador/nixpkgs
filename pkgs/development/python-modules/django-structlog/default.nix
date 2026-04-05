@@ -1,12 +1,28 @@
 {
+  asgiref,
   buildPythonPackage,
   fetchFromGitHub,
   lib,
   setuptools,
-  python,
-  pkgs,
+  django,
+  django-allauth,
+  crispy-bootstrap5,
+  django-environ,
+  django-extensions,
+  django-ipware,
+  django-ninja,
+  django-redis,
+  djangorestframework,
+  structlog,
+  celery,
+  factory-boy,
+  pytest-asyncio,
+  pytest-django,
+  pytest-mock,
+  redisTestHook,
+  pytestCheckHook,
 }:
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = "django-structlog";
   version = "10.0.0";
   pyproject = true;
@@ -14,68 +30,57 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "jrobichaud";
     repo = "django-structlog";
-    tag = version;
+    tag = finalAttrs.version;
     hash = "sha256-BNZ+nk2NK5x2YsTDZjH5BVizXAyLZhKp8zRvkWi068k=";
   };
 
-  dependencies = with python.pkgs; [
-    colorama
+  build-system = [ setuptools ];
+
+  dependencies = [
+    asgiref
     django
-    django-allauth
-    crispy-bootstrap5
-    django-crispy-forms
-    django-environ
-    django-extensions
-    django-ipware
-    django-model-utils
-    django-ninja
-    django-redis
-    djangorestframework
     structlog
+    django-ipware
   ];
 
-  optional-dependencies.celery = with python.pkgs; [ celery ];
+  optional-dependencies = {
+    celery = [ celery ];
+    commands = [ django-extensions ];
+  };
 
-  build-system = [ setuptools ];
-  doCheck = true;
   preCheck = ''
     export DJANGO_SETTINGS_MODULE=config.settings.test_demo_app
-
-    ${pkgs.valkey}/bin/redis-server &
-    REDIS_PID=$!
-  '';
-  postCheck = ''
-    kill $REDIS_PID
   '';
 
-  pytestFlags = [
-    "-x"
-    "--cov=./django_structlog_demo_project"
-    "--cov-append django_structlog_demo_project"
-  ];
+  enabledTestPaths = [ "django_structlog_demo_project" ];
+
   pythonImportsCheck = [
-    "structlog"
     "django_structlog"
   ];
 
-  nativeCheckInputs = with python.pkgs; [
-    celery
+  nativeCheckInputs = [
+    redisTestHook
     factory-boy
     pytest-asyncio
-    pytest-cov
     pytest-django
     pytest-mock
-    pytest-sugar
     pytestCheckHook
-  ];
+    django-allauth
+    crispy-bootstrap5
+    django-environ
+    django-ninja
+    django-redis
+    djangorestframework
+  ]
+  ++ lib.concatAttrValues finalAttrs.passthru.optional-dependencies;
 
   __darwinAllowLocalNetworking = true;
 
-  meta = with lib; {
+  meta = {
     description = "Structured Logging for Django";
     homepage = "https://github.com/jrobichaud/django-structlog";
-    changelog = "https://github.com/jrobichaud/django-structlog/releases/tag/${version}";
-    license = licenses.mit;
-    maintainers = with maintainers; [ kurogeek ];
+    changelog = "https://github.com/jrobichaud/django-structlog/blob/${finalAttrs.src.tag}/docs/changelog.rst";
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [ kurogeek ];
   };
-}
+})

@@ -16,20 +16,20 @@
 
 buildDotnetModule rec {
   pname = "libation";
-  version = "13.3.0";
+  version = "13.3.2";
 
   src = fetchFromGitHub {
     owner = "rmcrackan";
     repo = "Libation";
     tag = "v${version}";
-    hash = "sha256-sq3P1naACfZjvgNxNwSK+6ljkqVnVRKHvCgO0Dre1dc=";
+    hash = "sha256-IwKpM6BBHTbfdH4Sf3nYR0HDIxU8S5Pz0XxYdVRJcn4=";
   };
 
   sourceRoot = "${src.name}/Source";
 
   env.AVALONIA_TELEMETRY_OPTOUT = "1";
 
-  dotnet-sdk = dotnetCorePackages.sdk_10_0;
+  dotnet-sdk = dotnetCorePackages.sdk_10_0_1xx;
 
   dotnet-runtime = dotnetCorePackages.runtime_10_0;
 

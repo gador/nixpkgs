@@ -11,17 +11,17 @@
 
 buildGoModule (finalAttrs: {
   pname = "tinyauth";
-  version = "5.0.4";
+  version = "5.0.6";
 
   src = fetchFromGitHub {
     owner = "steveiliop56";
     repo = "tinyauth";
     tag = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-pToHUXUItcI6M0GkApqWjKtllidCi5aFwnIyLykOmPk=";
+    hash = "sha256-V75kjO34b1DBBI5aJMfn9finHSbVbWqQ34CH68gzrig=";
   };
 
-  vendorHash = "sha256-mECaACnQuJe5uBty6hs54vvaQ5uOafm6rhRfBhktvkc=";
+  vendorHash = "sha256-iyduJgKt9OAkOY6J8J1GztCkYEssr/TcB43L6/Qdzmc=";
 
   subPackages = [ "cmd/tinyauth" ];
 
@@ -29,8 +29,8 @@ buildGoModule (finalAttrs: {
   ldflags = [
     "-s"
     "-w"
-    "-X tinyauth/internal/config.Version=v${finalAttrs.version}"
-    "-X tinyauth/internal/config.CommitHash=${finalAttrs.src.rev}"
+    "-X github.com/steveiliop56/tinyauth/internal/config.Version=v${finalAttrs.version}"
+    "-X github.com/steveiliop56/tinyauth/internal/config.CommitHash=${finalAttrs.src.rev}"
   ];
 
   preBuild = ''
@@ -83,7 +83,7 @@ buildGoModule (finalAttrs: {
     '';
 
     outputHashMode = "recursive";
-    outputHash = "sha256-0XmblrGZfi8EH4J+KONf5ZrnEmeeaVptVrIJDNz6PKo=";
+    outputHash = "sha256-pd5v5lD8Lyhf21OQvzjDTh63EcAe7E1OAoQuFGhAOX8=";
   };
 
   passthru = {

@@ -24,14 +24,14 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "langchain-anthropic";
-  version = "1.3.4";
+  version = "1.4.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "langchain-ai";
     repo = "langchain";
     tag = "langchain-anthropic==${finalAttrs.version}";
-    hash = "sha256-8dGP26N2aheMTtI2wYMBVitlzrTsJZa5Zt5xVl+vqI4=";
+    hash = "sha256-nPVmyRvgGWDOANP0NalmX4obl+mMb/LdXtyO60k4zKs=";
   };
 
   sourceRoot = "${finalAttrs.src.name}/libs/partners/anthropic";

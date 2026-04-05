@@ -867,10 +867,12 @@ assertNoAdditions {
     dependencies = [ self.plenary-nvim ];
     nvimSkipModules = [
       # Test mismatch of directory because of nix generated path
+      "conjure-spec.client.clojure.nrepl.server_spec"
       "conjure-spec.client.common-lisp.swank_spec"
       "conjure-spec.client.fennel.nfnl_spec"
       "conjure-spec.client.guile.socket_spec"
       "conjure-spec.client.scheme.stdio_spec"
+      "conjure-spec.process_spec"
       # No parser for fennel
       "conjure.client.fennel.def-str-util"
     ];
@@ -1408,6 +1410,7 @@ assertNoAdditions {
     nvimSkipModules = [
       "init"
       # _GO_NVIM_CFG
+      "go.ai.init"
       "go.comment"
       "go.format"
       "go.ginkgo"
@@ -1532,6 +1535,11 @@ assertNoAdditions {
       # https://github.com/NixOS/nixpkgs/issues/431458
       "himalaya.folder.pickers.fzflua"
     ];
+  };
+
+  hotpot-nvim = super.hotpot-nvim.overrideAttrs {
+    # NOTE: Vim:E919: Directory not found in 'packpath': "pack/*/opt/hotpot-fennel-update"
+    doCheck = false;
   };
 
   hover-nvim = super.hover-nvim.overrideAttrs {
@@ -1704,6 +1712,8 @@ assertNoAdditions {
       "lazyvim.plugins.extras.lang.python"
       "lazyvim.plugins.extras.lang.svelte"
       "lazyvim.plugins.extras.lang.typescript"
+      "lazyvim.plugins.extras.lang.typescript.init"
+      "lazyvim.plugins.extras.lang.typescript.vtsls"
       "lazyvim.plugins.init"
       "lazyvim.plugins.ui"
       "lazyvim.plugins.xtras"

@@ -3,14 +3,14 @@
   buildPythonPackage,
   setuptools,
   lib,
-  django,
   py-moneyed,
+  django,
   certifi,
   pytestCheckHook,
   pytest-django,
-  pytest-cov,
+  pytest-cov-stub,
 }:
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = "django-money";
   version = "3.6.0";
   pyproject = true;
@@ -18,35 +18,40 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "django-money";
     repo = "django-money";
-    tag = version;
+    tag = finalAttrs.version;
     hash = "sha256-VxAKTtrbDMRhiLxqjVYt7pLGl0sy9F1iwswP/hxQ01k=";
   };
 
+  build-system = [ setuptools ];
+
   dependencies = [
     django
-    certifi
     py-moneyed
   ];
 
-  build-system = [ setuptools ];
-  doCheck = true;
+  optional-dependencies = {
+    exchange = [ certifi ];
+  };
+
   nativeCheckInputs = [
     pytestCheckHook
     pytest-django
-    pytest-cov
-  ];
+    pytest-cov-stub
+  ]
+  ++ lib.concatAttrValues finalAttrs.passthru.optional-dependencies;
+
   pythonImportsCheck = [ "djmoney" ];
 
-  # avoid tests which import mixer, an abandoned library
   disabledTests = [
+    # avoid tests which import mixer, an abandoned library
     "test_mixer_blend"
   ];
 
-  meta = with lib; {
-    description = "Money fields for Django forms and models.";
+  meta = {
+    description = "Money fields for Django forms and models";
     homepage = "https://github.com/django-money/django-money";
-    changelog = "https://github.com/django-money/django-money/releases/tag/${version}";
-    license = licenses.bsd3;
-    maintainers = with maintainers; [ kurogeek ];
+    changelog = "https://github.com/django-money/django-money/releases/tag/${finalAttrs.src.tag}";
+    license = lib.licenses.bsd3;
+    maintainers = with lib.maintainers; [ kurogeek ];
   };
-}
+})

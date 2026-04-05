@@ -1,6 +1,5 @@
 {
   buildPythonPackage,
-  coverage,
   django,
   django-debug-toolbar,
   fetchFromGitHub,
@@ -9,9 +8,8 @@
   pytest-django,
   pytestCheckHook,
   setuptools-scm,
-  setuptools,
 }:
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = "django-flags";
   version = "5.2.0";
   pyproject = true;
@@ -19,42 +17,36 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "cfpb";
     repo = "django-flags";
-    tag = version;
+    tag = finalAttrs.version;
     hash = "sha256-4UOueNXfDouTqpLpG391zcGHTTJ8GfznYmEl33YKdv8=";
   };
+
+  build-system = [
+    setuptools-scm
+  ];
 
   dependencies = [
     django
   ];
 
-  build-system = [
-    setuptools
-    setuptools-scm
-  ];
-  doCheck = true;
   preCheck = ''
     export DJANGO_SETTINGS_MODULE=flags.tests.settings
   '';
+
   pythonImportsCheck = [ "flags" ];
+
   nativeCheckInputs = [
-    coverage
-    (django-debug-toolbar.overrideAttrs (old: rec {
-      version = "5.2.0";
-      src = old.src.override {
-        tag = version;
-        hash = "sha256-/oWirfJaiHVRI1m3N1QveutX2sag8fjYqJYCZ8BnMa0=";
-      };
-    }))
+    django-debug-toolbar
     jinja2
     pytest-django
     pytestCheckHook
   ];
 
-  meta = with lib; {
+  meta = {
     description = "Feature flags for Django projects";
     homepage = "https://github.com/cfpb/django-flags";
-    changelog = "https://github.com/cfpb/django-flags/releases/tag/${version}";
-    license = licenses.cc0;
-    maintainers = with maintainers; [ kurogeek ];
+    changelog = "https://github.com/cfpb/django-flags/releases/tag/${finalAttrs.src.tag}";
+    license = lib.licenses.cc0;
+    maintainers = with lib.maintainers; [ kurogeek ];
   };
-}
+})

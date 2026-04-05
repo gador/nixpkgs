@@ -92,6 +92,8 @@
   fuse3,
   canokeySupport ? false,
   canokey-qemu,
+  u2fEmuSupport ? false,
+  libu2f-emu,
   capstoneSupport ? !minimal,
   capstone,
   valgrindSupport ? false,
@@ -138,11 +140,11 @@ stdenv.mkDerivation (finalAttrs: {
     + lib.optionalString nixosTestRunner "-for-vm-tests"
     + lib.optionalString toolsOnly "-utils"
     + lib.optionalString userOnly "-user";
-  version = "10.2.1";
+  version = "10.2.2";
 
   src = fetchurl {
     url = "https://download.qemu.org/qemu-${finalAttrs.version}.tar.xz";
-    hash = "sha256-o3F0d9jiyE1jC//7wg9s0yk+tFqh5trG0MwnaJmRyeE=";
+    hash = "sha256-eEspb/KcFBeqcjI6vLLS6pq5dxck9Xfc14XDsE8h4XY=";
   };
 
   depsBuildBuild = [
@@ -245,6 +247,7 @@ stdenv.mkDerivation (finalAttrs: {
   ++ lib.optionals uringSupport [ liburing ]
   ++ lib.optionals fuseSupport [ fuse3 ]
   ++ lib.optionals canokeySupport [ canokey-qemu ]
+  ++ lib.optionals u2fEmuSupport [ libu2f-emu ]
   ++ lib.optionals capstoneSupport [ capstone ]
   ++ lib.optionals valgrindSupport [ valgrind-light ];
 
@@ -329,6 +332,7 @@ stdenv.mkDerivation (finalAttrs: {
   ++ lib.optional uringSupport "--enable-linux-io-uring"
   ++ lib.optional fuseSupport "--enable-fuse"
   ++ lib.optional canokeySupport "--enable-canokey"
+  ++ lib.optional u2fEmuSupport "--enable-u2f"
   ++ lib.optional capstoneSupport "--enable-capstone"
   ++ lib.optional (!pluginsSupport) "--disable-plugins"
   ++ lib.optional (!enableBlobs) "--disable-install-blobs"

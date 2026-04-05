@@ -9,16 +9,16 @@
 
 buildGoModule (finalAttrs: {
   pname = "nfpm";
-  version = "2.45.1";
+  version = "2.46.0";
 
   src = fetchFromGitHub {
     owner = "goreleaser";
     repo = "nfpm";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-ThoCDsuz52odVLVJuT4F96sjtqOOzjqq7JIE5Idzl1k=";
+    hash = "sha256-dzgC8SnGsKdW95xyq7pXacBvCTrte6QQCjYvo5R4D9I=";
   };
 
-  vendorHash = "sha256-cq0pcbC0T3klh3D9l0e0u5JPYv1kWYlpeNYyGczGX+A=";
+  vendorHash = "sha256-HfqPqGpwInTrGjTCA4qJjtngJTCmb+c/sJ1Uhi/CCZ0=";
 
   ldflags = [
     "-s"

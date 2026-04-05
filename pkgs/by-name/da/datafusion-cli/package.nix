@@ -6,17 +6,17 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "datafusion-cli";
-  version = "52.3.0";
+  version = "53.0.0";
 
   src = fetchFromGitHub {
     name = "datafusion-cli-source";
     owner = "apache";
     repo = "arrow-datafusion";
     tag = finalAttrs.version;
-    hash = "sha256-Rmhgs+sy5/j4uTT1TQ709xDKWqgUbTVJZ2aMc9AHDaM=";
+    hash = "sha256-DYNKYE8+rh/hkHpWnBl9C7licTst7WxNOV812vPXiQs=";
   };
 
-  cargoHash = "sha256-5mOImBH0HUIY1NAVHfVTXPOa+lpBbb40RiB6b5dGLzw=";
+  cargoHash = "sha256-bMa8bcvD12lLf7/Kj0rcaFbzOa8nlTWkVsVzMbdRCXw=";
 
   buildAndTestSubdir = "datafusion-cli";
 

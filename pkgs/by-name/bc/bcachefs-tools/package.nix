@@ -29,18 +29,18 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "bcachefs-tools";
-  version = "1.36.1";
+  version = "1.37.4";
 
   src = fetchFromGitHub {
     owner = "koverstreet";
     repo = "bcachefs-tools";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-15Z1lHNeXTToDpdVc/YB5ojhoiB5qdgWs47O1aKoyFM=";
+    hash = "sha256-VlljE+xoKg6GryVuebUA1v9x2shMBUb7veCtD68MBJw=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit (finalAttrs) src;
-    hash = "sha256-YWsJUSgKNkK9W4Yuolix21bRRFSF01+sivoj7SJo7DY=";
+    hash = "sha256-t6ghsIRJFR2Kqism4tdizhnJ8qcE2ZZwH6c3nYogHlo=";
   };
 
   postPatch = ''

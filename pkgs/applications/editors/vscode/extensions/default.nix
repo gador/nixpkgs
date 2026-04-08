@@ -1570,8 +1570,8 @@ let
         mktplcRef = {
           name = "vscode-great-icons";
           publisher = "emmanuelbeziat";
-          version = "2.1.120";
-          hash = "sha256-m5CPmilGF1jguhTZhPAUMrfzU4HU5SkiWeGOMAD+D/Y=";
+          version = "2.1.121";
+          hash = "sha256-5PAOxy+9KnATEf7BlrAV8cE+xFvfQVSyv7Dov9mqWI0=";
         };
         meta = {
           license = lib.licenses.mit;
@@ -1902,8 +1902,8 @@ let
         mktplcRef = {
           publisher = "github";
           name = "codespaces";
-          version = "1.18.11";
-          hash = "sha256-Jd0J7/8amQ1pLjvk+YXp6GbSrRgWhyKBw1TKr+h4OrI=";
+          version = "1.18.12";
+          hash = "sha256-A/ORfMybSCm90SFg8hRx/N0Vq9XMtTjMPVzCIoG938g=";
         };
 
         meta = {
@@ -2293,8 +2293,8 @@ let
         mktplcRef = {
           name = "vscode-vibrancy-continued";
           publisher = "illixion";
-          version = "1.1.65";
-          hash = "sha256-0DUKDBhabh8vOgPw5p6ZFavRLIuy4vPgOfAa6fLtJRA=";
+          version = "1.1.73";
+          hash = "sha256-hQKkqZi8fQoxVzgpg/JE4zPFR+ldi5eBYpgiqbx7OXo=";
         };
         meta = {
           downloadPage = "https://marketplace.visualstudio.com/items?itemName=illixion.vscode-vibrancy-continued";
@@ -4008,8 +4008,8 @@ let
         mktplcRef = {
           name = "partial-diff";
           publisher = "ryu1kn";
-          version = "1.4.4";
-          sha256 = "sha256-T+C/C2DBh05mgoFUdnSGcmhf9JXfMYc/JvG0aX0vEoU=";
+          version = "1.4.6";
+          sha256 = "sha256-yp0w/atuZUSSVEaRLhpnX4NmrYCGwzFjEgzncRpEoNA=";
         };
         meta = {
           license = lib.licenses.mit;
@@ -4458,8 +4458,8 @@ let
         mktplcRef = {
           name = "vscode-stylelint";
           publisher = "stylelint";
-          version = "2.2.0";
-          hash = "sha256-N23nzAI0cBNeX7txsgxKXhSUrcOGM9rjnMIJNK4OYFY=";
+          version = "2.2.1";
+          hash = "sha256-VnJ2OZe2KPo/QfZquxDZ3SMQncRWnAHBTTtfdJVBlpo=";
         };
         meta = {
           description = "Official Stylelint extension for Visual Studio Code";

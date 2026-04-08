@@ -2693,6 +2693,8 @@ self: super: with self; {
 
   chess = callPackage ../development/python-modules/chess { };
 
+  chess-com-api = callPackage ../development/python-modules/chess-com-api { };
+
   chevron = callPackage ../development/python-modules/chevron { };
 
   chex = callPackage ../development/python-modules/chex { };
@@ -7112,6 +7114,8 @@ self: super: with self; {
 
   homeconnect = callPackage ../development/python-modules/homeconnect { };
 
+  homekit-audio-proxy = callPackage ../development/python-modules/homekit-audio-proxy { };
+
   homelink-integration-api = callPackage ../development/python-modules/homelink-integration-api { };
 
   homematicip = callPackage ../development/python-modules/homematicip { };
@@ -8672,6 +8676,8 @@ self: super: with self; {
 
   libcst = callPackage ../development/python-modules/libcst { };
 
+  libdebug = callPackage ../development/python-modules/libdebug { inherit (pkgs) zstd; };
+
   libdnf = lib.pipe pkgs.libdnf [
     toPythonModule
     (
@@ -9282,6 +9288,8 @@ self: super: with self; {
   logutils = callPackage ../development/python-modules/logutils { };
 
   logzero = callPackage ../development/python-modules/logzero { };
+
+  lojack-api = callPackage ../development/python-modules/lojack-api { };
 
   lomond = callPackage ../development/python-modules/lomond { };
 
@@ -12771,6 +12779,8 @@ self: super: with self; {
 
   pq = callPackage ../development/python-modules/pq { };
 
+  prana-api-client = callPackage ../development/python-modules/prana-api-client { };
+
   prance = callPackage ../development/python-modules/prance { };
 
   praw = callPackage ../development/python-modules/praw { };
@@ -13775,6 +13785,8 @@ self: super: with self; {
   pyformlang = callPackage ../development/python-modules/pyformlang { };
 
   pyfreedompro = callPackage ../development/python-modules/pyfreedompro { };
+
+  pyfreshr = callPackage ../development/python-modules/pyfreshr { };
 
   pyfribidi = callPackage ../development/python-modules/pyfribidi { };
 
@@ -17624,6 +17636,8 @@ self: super: with self; {
 
   sievelib = callPackage ../development/python-modules/sievelib { };
 
+  signalrcore = callPackage ../development/python-modules/signalrcore { };
+
   signalslot = callPackage ../development/python-modules/signalslot { };
 
   signedjson = callPackage ../development/python-modules/signedjson { };
@@ -18013,6 +18027,8 @@ self: super: with self; {
   solaredge-web = callPackage ../development/python-modules/solaredge-web { };
 
   solarlog-cli = callPackage ../development/python-modules/solarlog-cli { };
+
+  solarman-opendata = callPackage ../development/python-modules/solarman-opendata { };
 
   solax = callPackage ../development/python-modules/solax { };
 
@@ -19594,6 +19610,18 @@ self: super: with self; {
 
   transaction = callPackage ../development/python-modules/transaction { };
 
+  transformer-engine = callPackage ../development/python-modules/transformer-engine { };
+
+  transformer-engine-jax = transformer-engine.override {
+    withJax = true;
+    withPytorch = false;
+  };
+
+  transformer-engine-pytorch = transformer-engine.override {
+    withJax = false;
+    withPytorch = true;
+  };
+
   transformers = callPackage ../development/python-modules/transformers { };
 
   transformers_4 = callPackage ../development/python-modules/transformers/4.nix { };
@@ -20393,7 +20421,11 @@ self: super: with self; {
 
   ucsmsdk = callPackage ../development/python-modules/ucsmsdk { };
 
+  udapi = callPackage ../development/python-modules/udapi { };
+
   udatetime = callPackage ../development/python-modules/udatetime { };
+
+  udtools = callPackage ../development/python-modules/udtools { };
 
   ueagle = callPackage ../development/python-modules/ueagle { };
 

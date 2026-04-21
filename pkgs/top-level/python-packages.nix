@@ -510,6 +510,8 @@ self: super: with self; {
 
   aiosendspin = callPackage ../development/python-modules/aiosendspin { };
 
+  aiosendspin-mpris = callPackage ../development/python-modules/aiosendspin-mpris { };
+
   aioserial = callPackage ../development/python-modules/aioserial { };
 
   aioshelly = callPackage ../development/python-modules/aioshelly { };
@@ -7639,6 +7641,8 @@ self: super: with self; {
 
   ioctl-opt = callPackage ../development/python-modules/ioctl-opt { };
 
+  iocx = callPackage ../development/python-modules/iocx { };
+
   iodata = callPackage ../development/python-modules/iodata { };
 
   iometer = callPackage ../development/python-modules/iometer { };
@@ -7956,6 +7960,8 @@ self: super: with self; {
   json-api-doc = callPackage ../development/python-modules/json-api-doc { };
 
   json-flatten = callPackage ../development/python-modules/json-flatten { };
+
+  json-handler-registry = callPackage ../development/python-modules/json-handler-registry { };
 
   json-home-client = callPackage ../development/python-modules/json-home-client { };
 
@@ -10282,6 +10288,8 @@ self: super: with self; {
 
   mpmath = callPackage ../development/python-modules/mpmath { };
 
+  mpris-api = callPackage ../development/python-modules/mpris-api { };
+
   mprisify = callPackage ../development/python-modules/mprisify { };
 
   mpv = callPackage ../development/python-modules/mpv { inherit (pkgs) mpv; };
@@ -12245,6 +12253,8 @@ self: super: with self; {
 
   pdbfixer = callPackage ../development/python-modules/pdbfixer { };
 
+  pdf-oxide = callPackage ../development/python-modules/pdf-oxide { };
+
   pdf2docx = callPackage ../development/python-modules/pdf2docx { };
 
   pdf2image = callPackage ../development/python-modules/pdf2image { };
@@ -13590,6 +13600,8 @@ self: super: with self; {
 
   pydantic-graph = callPackage ../development/python-modules/pydantic-graph { };
 
+  pydantic-monty = callPackage ../development/python-modules/pydantic-monty { };
+
   pydantic-scim = callPackage ../development/python-modules/pydantic-scim { };
 
   pydantic-settings = callPackage ../development/python-modules/pydantic-settings { };
@@ -14373,8 +14385,6 @@ self: super: with self; {
   pymysql = callPackage ../development/python-modules/pymysql { };
 
   pymysqlsa = callPackage ../development/python-modules/pymysqlsa { };
-
-  pymystem3 = callPackage ../development/python-modules/pymystem3 { };
 
   pynac = callPackage ../development/python-modules/pynac { };
 
@@ -17499,6 +17509,8 @@ self: super: with self; {
 
   sendgrid = callPackage ../development/python-modules/sendgrid { };
 
+  sendspin = callPackage ../development/python-modules/sendspin { };
+
   senf = callPackage ../development/python-modules/senf { };
 
   sensai-utils = callPackage ../development/python-modules/sensai-utils { };
@@ -18413,6 +18425,8 @@ self: super: with self; {
   sqids = callPackage ../development/python-modules/sqids { };
 
   sqlalchemy = callPackage ../development/python-modules/sqlalchemy { };
+
+  sqlalchemy-adapter = callPackage ../development/python-modules/sqlalchemy-adapter { };
 
   sqlalchemy-citext = callPackage ../development/python-modules/sqlalchemy-citext { };
 
@@ -19866,6 +19880,8 @@ self: super: with self; {
 
   tunigo = callPackage ../development/python-modules/tunigo { };
 
+  tunit = callPackage ../development/python-modules/tunit { };
+
   turnt = callPackage ../development/python-modules/turnt { };
 
   turrishw = callPackage ../development/python-modules/turrishw { };
@@ -20374,6 +20390,8 @@ self: super: with self; {
   types-mysqlclient = callPackage ../development/python-modules/types-mysqlclient { };
 
   types-openpyxl = callPackage ../development/python-modules/types-openpyxl { };
+
+  types-paramiko = callPackage ../development/python-modules/types-paramiko { };
 
   types-pillow = callPackage ../development/python-modules/types-pillow { };
 

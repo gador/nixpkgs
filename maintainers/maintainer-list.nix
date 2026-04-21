@@ -8954,6 +8954,13 @@
     matrix = "@flandweber:envs.net";
     name = "Finn Landweber";
   };
+  flashonfire = {
+    email = "flashonfire@proton.me";
+    github = "flashonfire";
+    githubId = 26602207;
+    matrix = "@flashonfire:lithium.ovh";
+    name = "Guillaume Calderon";
+  };
   fleaz = {
     email = "mail@felixbreidenstein.de";
     matrix = "@fleaz:rainbownerds.de";
@@ -16250,6 +16257,12 @@
     name = "M0ustach3";
     github = "M0ustach3";
     githubId = 37956764;
+  };
+  m1-s = {
+    email = "michael@m1-s.com";
+    github = "m1-s";
+    githubId = 94642227;
+    name = "Michael Schneider";
   };
   m1cr0man = {
     email = "lucas+nix@m1cr0man.com";
@@ -26748,6 +26761,12 @@
     githubId = 156964;
     name = "Thomas Boerger";
   };
+  tbutter = {
+    email = "tbutter@gmail.com";
+    github = "tbutter";
+    githubId = 1336537;
+    name = "Thomas Butter";
+  };
   tc-kaluza = {
     github = "tc-kaluza";
     githubId = 101565936;
@@ -29360,6 +29379,12 @@
     github = "winterqt";
     githubId = 78392041;
     name = "Winter";
+  };
+  winterec = {
+    github = "winterec";
+    githubId = 9159652;
+    name = "Edward";
+    keys = [ { fingerprint = "0BC2F3C6AE5D73DAE870CB0E8AE4DE0EFB6CC443"; } ];
   };
   wirew0rm = {
     email = "alex@wirew0rm.de";

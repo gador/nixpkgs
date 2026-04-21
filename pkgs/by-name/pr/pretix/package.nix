@@ -5,7 +5,7 @@
   fetchPypi,
   libredirect,
   nodejs,
-  python312,
+  python3,
   gettext,
   nixosTests,
   pretix,
@@ -13,7 +13,7 @@
 }:
 
 let
-  python = python312.override {
+  python = python3.override {
     self = python;
     packageOverrides = self: super: {
       django = super.django_5;
@@ -51,13 +51,13 @@ let
   };
 
   pname = "pretix";
-  version = "2026.3.0";
+  version = "2026.3.1";
 
   src = fetchFromGitHub {
     owner = "pretix";
     repo = "pretix";
     tag = "v${version}";
-    hash = "sha256-D8i8wRdPak1L0D451WP7upr3yn+8SzG/0wuWD/EsemM=";
+    hash = "sha256-E/WJRuugcfy/r6USS37G73PiHg8DuYRFSq0e19XIRJg=";
   };
 
   npmDeps = buildNpmPackage {
@@ -96,6 +96,7 @@ python.pkgs.buildPythonApplication rec {
     "css-inline"
     "django-bootstrap3"
     "django-compressor"
+    "django-filter"
     "django-formset-js-improved"
     "django-i18nfield"
     "django-localflavor"

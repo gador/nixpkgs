@@ -16,13 +16,13 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "opencode";
-  version = "1.3.13";
+  version = "1.4.10";
 
   src = fetchFromGitHub {
     owner = "anomalyco";
     repo = "opencode";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-P6Md0WzHK2/oAZ6VbpYnabVJyVcqwuYizoOqbxaf+lU=";
+    hash = "sha256-L2oiB7YwAaB07ZSEjxOUobX3fZW4noluUbo/FFPDYl4=";
   };
 
   node_modules = stdenvNoCC.mkDerivation {
@@ -72,7 +72,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     # NOTE: Required else we get errors that our fixed-output derivation references store paths
     dontFixup = true;
 
-    outputHash = "sha256-fWc9xVn6HbNxnJ9S8Q+hdlYQYkdGk+4RWWbYaB+L09Q=";
+    outputHash = "sha256-rF+l0Hho0QEvMS5jaImhMlhKjjf1R66X20R6lEZcZeg=";
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
   };
@@ -104,6 +104,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   '';
 
   env.MODELS_DEV_API_JSON = "${models-dev}/dist/_api.json";
+  env.OPENCODE_DISABLE_MODELS_FETCH = true;
   env.OPENCODE_VERSION = finalAttrs.version;
   env.OPENCODE_CHANNEL = "stable";
 
@@ -150,7 +151,10 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     writableTmpDirAsHomeHook
   ];
   doInstallCheck = true;
-  versionCheckKeepEnvironment = [ "HOME" ];
+  versionCheckKeepEnvironment = [
+    "HOME"
+    "OPENCODE_DISABLE_MODELS_FETCH"
+  ];
   versionCheckProgramArg = "--version";
 
   passthru = {

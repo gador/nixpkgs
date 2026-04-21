@@ -1604,10 +1604,10 @@
   };
 
   matlab = {
-    version = "1.3.0-unstable-2025-11-22";
+    version = "1.3.0-unstable-2026-03-04";
     url = "github:acristoffers/tree-sitter-matlab";
-    rev = "1bccabdbd420a9c3c3f96f36d7f9e65b3d9c88ef";
-    hash = "sha256-V7GOXiR//JgxjTOxRi+PpfRGvunX4r3C0Bu1CrN+/K4=";
+    rev = "c2390a59016f74e7d5f75ef09510768b4f30217e";
+    hash = "sha256-WgyWvItbysSqeD/LdBr233NYlKF1HaxIDtHIr6BQOjw=";
     meta = {
       license = lib.licenses.mit;
       maintainers = with lib.maintainers; [
@@ -1778,6 +1778,18 @@
     hash = "sha256-e08lrKCyQRpb8pnLV6KK4ye53YBjxQ52nnDIzH+7ONc=";
     meta = {
       license = lib.licenses.mit;
+    };
+  };
+
+  ocamllex = {
+    version = "0.25.0";
+    url = "github:314eter/tree-sitter-ocamllex";
+    hash = "sha256-mqp/qHr1zWMJinlMJ0HNAKuFUQ4NqQiLzKx0DoN4wGI=";
+    meta = {
+      license = lib.licenses.mit;
+      maintainers = with lib.maintainers; [
+        leungbk
+      ];
     };
   };
 
@@ -1956,10 +1968,10 @@
   };
 
   php-only = {
-    version = "0.24.2-unstable-2025-11-24";
+    version = "0.24.2-unstable-2026-03-19";
     url = "github:tree-sitter/tree-sitter-php";
-    rev = "7d07b41ce2d442ca9a90ed85d0075eccc17ae315";
-    hash = "sha256-XEKlsqC7HJ3mShmcwmfpezNP9DHE8f73f7/ru4MuxEo=";
+    rev = "3f2465c217d0a966d41e584b42d75522f2a3149e";
+    hash = "sha256-RV6wHYVTOFdRYMqXdPw2Ryk3FadJJ4jcJVFjsJG8Ri0=";
     meta = {
       license = lib.licenses.mit;
       maintainers = with lib.maintainers; [
@@ -2484,9 +2496,9 @@
   };
 
   sshclientconfig = rec {
-    version = "2026.2.18";
+    version = "2026.4.16";
     url = "github:metio/tree-sitter-ssh-client-config?ref=${version}";
-    hash = "sha256-zEQ9jof8CMx6YtzU+y/GnBeI7htv9EbUHtAKSmX6c3M=";
+    hash = "sha256-bWZsxfLr8e2Kv96EGOwTyycLBH8DhXsLrzUIABN5um8=";
     meta = {
       license = lib.licenses.cc0;
       maintainers = with lib.maintainers; [

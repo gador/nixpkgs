@@ -1116,6 +1116,8 @@ self: super: with self; {
 
   async-generator = callPackage ../development/python-modules/async-generator { };
 
+  async-geotiff = callPackage ../development/python-modules/async-geotiff { };
+
   async-interrupt = callPackage ../development/python-modules/async-interrupt { };
 
   async-lru = callPackage ../development/python-modules/async-lru { };
@@ -1123,6 +1125,8 @@ self: super: with self; {
   async-modbus = callPackage ../development/python-modules/async-modbus { };
 
   async-stagger = callPackage ../development/python-modules/async-stagger { };
+
+  async-tiff = callPackage ../development/python-modules/async-tiff { };
 
   async-timeout = callPackage ../development/python-modules/async-timeout { };
 
@@ -1491,6 +1495,10 @@ self: super: with self; {
 
   azure-mgmt-containerregistry =
     callPackage ../development/python-modules/azure-mgmt-containerregistry
+      { };
+
+  azure-mgmt-containerregistrytasks =
+    callPackage ../development/python-modules/azure-mgmt-containerregistrytasks
       { };
 
   azure-mgmt-containerservice =
@@ -2605,6 +2613,8 @@ self: super: with self; {
 
   certifi = callPackage ../development/python-modules/certifi { };
 
+  certihound = callPackage ../development/python-modules/certihound { };
+
   certipy = callPackage ../development/python-modules/certipy { };
 
   certipy-ad = callPackage ../development/python-modules/certipy-ad { };
@@ -3156,6 +3166,8 @@ self: super: with self; {
 
   connect-box = callPackage ../development/python-modules/connect-box { };
 
+  connect-box3 = callPackage ../development/python-modules/connect-box3 { };
+
   connected-components-3d = callPackage ../development/python-modules/connected-components-3d { };
 
   connection-pool = callPackage ../development/python-modules/connection-pool { };
@@ -3396,21 +3408,7 @@ self: super: with self; {
 
   cuda-pathfinder = callPackage ../development/python-modules/cuda-pathfinder { };
 
-  cupy = callPackage ../development/python-modules/cupy {
-    cudaPackages =
-      # CuDNN 9 is not supported:
-      # https://github.com/cupy/cupy/issues/8215
-      # NOTE: cupy 14 will drop support for cuDNN entirely.
-      # https://github.com/cupy/cupy/pull/9326
-      let
-        version = if pkgs.cudaPackages.backendStdenv.hasJetsonCudaCapability then "8.9.5" else "8.9.7";
-      in
-      pkgs.cudaPackages.override (prevArgs: {
-        manifests = prevArgs.manifests // {
-          cudnn = pkgs._cuda.manifests.cudnn.${version};
-        };
-      });
-  };
+  cupy = callPackage ../development/python-modules/cupy { };
 
   curated-tokenizers = callPackage ../development/python-modules/curated-tokenizers { };
 
@@ -3757,6 +3755,8 @@ self: super: with self; {
   deep-chainmap = callPackage ../development/python-modules/deep-chainmap { };
 
   deep-ep = callPackage ../development/python-modules/deep-ep { };
+
+  deep-gemm = callPackage ../development/python-modules/deep-gemm { };
 
   deep-translator = callPackage ../development/python-modules/deep-translator { };
 
@@ -4426,11 +4426,15 @@ self: super: with self; {
 
   django-valkey = callPackage ../development/python-modules/django-valkey { };
 
+  django-vcache = callPackage ../development/python-modules/django-vcache { };
+
   django-versatileimagefield =
     callPackage ../development/python-modules/django-versatileimagefield
       { };
 
   django-vite = callPackage ../development/python-modules/django-vite { };
+
+  django-vtasks = callPackage ../development/python-modules/django-vtasks { };
 
   django-waffle = callPackage ../development/python-modules/django-waffle { };
 
@@ -4536,6 +4540,8 @@ self: super: with self; {
   dnfile = callPackage ../development/python-modules/dnfile { };
 
   dns-lexicon = callPackage ../development/python-modules/dns-lexicon { };
+
+  dnsight = callPackage ../development/python-modules/dnsight { };
 
   dnslib = callPackage ../development/python-modules/dnslib { };
 
@@ -6912,6 +6918,8 @@ self: super: with self; {
 
   hatch = callPackage ../development/python-modules/hatch/default.nix { };
 
+  hatch-argparse-manpage = callPackage ../development/python-modules/hatch-argparse-manpage { };
+
   hatch-autorun = callPackage ../development/python-modules/hatch-autorun { };
 
   hatch-babel = callPackage ../development/python-modules/hatch-babel { };
@@ -6925,6 +6933,8 @@ self: super: with self; {
       { };
 
   hatch-fancy-pypi-readme = callPackage ../development/python-modules/hatch-fancy-pypi-readme { };
+
+  hatch-gettext = callPackage ../development/python-modules/hatch-gettext { };
 
   hatch-jupyter-builder = callPackage ../development/python-modules/hatch-jupyter-builder { };
 
@@ -7028,6 +7038,8 @@ self: super: with self; {
 
   hg-git = callPackage ../development/python-modules/hg-git { };
 
+  hibpwned = callPackage ../development/python-modules/hibpwned { };
+
   hickle = callPackage ../development/python-modules/hickle { };
 
   hid = callPackage ../development/python-modules/hid { inherit (pkgs) hidapi; };
@@ -7107,6 +7119,8 @@ self: super: with self; {
   home-assistant-chip-wheels = toPythonModule (
     callPackage ../development/python-modules/home-assistant-chip-wheels { }
   );
+
+  home-assistant-datasets = callPackage ../development/python-modules/home-assistant-datasets { };
 
   home-connect-async = callPackage ../development/python-modules/home-connect-async { };
 
@@ -7336,6 +7350,8 @@ self: super: with self; {
 
   ibeacon-ble = callPackage ../development/python-modules/ibeacon-ble { };
 
+  ibind = callPackage ../development/python-modules/ibind { };
+
   ibis = callPackage ../development/python-modules/ibis { };
 
   ibis-framework = callPackage ../development/python-modules/ibis-framework { };
@@ -7403,6 +7419,8 @@ self: super: with self; {
   igloohome-api = callPackage ../development/python-modules/igloohome-api { };
 
   ignite = callPackage ../development/python-modules/ignite { };
+
+  ignorant = callPackage ../development/python-modules/ignorant { };
 
   igraph = callPackage ../development/python-modules/igraph { inherit (pkgs) igraph; };
 
@@ -7967,6 +7985,8 @@ self: super: with self; {
 
   jsonable = callPackage ../development/python-modules/jsonable { };
 
+  jsonalias = callPackage ../development/python-modules/jsonalias { };
+
   jsonargparse = callPackage ../development/python-modules/jsonargparse { };
 
   jsonconversion = callPackage ../development/python-modules/jsonconversion { };
@@ -8192,6 +8212,8 @@ self: super: with self; {
   kajiki = callPackage ../development/python-modules/kajiki { };
 
   kaldi-active-grammar = callPackage ../development/python-modules/kaldi-active-grammar { };
+
+  kaldi-native-fbank = callPackage ../development/python-modules/kaldi-native-fbank { };
 
   kaleido = callPackage ../development/python-modules/kaleido { };
 
@@ -8570,6 +8592,8 @@ self: super: with self; {
   ldfparser = callPackage ../development/python-modules/ldfparser { };
 
   leanblueprint = callPackage ../development/python-modules/leanblueprint { };
+
+  leanclient = callPackage ../development/python-modules/leanclient { };
 
   leaone-ble = callPackage ../development/python-modules/leaone-ble { };
 
@@ -11327,6 +11351,8 @@ self: super: with self; {
 
   obsidian-media = callPackage ../development/python-modules/obsidian-media { };
 
+  obspec = callPackage ../development/python-modules/obspec { };
+
   obspy = callPackage ../development/python-modules/obspy { };
 
   obstore = callPackage ../development/python-modules/obstore { };
@@ -11357,9 +11383,15 @@ self: super: with self; {
 
   oddsprout = callPackage ../development/python-modules/oddsprout { };
 
+  odfdo = callPackage ../development/python-modules/odfdo { };
+
   odfpy = callPackage ../development/python-modules/odfpy { };
 
   odp-amsterdam = callPackage ../development/python-modules/odp-amsterdam { };
+
+  odsgenerator = callPackage ../development/python-modules/odsgenerator { };
+
+  odsparsator = callPackage ../development/python-modules/odsparsator { };
 
   oelint-data = callPackage ../development/python-modules/oelint-data { };
 
@@ -13605,6 +13637,8 @@ self: super: with self; {
   pydicom-seg = callPackage ../development/python-modules/pydicom-seg { };
 
   pydiffx = callPackage ../development/python-modules/pydiffx { };
+
+  pydig = callPackage ../development/python-modules/pydig { };
 
   pydigiham = callPackage ../development/python-modules/pydigiham { };
 
@@ -16259,6 +16293,8 @@ self: super: with self; {
 
   pywebpush = callPackage ../development/python-modules/pywebpush { };
 
+  pywebtransport = callPackage ../development/python-modules/pywebtransport { };
+
   pywebview = callPackage ../development/python-modules/pywebview { };
 
   pywemo = callPackage ../development/python-modules/pywemo { };
@@ -16778,6 +16814,10 @@ self: super: with self; {
 
   requests-pkcs12 = callPackage ../development/python-modules/requests-pkcs12 { };
 
+  requests-random-user-agent =
+    callPackage ../development/python-modules/requests-random-user-agent
+      { };
+
   requests-ratelimiter = callPackage ../development/python-modules/requests-ratelimiter { };
 
   requests-toolbelt = callPackage ../development/python-modules/requests-toolbelt { };
@@ -17046,6 +17086,8 @@ self: super: with self; {
   rova = callPackage ../development/python-modules/rova { };
 
   rowan = callPackage ../development/python-modules/rowan { };
+
+  rpatool = callPackage ../development/python-modules/rpatool { };
 
   rpcq = callPackage ../development/python-modules/rpcq { };
 
@@ -18034,6 +18076,8 @@ self: super: with self; {
 
   solc-select = callPackage ../development/python-modules/solc-select { };
 
+  solders = callPackage ../development/python-modules/solders { };
+
   solidpython2 = callPackage ../development/python-modules/solidpython2 { };
 
   solo-python = callPackage ../development/python-modules/solo-python { };
@@ -18486,6 +18530,8 @@ self: super: with self; {
 
   stable-baselines3 = callPackage ../development/python-modules/stable-baselines3 { };
 
+  stac-validator = callPackage ../development/python-modules/stac-validator { };
+
   stack-data = callPackage ../development/python-modules/stack-data { };
 
   stackprinter = callPackage ../development/python-modules/stackprinter { };
@@ -18883,6 +18929,8 @@ self: super: with self; {
   synergy = callPackage ../development/python-modules/synergy { };
 
   synology-srm = callPackage ../development/python-modules/synology-srm { };
+
+  synthetic-home = callPackage ../development/python-modules/synthetic-home { };
 
   syrupy = callPackage ../development/python-modules/syrupy { };
 
@@ -20485,6 +20533,8 @@ self: super: with self; {
 
   unasync = callPackage ../development/python-modules/unasync { };
 
+  uncalled-for = callPackage ../development/python-modules/uncalled-for { };
+
   uncertainties = callPackage ../development/python-modules/uncertainties { };
 
   uncompresspy = callPackage ../development/python-modules/uncompresspy { };
@@ -21156,6 +21206,8 @@ self: super: with self; {
   wiffi = callPackage ../development/python-modules/wiffi { };
 
   wifi = callPackage ../development/python-modules/wifi { };
+
+  wiim = callPackage ../development/python-modules/wiim { };
 
   wikipedia = callPackage ../development/python-modules/wikipedia { };
 

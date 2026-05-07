@@ -2512,12 +2512,18 @@ self: super: with self; {
 
   casa-formats-io = callPackage ../development/python-modules/casa-formats-io { };
 
+  casaconfig = callPackage ../development/python-modules/casaconfig { };
+
   casadi = toPythonModule (
     pkgs.casadi.override {
       pythonSupport = true;
       python3Packages = self;
     }
   );
+
+  casatasks = callPackage ../development/python-modules/casatasks { };
+
+  casatools = callPackage ../development/python-modules/casatools { };
 
   case-converter = callPackage ../development/python-modules/case-converter { };
 
@@ -4358,6 +4364,8 @@ self: super: with self; {
 
   django-reversion = callPackage ../development/python-modules/django-reversion { };
 
+  django-rich = callPackage ../development/python-modules/django-rich { };
+
   django-rosetta = callPackage ../development/python-modules/django-rosetta { };
 
   django-rq = callPackage ../development/python-modules/django-rq { };
@@ -5334,6 +5342,16 @@ self: super: with self; {
     faiss-build = pkgs.faiss.override {
       pythonSupport = true;
       python3Packages = self;
+    };
+  };
+
+  faiss-cpu = callPackage ../development/python-modules/faiss-cpu {
+    faiss = self.faiss.override {
+      faiss-build = pkgs.faiss.override {
+        pythonSupport = true;
+        python3Packages = self;
+        cudaSupport = false;
+      };
     };
   };
 
@@ -7803,6 +7821,24 @@ self: super: with self; {
     }
   );
 
+  itkwasm = callPackage ../development/python-modules/itkwasm { };
+
+  itkwasm-downsample = callPackage ../development/python-modules/itkwasm-downsample { };
+
+  itkwasm-downsample-emscripten =
+    callPackage ../development/python-modules/itkwasm-downsample-emscripten
+      { };
+
+  itkwasm-downsample-wasi = callPackage ../development/python-modules/itkwasm-downsample-wasi { };
+
+  itkwasm-image-io = callPackage ../development/python-modules/itkwasm-image-io { };
+
+  itkwasm-image-io-emscripten =
+    callPackage ../development/python-modules/itkwasm-image-io-emscripten
+      { };
+
+  itkwasm-image-io-wasi = callPackage ../development/python-modules/itkwasm-image-io-wasi { };
+
   itsdangerous = callPackage ../development/python-modules/itsdangerous { };
 
   itunespy = callPackage ../development/python-modules/itunespy { };
@@ -8050,8 +8086,6 @@ self: super: with self; {
   jsonschema-path = callPackage ../development/python-modules/jsonschema-path { };
 
   jsonschema-rs = callPackage ../development/python-modules/jsonschema-rs { };
-
-  jsonschema-spec = callPackage ../development/python-modules/jsonschema-spec { };
 
   jsonschema-specifications = callPackage ../development/python-modules/jsonschema-specifications { };
 
@@ -8481,6 +8515,8 @@ self: super: with self; {
   langchain-openai = callPackage ../development/python-modules/langchain-openai { };
 
   langchain-perplexity = callPackage ../development/python-modules/langchain-perplexity { };
+
+  langchain-protocol = callPackage ../development/python-modules/langchain-protocol { };
 
   langchain-tests = callPackage ../development/python-modules/langchain-tests { };
 
@@ -11074,6 +11110,8 @@ self: super: with self; {
 
   nftables = callPackage ../os-specific/linux/nftables/python.nix { inherit (pkgs) nftables; };
 
+  ngff-zarr = callPackage ../development/python-modules/ngff-zarr { };
+
   nglview = callPackage ../development/python-modules/nglview { };
 
   nh3 = callPackage ../development/python-modules/nh3 { };
@@ -12489,8 +12527,6 @@ self: super: with self; {
   pika-pool = callPackage ../development/python-modules/pika-pool { };
 
   pikepdf = callPackage ../development/python-modules/pikepdf { };
-
-  pilight = callPackage ../development/python-modules/pilight { };
 
   pilkit = callPackage ../development/python-modules/pilkit { };
 
@@ -19019,7 +19055,6 @@ self: super: with self; {
 
   taco = toPythonModule (
     pkgs.taco.override {
-      inherit (self) python;
       enablePython = true;
     }
   );
@@ -19577,6 +19612,8 @@ self: super: with self; {
   torch-bin = callPackage ../development/python-modules/torch/bin { triton = self.triton-bin; };
 
   torch-c-dlpack-ext = callPackage ../development/python-modules/torch-c-dlpack-ext { };
+
+  torch-einops-utils = callPackage ../development/python-modules/torch-einops-utils { };
 
   torch-geometric = callPackage ../development/python-modules/torch-geometric { };
 
@@ -21074,6 +21111,8 @@ self: super: with self; {
     ;
 
   wasmerPackages = lib.recurseIntoAttrs (callPackage ../development/python-modules/wasmer { });
+
+  wasmtime = callPackage ../development/python-modules/wasmtime { };
 
   wasserstein = callPackage ../development/python-modules/wasserstein { };
 

@@ -33,14 +33,14 @@ let
 in
 python.pkgs.buildPythonApplication (finalAttrs: {
   pname = "esphome";
-  version = "2026.4.3";
+  version = "2026.5.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "esphome";
     repo = "esphome";
     tag = finalAttrs.version;
-    hash = "sha256-+esSczOBIT4dJEyzqmEv6YMU4wGkN4lFGmuZKRp5/bo=";
+    hash = "sha256-oWlzpBzDOSrXv+gOnFSL7TQqDZJc3oN2RoAW2ywFCGo=";
   };
 
   patches = [
@@ -73,7 +73,7 @@ python.pkgs.buildPythonApplication (finalAttrs: {
   postPatch = ''
     substituteInPlace pyproject.toml \
       --replace-fail "setuptools==82.0.1" "setuptools" \
-      --replace-fail "wheel>=0.43,<0.47" "wheel"
+      --replace-fail "wheel>=0.43,<0.48" "wheel"
   '';
 
   # Remove esptool and platformio from requirements
@@ -186,6 +186,10 @@ python.pkgs.buildPythonApplication (finalAttrs: {
     # Expects a full git clone
     "test_clang_tidy_mode_full_scan"
     "test_clang_tidy_mode_targeted_scan"
+    # Patched to run platformio without the esphome wrapper
+    "test_run_platformio_cli_strips_win_long_path_prefix"
+    "test_run_platformio_cli_does_not_set_pythonexepath_without_strip"
+    "test_patch_file_downloader_recovers_against_real_server"
   ];
 
   passthru = {

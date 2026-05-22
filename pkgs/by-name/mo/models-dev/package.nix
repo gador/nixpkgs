@@ -8,12 +8,12 @@
 }:
 let
   pname = "models-dev";
-  version = "0-unstable-2026-04-29";
+  version = "0-unstable-2026-05-19";
   src = fetchFromGitHub {
     owner = "anomalyco";
     repo = "models.dev";
-    rev = "e8b5a27723f124e195d60ff18dfe42735dd76aff";
-    hash = "sha256-lGryqSZf/baGL8HP1aKK8zQ5hr5UuyIaATmjcgGkCMI=";
+    rev = "db0a7cf6113f380b15e8ab21944e5de18bb30feb";
+    hash = "sha256-kFskkQ5YrK7ler8s+vC5ONEjmNmOpiIKAZqoiCk97Qk=";
   };
 
   node_modules = stdenvNoCC.mkDerivation {
@@ -57,7 +57,7 @@ let
     # NOTE: Required else we get errors that our fixed-output derivation references store paths
     dontFixup = true;
 
-    outputHash = "sha256-eXgzhb/yhgw0B1WDrpaEmH5Tyya+/rye6kJVKdiV56w=";
+    outputHash = "sha256-kn5Ung5DGDYMf5MHnZ+jsqXCg+MYahfkbiixcD9kh4Y=";
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
   };

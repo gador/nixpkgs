@@ -676,7 +676,7 @@ let
         fpath = callPackage ../development/ocaml-modules/fpath { };
 
         frama-c = callPackage ../development/ocaml-modules/frama-c {
-          framac = pkgs.framac.override {
+          frama-c = pkgs.frama-c.override {
             ocamlPackages = self;
             why3 = pkgs.why3.override { ocamlPackages = self; };
           };
@@ -2028,8 +2028,6 @@ let
         smtml = callPackage ../development/ocaml-modules/smtml {
           mdx = mdx.override { inherit logs; };
         };
-
-        sodium = callPackage ../development/ocaml-modules/sodium { };
 
         sosa = callPackage ../development/ocaml-modules/sosa { };
 

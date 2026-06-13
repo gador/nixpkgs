@@ -832,6 +832,15 @@ with haskellLib;
   # Tests require a Kafka broker running locally
   haskakafka = dontCheck super.haskakafka;
 
+  # https://github.com/itchyny/qhs/issues/8
+  qhs = overrideSrc {
+    version = "0.4.3";
+    src = pkgs.fetchzip {
+      url = "mirror://hackage/qhs-0.4.3/qhs-0.4.3.tar.gz";
+      sha256 = "191015m47qdxzi8w5pvadgv95g8vk7v2gr76jzfgglyjy6zhb5wb";
+    };
+  } (warnAfterVersion "0.4.2" super.qhs);
+
   # Fix build with time >= 1.10 while retaining compat with time < 1.9
   mbox = appendPatch ./patches/mbox-time-1.10.patch (
     overrideCabal {
@@ -2521,12 +2530,12 @@ with haskellLib;
         doJailbreak
         # 2022-12-02: Hackage release lags behind actual releases: https://github.com/PostgREST/postgrest/issues/2275
         (overrideSrc rec {
-          version = "14.12";
+          version = "14.13";
           src = pkgs.fetchFromGitHub {
             owner = "PostgREST";
             repo = "postgrest";
             rev = "v${version}";
-            hash = "sha256-9Y14sDjHf51qv78DGIrcoU1S/nSHOhc6lGM9wRlegMs=";
+            hash = "sha256-F34fAoNBcww9n6MsxYTjuBorOMcFzmo8nEj8rRomcrs=";
           };
         })
       ];

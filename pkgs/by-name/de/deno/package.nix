@@ -22,6 +22,7 @@
   git,
   python3,
   esbuild,
+  runCommand,
 
   # self for passthru
   deno,
@@ -32,17 +33,17 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "deno";
-  version = "2.7.14";
+  version = "2.8.2";
 
   src = fetchFromGitHub {
     owner = "denoland";
     repo = "deno";
     tag = "v${finalAttrs.version}";
     fetchSubmodules = true; # required for tests
-    hash = "sha256-tkZc89JOhXCdMVSAOQYGR6HDe7KmCI5/haLH1RP2p7I=";
+    hash = "sha256-WtACDLrC1c7KxkoQgYrNavykkm8+tZmF46UU1YrLwVs=";
   };
 
-  cargoHash = "sha256-bFQLsAF4hFBRw04VaL+sxvxIZ9p7nXOLSr2BIZKcwiI=";
+  cargoHash = "sha256-Og+owcfHfdFJ08Xtiye2IEvKWd2Q/7f7QzQ/898IOcQ=";
 
   patches = [
     ./patches/0002-tests-replace-hardcoded-paths.patch
@@ -242,7 +243,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   passthru = {
     updateScript = ./update.sh;
-    tests = (callPackage ./tests { }) // {
+    tests = (import ./tests { inherit deno runCommand lib; }) // {
       build-with-unit-tests = deno.overrideAttrs (fa: {
         # The tools test suite requires building the test server
         dontBuild = false;

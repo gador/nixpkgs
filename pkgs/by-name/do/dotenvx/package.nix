@@ -7,16 +7,16 @@
 
 buildNpmPackage (finalAttrs: {
   pname = "dotenvx";
-  version = "1.66.0";
+  version = "1.71.2";
 
   src = fetchFromGitHub {
     owner = "dotenvx";
     repo = "dotenvx";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-dW/7dD24zCyGwKf6QDtT6WRglHJwJwI+peiPdmdxoOQ=";
+    hash = "sha256-51mmOF03j+JpyE4fyoqmZdgHtAOPhdEQiUTTATPFujM=";
   };
 
-  npmDepsHash = "sha256-jDqlcRMU2nzL4l1N/cFhYFpXOur9+RH4JFb7Sgdd7wU=";
+  npmDepsHash = "sha256-3+Dn4XE5BH3QfeHVILLP/3ZESmhbYuzfT6IAIOLCJkQ=";
 
   dontNpmBuild = true;
 

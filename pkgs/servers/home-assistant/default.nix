@@ -150,6 +150,11 @@ let
           tag = version;
           hash = "sha256-NwGGNN6LC3gvE8zoVL5meNWMbqZjJ+6PcU2ebJTfJmU=";
         };
+
+        # ancient pinned version requires pkg_resources
+        nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [
+          self.setuptools_80
+        ];
       });
 
       # Pinned due to API changes in 0.1.0
@@ -265,7 +270,7 @@ let
   extraBuildInputs = extraPackages python3Packages;
 
   # Don't forget to run update-component-packages.py after updating
-  hassVersion = "2026.6.2";
+  hassVersion = "2026.7.3";
 
 in
 python3Packages.buildPythonApplication rec {
@@ -286,13 +291,13 @@ python3Packages.buildPythonApplication rec {
     owner = "home-assistant";
     repo = "core";
     tag = version;
-    hash = "sha256-wDGXJoo1R2YX2qNRsMYNHm94WCsSHsC7ihCW6w8YAD8=";
+    hash = "sha256-P3XpShQivIG39i4inhhFe5lOWKIJWuWOdiIUxpfaH8Y=";
   };
 
   # Secondary source is pypi sdist for translations
   sdist = fetchPypi {
     inherit pname version;
-    hash = "sha256-XpFnxxa1liRUm8KEoI73t9wAfnsLKC3G56vrgkcIqR0=";
+    hash = "sha256-zC95f1/p71jag7ex0EGoa5gQobab17a+VDBc7h9YBFA=";
   };
 
   build-system = with python3Packages; [
@@ -324,6 +329,12 @@ python3Packages.buildPythonApplication rec {
     (replaceVars ./patches/ffmpeg-path.patch {
       ffmpeg = "${lib.getExe ffmpeg-headless}";
     })
+
+    # https://github.com/home-assistant/core/pull/172893
+    ./patches/pyjwt-2.13-compat.patch
+
+    # remove is_xdist_controller usage
+    ./patches/syrupy-5.5-compat.patch
   ];
 
   postPatch = ''

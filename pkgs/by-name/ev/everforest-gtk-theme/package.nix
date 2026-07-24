@@ -23,6 +23,9 @@ stdenvNoCC.mkDerivation {
     # remove when merged
     # https://github.com/Fausto-Korpsvart/Everforest-GTK-Theme/pull/34
     ./fix-install-script.patch
+    # remove when merged
+    # https://github.com/Fausto-Korpsvart/Everforest-GTK-Theme/pull/35
+    ./gtk3-remove-border-spacing.patch
   ];
 
   propagatedUserEnvPkgs = [
@@ -68,7 +71,7 @@ stdenvNoCC.mkDerivation {
     description = "Everforest colour palette for GTK";
     homepage = "https://github.com/Fausto-Korpsvart/Everforest-GTK-Theme";
     license = lib.licenses.gpl3Only;
-    maintainers = with lib.maintainers; [ jn-sena ];
+    maintainers = [ ];
     platforms = lib.platforms.unix;
   };
 }

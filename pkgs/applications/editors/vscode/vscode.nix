@@ -24,7 +24,6 @@ let
   plat =
     {
       x86_64-linux = "linux-x64";
-      x86_64-darwin = "darwin";
       aarch64-linux = "linux-arm64";
       aarch64-darwin = "darwin-arm64";
       armv7l-linux = "linux-armhf";
@@ -35,17 +34,16 @@ let
 
   hash =
     {
-      x86_64-linux = "sha256-L975R3F779LgaFTL4B6ZtImPd1LyXhImnDgCPmO5PI8=";
-      x86_64-darwin = "sha256-Sygw/VkIiyV+iABylgFpTiHs0f5dS6NYPWSm5BNh9tQ=";
-      aarch64-linux = "sha256-jcFC668WKAjlYju33RI6poAKnhm3fL1hO16alUwjwv4=";
-      aarch64-darwin = "sha256-AY6WeDzGEH5zXRosN1H/osxC3e5j0Hs9s2Ys2xe1UxI=";
-      armv7l-linux = "sha256-LqofnnZid/I0lVTyhC7yHD+Fxz4dSBxKJ8n+lp2uucQ=";
+      x86_64-linux = "sha256-cieB7O7HQ2oJVFT4OfmaToXHh6pFPpBk7dltKZ8CSVM=";
+      aarch64-linux = "sha256-G5F497a4aL79ijDC3P1mP58w1aA+LmxpSljnU30zbOI=";
+      aarch64-darwin = "sha256-zBuCRa+EqMafAZahkJP1IajO1ceIIbOfDn5Qwl0Hw90=";
+      armv7l-linux = "sha256-O39xDcl34Qiafmi7OQn0AYBvqC4Yn7IyOLR/vsI2uHs=";
     }
     .${system} or throwSystem;
 
   # Please backport all compatible updates to the stable release.
   # This is important for the extension ecosystem.
-  version = "1.123.0";
+  version = "1.129.1";
 
   # The update server (update.code.visualstudio.com) expects the version path
   # segment in X.Y.Z form, so we normalize X.Y to X.Y.0 (e.g. "1.110" → "1.110.0").
@@ -53,7 +51,7 @@ let
   downloadVersion = lib.versions.pad 3 version;
 
   # This is used for VS Code - Remote SSH test
-  rev = "6a44c352bd24569c417e530095901b649960f9f8";
+  rev = "8a7abeba6e03ea3af87bfbce9a1b7e48fed567b8";
 in
 buildVscode {
   pname = "vscode" + lib.optionalString isInsiders "-insiders";
@@ -86,7 +84,7 @@ buildVscode {
     src = fetchurl {
       name = "vscode-server-${rev}.tar.gz";
       url = "https://update.code.visualstudio.com/commit:${rev}/server-linux-x64/stable";
-      hash = "sha256-i034bIsaPlxlVFNY5cKf/ftWPy17SFokbFUMa+zeLng=";
+      hash = "sha256-LVd4zd90R8sM96tWe9gJacO2KFMQkruoZEO8kI3tzzg=";
     };
     stdenv = stdenvNoCC;
   };
@@ -128,7 +126,6 @@ buildVscode {
     ];
     platforms = [
       "x86_64-linux"
-      "x86_64-darwin"
       "aarch64-darwin"
       "aarch64-linux"
       "armv7l-linux"

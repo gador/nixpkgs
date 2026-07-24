@@ -9,14 +9,14 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "secretspec";
-  version = "0.12.0";
+  version = "0.16.0";
 
   src = fetchCrate {
     inherit (finalAttrs) pname version;
-    hash = "sha256-gPavr9V/mtr7mfdmgaVkE6GwIfal44JUOPR/SW1ZPqY=";
+    hash = "sha256-YiKud3dfw6QmZbKVCY9FD5vrxJs9bE6++BvEeaDUiEs=";
   };
 
-  cargoHash = "sha256-ZO+vwclanqZ8z8mXTP3ytwMqsKauMceR/soPC3vXNmo=";
+  cargoHash = "sha256-tXZ1KUjZWgddh8wD3oyeZWDe5XqdknyEQ0eu4LXPrf0=";
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [ dbus ];
@@ -26,7 +26,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   meta = {
     description = "Declarative secrets, every environment, any provider";
     homepage = "https://secretspec.dev";
-    license = with lib.licenses; [ asl20 ];
+    license = lib.licenses.asl20;
     maintainers = with lib.maintainers; [
       domenkozar
       sandydoo

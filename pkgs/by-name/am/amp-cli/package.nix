@@ -20,14 +20,13 @@ let
     # supported x86_64 CPUs instead of depending on the build user's CPU flags.
     x86_64-linux = "linux-x64-baseline";
     aarch64-linux = "linux-arm64";
-    x86_64-darwin = "darwin-x64";
     aarch64-darwin = "darwin-arm64";
   };
 
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "amp-cli";
-  version = "0.0.1780564400-g2007df";
+  version = "0.0.1784391370-g49c6a1";
 
   src = finalAttrs.passthru.sources.${stdenvNoCC.hostPlatform.system};
 
@@ -78,10 +77,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
         url = "https://static.ampcode.com/cli/${finalAttrs.version}/amp-${platform}.gz";
         hash =
           {
-            x86_64-linux = "sha256-7hUa1Qs1pNH2+31rrc9T99eDQ9Vq+CSwxROISyPqogY=";
-            aarch64-linux = "sha256-ThT2J1YBoZM5+YanRbL40GyxYQtK/xyDqac8fv0gfZs=";
-            x86_64-darwin = "sha256-VnuMqXVzqge5jgduxB+woYLVZkFtu92MEsEsrh4tJgE=";
-            aarch64-darwin = "sha256-gYAI+eQitglQTBtuilHkHKd8rsYsJ7s2QKoFQR85l6o=";
+            x86_64-linux = "sha256-x7p8BIQbu/ylyCkE63NZQUYfOn5nzwvwqXRWYbW4Q8w=";
+            aarch64-linux = "sha256-X2xQzlu2VfucXii92mFWsp1Ab8blBORtT/BE0kcZi6g=";
+            aarch64-darwin = "sha256-8jj4+dtc54eaFHVlCYKdX9F3s/qrCVICgi5Dyi+n3cg=";
           }
           .${system'};
       }

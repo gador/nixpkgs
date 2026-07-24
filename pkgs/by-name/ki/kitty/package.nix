@@ -50,21 +50,21 @@
 with python3Packages;
 buildPythonApplication rec {
   pname = "kitty";
-  version = "0.47.2";
+  version = "0.48.0";
   pyproject = false;
 
   src = fetchFromGitHub {
     owner = "kovidgoyal";
     repo = "kitty";
     tag = "v${version}";
-    hash = "sha256-hRQ/1EMBt04Er1OfLg1W9fIma3NZBHZklW1N4DmFBpM=";
+    hash = "sha256-+x3saXQw+6BzBYfwwur0DiTaJZVNgOYKJ4UVzeScbtk=";
   };
 
   goModules =
     (buildGo126Module {
       pname = "kitty-go-modules";
       inherit src version;
-      vendorHash = "sha256-zZZDrWzl2q/o4f52diE0YDV/MdYfsdKWWjQ0ej2bBTM=";
+      vendorHash = "sha256-nxPca7xDgxQd8vXbGKGuKXmB5vu0d3me//m8AULJZ6o=";
     }).goModules;
 
   buildInputs = [

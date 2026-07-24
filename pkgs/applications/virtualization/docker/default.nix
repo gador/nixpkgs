@@ -420,18 +420,18 @@ in
 
   docker_29 =
     let
-      version = "29.5.3";
+      version = "29.6.2";
     in
     callPackage dockerGen {
       inherit version;
       cliRev = "v${version}";
-      cliHash = "sha256-ZYfBWNVp7w8ZKdRA6bmDVQV4UEp+t8lWehInvtfysxM=";
+      cliHash = "sha256-WpPSePMCfWAVxCkX1nZyI+sra/Vug009ZPmnVKDaX0I=";
       mobyRev = "docker-v${version}";
-      mobyHash = "sha256-D+XjHsKUFgMBCQsFI825JIGHEQmDt3NQCwpTdu6XSc8=";
-      runcRev = "v1.3.5";
-      runcHash = "sha256-Swphxbu/OLkUrfRjLMZIVGwYb7AN0xHdyxm0ysAVam0=";
-      containerdRev = "v2.2.4";
-      containerdHash = "sha256-F0lw7zh4V9JlFQGkE4RNT1VLX8WWLgZAAvbP12jnRMw=";
+      mobyHash = "sha256-zrvrZCRUuiZ2vixZNOUFeGmDehHzSI+FzDMzV1gMqMc=";
+      runcRev = "v1.3.6";
+      runcHash = "sha256-cBMYZOElWHQ4OkF2NlYJSZrlW4833WD8CRJRkkXeKJc=";
+      containerdRev = "v2.2.6";
+      containerdHash = "sha256-Ngo9x847cXFYPnj/0I+g7BeV7e1/5T2YXfA1zkIdiPg=";
       tiniRev = "369448a167e8b3da4ca5bca0b3307500c3371828";
       tiniHash = "sha256-jCBNfoJAjmcTJBx08kHs+FmbaU82CbQcf0IVjd56Nuw=";
     };

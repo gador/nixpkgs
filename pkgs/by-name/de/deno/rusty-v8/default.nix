@@ -1,21 +1,18 @@
 {
   lib,
   fetchFromGitHub,
-  fetchpatch,
   rustPlatform,
   rustc,
-  rustc-unwrapped,
   rust-bindgen,
-  rust-analyzer,
   rustfmt,
   cargo,
-  clippy,
   llvmPackages ? rustc.llvmPackages,
   pkg-config,
   stdenv,
   glib,
   glibc,
   icu,
+  libffi,
   python3,
   gn,
   ninja,
@@ -29,20 +26,24 @@ let
     name = "rusty-v8-rust-toolchain";
     paths = [
       rustc
-      rustc-unwrapped
       rust-bindgen
-      rust-analyzer
       rustfmt
       cargo
-      clippy
       llvmPackages.libclang.lib
+      # To provide about the same tools as the upstream rust toolchain, the following inputs are also needed.
+      # But they are not actually needed, and to avoid unnecessary rebuilds, we are not adding them.
+      #rustc-unwrapped
+      #rust-analyzer
+      #clippy
     ];
-    postBuild = ''
-      mkdir -p "$out/lib/rustlib/src/rust"
-      cp -r '${rustPlatform.rustcSrc}'/* "$out/lib/rustlib/src/rust/"
-      chmod u+w "$out/lib/rustlib/src/rust/library/"
-      ln -s '${rustPlatform.rustVendorSrc}' "$out/lib/rustlib/src/rust/library/vendor"
-    '';
+    /*
+      postBuild = ''
+        mkdir -p "$out/lib/rustlib/src/rust"
+        cp -r '${rustPlatform.rustcSrc}'/* "$out/lib/rustlib/src/rust/"
+        chmod u+w "$out/lib/rustlib/src/rust/library/"
+        ln -s '${rustPlatform.rustVendorSrc}' "$out/lib/rustlib/src/rust/library/vendor"
+      '';
+    */
   };
 
   clangBasePath = symlinkJoin {
@@ -70,14 +71,14 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "rusty-v8";
-  version = "149.2.0";
+  version = "149.4.0";
 
   src = fetchFromGitHub {
     owner = "denoland";
     repo = "rusty_v8";
     tag = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-OAwfrSU1bu80+qcseUHtScVLZCTe9mY3NEfq0+hmVMg=";
+    hash = "sha256-n4dKtki9ov0lWBeLmMDI4Tpk8zQ8YYSf04QW6DTYisY=";
   };
 
   patches = [
@@ -89,7 +90,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     ./librusty_v8-darwin-fix-__rust_no_alloc_shim_is_unstable_v2.patch
   ];
 
-  cargoHash = "sha256-dkuvWJaDPmsU25f3UGifWl2GvYku6+7Htk9tm5JVpLU=";
+  cargoHash = "sha256-bGqg/6sfBaF/JpObgXyP4Mh+4P9zfuzd454m4wjluGw=";
 
   nativeBuildInputs = [
     llvmPackages.clang
@@ -106,6 +107,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   buildInputs = [
     glib
     icu
+    libffi
   ]
   ++ lib.optionals stdenv.targetPlatform.isDarwin [
     apple-sdk_15
@@ -123,6 +125,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     RUSTC_BOOTSTRAP = 1;
     EXTRA_GN_ARGS = lib.concatStringsSep " " (
       [
+        "use_system_libffi=true"
         "use_sysroot=false" # prevent download of debian sysroot
         "clang_version=\"${lib.versions.major llvmPackages.clang.version}\""
         "rustc_version=\"${rustc.version}\""

@@ -28,7 +28,7 @@ in
 
 stdenv.mkDerivation (finalAttrs: {
   name = "wildergarden-maim";
-  version = "1.1.1-unstable-2025-12-17";
+  version = "1.1.1-unstable-2026-07-23";
 
   strictDeps = true;
   __structuredAttrs = true;
@@ -36,8 +36,8 @@ stdenv.mkDerivation (finalAttrs: {
   src = fetchFromGitHub {
     owner = "ArdenButterfield";
     repo = "Maim";
-    rev = "181fe240ff99b446858f054074f8241401304e84";
-    hash = "sha256-Ht8Mj8nViXyQm/uHabSxYG1RuJj60MEsCJmISSrn6x0=";
+    rev = "985ed209436d02fb9f805ec983f4ab2c1c37d40a";
+    hash = "sha256-Cmxo74H0DDolHhlsnn+rxawsbtjz+FtfzSWBi7DEcuo=";
     fetchSubmodules = true;
   };
 
@@ -77,23 +77,25 @@ stdenv.mkDerivation (finalAttrs: {
     alsa-lib
   ];
 
-  # Needed for standalone
-  NIX_LDFLAGS = "-lX11";
-
   cmakeFlags = [
     (lib.cmakeFeature "LAME_LIB" "lib/lame/libmp3lame/.libs/libmp3lame.a")
   ];
 
-  env.NIX_CFLAGS_COMPILE = toString [
-    # juce, compiled in this build as part of a Git submodule, uses `-flto` as
-    # a Link Time Optimization flag, and instructs the plugin compiled here to
-    # use this flag to. This breaks the build for us. Using _fat_ LTO allows
-    # successful linking while still providing LTO benefits. If our build of
-    # `juce` was used as a dependency, we could have patched that `-flto` line
-    # in our juce's source, but that is not possible because it is used as a
-    # Git Submodule.
-    "-ffat-lto-objects"
-  ];
+  env = {
+    NIX_CFLAGS_COMPILE = toString [
+      # juce, compiled in this build as part of a Git submodule, uses `-flto` as
+      # a Link Time Optimization flag, and instructs the plugin compiled here to
+      # use this flag to. This breaks the build for us. Using _fat_ LTO allows
+      # successful linking while still providing LTO benefits. If our build of
+      # `juce` was used as a dependency, we could have patched that `-flto` line
+      # in our juce's source, but that is not possible because it is used as a
+      # Git Submodule.
+      "-ffat-lto-objects"
+    ];
+
+    # Needed for standalone
+    NIX_LDFLAGS = "-lX11";
+  };
 
   installPhase = ''
     runHook preInstall

@@ -27,7 +27,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "gst-devtools";
-  version = "1.28.5";
+  version = "1.28.6";
 
   outputs = [
     "out"
@@ -36,7 +36,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   src = fetchurl {
     url = "https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-${finalAttrs.version}.tar.xz";
-    hash = "sha256-dFkEXbMdbkRgC8vgEdySV1AmiHDnuQ9+ego69KIcCeU=";
+    hash = "sha256-FNQfquA2GSUflZWdPVe/ZcYQaDiztUIY3JXHE14euhM=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
@@ -88,6 +88,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   mesonFlags = [
     (lib.mesonEnable "doc" enableDocumentation)
+    # dots-viewer requires nix 0.23.2, which is too old to build on loongarch64
+    (lib.mesonEnable "dots_viewer" (!stdenv.hostPlatform.isLoongArch64))
   ];
 
   cargoRoot = "dots-viewer";

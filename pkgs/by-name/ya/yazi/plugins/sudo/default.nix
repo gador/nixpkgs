@@ -5,13 +5,13 @@
 }:
 mkYaziPlugin {
   pname = "sudo.yazi";
-  version = "0-unstable-2026-05-07";
+  version = "0-unstable-2026-08-26";
 
   src = fetchFromGitHub {
     owner = "TD-Sky";
     repo = "sudo.yazi";
-    rev = "afd61cedbcd13c549c552766755645069561d28c";
-    hash = "sha256-5wa4fdYo7wOXOzdrigWMtADZIL/7alG8Jw7r8iWz9yA=";
+    rev = "74e17fe22810521430223ed10fb997cdce5c008d";
+    hash = "sha256-+wjSDVkeL4K/1wVAPL7qph6TCMTWF/WYUghw4ggNYa8=";
   };
 
   meta = {

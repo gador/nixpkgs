@@ -9,16 +9,16 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "panache";
-  version = "3.0.2";
+  version = "3.6.1";
 
   src = fetchFromGitHub {
     owner = "jolars";
     repo = "panache";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-2pu/vU9TdJMBMR7Znw93NzYso3QoxPoGWhVO4SMX5A0=";
+    hash = "sha256-zUSx97thgYaVcQr1wImMLsey075XERNTOdZdOIIMbmw=";
   };
 
-  cargoHash = "sha256-UdDzuf7IejygkZpKkmdUy7kv+vODDfT1U6UVL5lnASE=";
+  cargoHash = "sha256-lf65tFVeEr5rIhC95GojSFNb3SEcp6DOFVNox9H9fB0=";
 
   nativeBuildInputs = [
     installShellFiles

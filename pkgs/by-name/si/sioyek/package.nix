@@ -15,13 +15,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "sioyek";
-  version = "2.0.0-unstable-2026-07-21";
+  version = "2.0.0-unstable-2026-08-18";
 
   src = fetchFromGitHub {
     owner = "ahrm";
     repo = "sioyek";
-    rev = "efc88cd7e0985e81d1707c907968088c44f75aea";
-    hash = "sha256-dOjWV9NlTY0L9SK960TcVw02aSThYF9GcbmkTN9BUa0=";
+    rev = "d0b2c1915ececf8394c355b9e4dcdd675154f5d0";
+    hash = "sha256-Mun68PZXpSuU8xzo0wmBbQgGwGoLPkfDhgz6dKxeIDI=";
   };
 
   buildInputs = [

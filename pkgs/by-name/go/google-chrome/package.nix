@@ -1,10 +1,11 @@
 {
+  bintools,
   fetchurl,
   lib,
   makeWrapper,
   patchelf,
   stdenvNoCC,
-  bintools,
+  testers,
 
   # Linked dynamic libraries.
   alsa-lib,
@@ -178,8 +179,8 @@ let
   ];
 
   linux = stdenvNoCC.mkDerivation (finalAttrs: {
-    inherit pname meta passthru;
-    version = "151.0.7922.71";
+    inherit pname meta;
+    version = "152.0.7977.64";
 
     src =
       let
@@ -194,8 +195,8 @@ let
         url = "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${finalAttrs.version}-1_${debArch}.deb";
         hash =
           {
-            amd64 = "sha256-yGyvxpfs24glkxLO9H5GTRJ4ZDYQUAp8kQTmuxrzulw=";
-            arm64 = "sha256-2NPhv8ktOHURVNPTDfy06MiiXmMNilPWCwawNLVemqQ=";
+            amd64 = "sha256-Tq4HNqgS2byFHNKTf3rwDkfbr4MFhF7tRScD/wCYc8c=";
+            arm64 = "sha256-bMq3mnr+HRdMieKM8NWiZebohV/ztFxqIVGmXX3a6eg=";
           }
           .${debArch};
       };
@@ -296,15 +297,20 @@ let
     postInstall = lib.optionalString withSymlink ''
       ln -s $out/bin/google-chrome-stable $out/bin/google-chrome
     '';
+
+    passthru = {
+      updateScript = ./update.sh;
+      tests.version = testers.testVersion { package = finalAttrs.finalPackage; };
+    };
   });
 
   darwin = stdenvNoCC.mkDerivation (finalAttrs: {
-    inherit pname meta passthru;
-    version = "151.0.7922.72";
+    inherit pname meta;
+    version = "152.0.7977.65";
 
     src = fetchurl {
-      url = "http://dl.google.com/release2/chrome/jzy33whkrvxpy4bxsfmxnqtcwi_151.0.7922.72/GoogleChrome-151.0.7922.72.dmg";
-      hash = "sha256-KQybAFcO48waFskPomdFmx8jAsUVAm4jJe7mHAVaSyE=";
+      url = "http://dl.google.com/release2/chrome/hojsgpdatugdlbpbk6whstg6m4_152.0.7977.65/GoogleChrome-152.0.7977.65.dmg";
+      hash = "sha256-a3r/7DSXVfQJKNujF2xu5KPTLjJk3JLE+oFrAwktPAc=";
     };
 
     dontPatch = true;
@@ -337,9 +343,12 @@ let
     postInstall = lib.optionalString withSymlink ''
       ln -s $out/bin/google-chrome-stable $out/bin/google-chrome
     '';
-  });
 
-  passthru.updateScript = ./update.sh;
+    passthru = {
+      updateScript = ./update.sh;
+      tests.version = testers.testVersion { package = finalAttrs.finalPackage; };
+    };
+  });
 
   meta = {
     description = "Freeware web browser developed by Google";

@@ -14,7 +14,7 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "folia-major";
-  version = "0.6.8";
+  version = "0.7.0";
 
   strictDeps = true;
   __structuredAttrs = true;
@@ -23,12 +23,12 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     owner = "chthollyphile";
     repo = "folia-major";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-wC6HUeSeKYupGG6TfZrmuO7XZ5xQWnlntkH/FPXoIwA=";
+    hash = "sha256-vVWE4k5GDyGuv20rLjR4DNMN+A6qyBNzUyJYNvAZo64=";
   };
 
   npmDeps = fetchNpmDeps {
     inherit (finalAttrs) src;
-    hash = "sha256-JvpobXMszpFU1rgdRHrtzhotBMO5aTptpVyK6T49xMM=";
+    hash = "sha256-N4sD1R921+1lviUBbgRejqm4Angb/XIpBFm8cuUP8Zc=";
   };
 
   nativeBuildInputs = [

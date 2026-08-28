@@ -12,17 +12,19 @@ let
 
   # Only placeholders reach the world-readable Nix store; the install
   # script substitutes the real secrets at runtime.
+  dbConfig =
+    cfg.database
+    // optionalAttrs (cfg.databasePasswordFile != null) {
+      password = "@databasePassword@";
+    };
+
   flarumInstallConfig = pkgs.writeText "config.json" (
     builtins.toJSON {
       debug = false;
       offline = false;
 
       baseUrl = cfg.baseUrl;
-      databaseConfiguration =
-        cfg.database
-        // optionalAttrs (cfg.databasePasswordFile != null) {
-          password = "@databasePassword@";
-        };
+      databaseConfiguration = dbConfig;
       adminUser = {
         username = cfg.adminUser;
         password =
@@ -34,6 +36,25 @@ let
       };
     }
   );
+
+  phpFormat = pkgs.formats.php { };
+
+  configPhpFile = phpFormat.generate "flarum-config.php" {
+    debug = false;
+    database = dbConfig;
+    url = cfg.baseUrl;
+    paths = {
+      api = "api";
+      admin = "admin";
+    };
+    headers = {
+      poweredByHeader = true;
+      referrerPolicy = "same-origin";
+    };
+    queue = {
+      driver = "sync";
+    };
+  };
 in
 {
   options.services.flarum = {
@@ -174,6 +195,25 @@ in
         Only set this to true if you are certain you are working with a fresh, empty database.
       '';
     };
+
+    adoptConfig = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to let this module manage a pre-existing config.php,
+        such as a hand-maintained one (typically with
+        {option}`createDatabaseLocally` = false).
+
+        By default, a config.php this module didn't create is left alone:
+        {option}`baseUrl` and {option}`database` are not applied to it, so
+        real settings can't get silently overwritten by their defaults.
+
+        Before enabling this, make sure {option}`baseUrl` and
+        {option}`database` already match the file's real values. Once
+        enabled, config.php is regenerated from these options on every
+        activation, and anything in the file not covered by them is lost.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -266,24 +306,43 @@ in
         cp -f ${cfg.package}/share/php/flarum/{extend.php,site.php,flarum} .
         ln -sf ${cfg.package}/share/php/flarum/vendor .
         ln -sf ${cfg.package}/share/php/flarum/public/index.php public/
+
+        ${optionalString cfg.adoptConfig "touch .flarum-installed"}
+
+        # config.php with no marker means we didn't write it, so leave it alone.
+        # This check must come before the guard below: that guard also touches
+        # the marker, which would make this check pass for the wrong reason.
+        if [ ! -f .flarum-installed ] && [ -f config.php ]; then
+          echo "flarum-install: config.php exists but wasn't written by this module; leaving it untouched." >&2
+          echo "flarum-install: set services.flarum.adoptConfig = true to adopt it." >&2
+        else
       ''
       + optionalString (cfg.createDatabaseLocally && cfg.database.driver == "mysql") ''
-        if [ ! -f config.php ]; then
-          install -m 0600 ${flarumInstallConfig} /tmp/flarum-install.json
-          ${optionalString (cfg.initialAdminPasswordFile != null) ''
-            ${pkgs.replace-secret}/bin/replace-secret '@adminPassword@' \
-              ${escapeShellArg cfg.initialAdminPasswordFile} /tmp/flarum-install.json
-          ''}
-          ${optionalString (cfg.databasePasswordFile != null) ''
-            ${pkgs.replace-secret}/bin/replace-secret '@databasePassword@' \
-              ${escapeShellArg cfg.databasePasswordFile} /tmp/flarum-install.json
-          ''}
-          php flarum install --file=/tmp/flarum-install.json
-          # config.php contains the database password; stateDir is world-readable
-          chmod 600 config.php
+        if [ ! -f .flarum-installed ]; then
+          if [ ! -f config.php ]; then
+            install -m 0600 ${flarumInstallConfig} /tmp/flarum-install.json
+            ${optionalString (cfg.initialAdminPasswordFile != null) ''
+              ${pkgs.replace-secret}/bin/replace-secret '@adminPassword@' \
+                ${escapeShellArg cfg.initialAdminPasswordFile} /tmp/flarum-install.json
+            ''}
+            ${optionalString (cfg.databasePasswordFile != null) ''
+              ${pkgs.replace-secret}/bin/replace-secret '@databasePassword@' \
+                ${escapeShellArg cfg.databasePasswordFile} /tmp/flarum-install.json
+            ''}
+            php flarum install --file=/tmp/flarum-install.json
+          fi
+          touch .flarum-installed
         fi
       ''
       + ''
+          touch .flarum-installed
+          install -m 0600 ${configPhpFile} config.php
+          ${optionalString (cfg.databasePasswordFile != null) ''
+            ${pkgs.replace-secret}/bin/replace-secret '@databasePassword@' \
+              ${escapeShellArg cfg.databasePasswordFile} config.php
+          ''}
+        fi
+
         if [ -f config.php ]; then
           php flarum migrate
           php flarum cache:clear

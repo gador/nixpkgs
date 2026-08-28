@@ -189,14 +189,14 @@ lib.makeExtensible (
 
       nixComponents_2_35 =
         (nixDependencies.callPackage ./modular/packages.nix rec {
-          version = "2.35.1";
+          version = "2.35.2";
           inherit teams;
           otherSplices = generateSplicesForNixComponents "nixComponents_2_35";
           src = removeFunctionalTests commonDisabledTests (fetchFromGitHub {
             owner = "NixOS";
             repo = "nix";
             tag = version;
-            hash = "sha256-ldhnx4+Ya3OfRT9Sh7Nzk+H+9D3CjonomPBjGSfXdJk=";
+            hash = "sha256-C/YEm/5IPiAMxQH5aHlkwgQMkLqK7NVsudEWdlzBZAA=";
           });
         }).appendPatches
           [ ];
@@ -208,12 +208,12 @@ lib.makeExtensible (
           src = fetchFromGitHub {
             owner = "NixOS";
             repo = "nix";
-            rev = "f8bb823a23bf6d62f4c8feb792a77702d7a49fe1";
-            hash = "sha256-eWBQ01zjUjTF6VyWzmt6fN6jI+vlCDtqYaJG1McIKpc=";
+            rev = "d8c24e6118d6fb323d4fcd2f311cda9c748452fa";
+            hash = "sha256-SbXYrP5NKa1ySGHvPWE0e39PMOczcyeiXTaxMFsv1vs=";
           };
         in
         (nixDependencies.callPackage ./modular/packages.nix {
-          version = "2.35pre20260619_${lib.substring 0 8 src.rev}";
+          version = "2.36pre20260804_${lib.substring 0 8 src.rev}";
           inherit teams;
           otherSplices = generateSplicesForNixComponents "nixComponents_git";
           src = removeFunctionalTests commonDisabledTests src;

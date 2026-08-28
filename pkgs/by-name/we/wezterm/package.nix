@@ -29,14 +29,14 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "wezterm";
-  version = "0-unstable-2026-07-16";
+  version = "0-unstable-2026-08-23";
 
   src = fetchFromGitHub {
     owner = "wezterm";
     repo = "wezterm";
-    rev = "76b606ec597a3c0263fa60321548637451c0a547";
+    rev = "f93d90350075d3e42566e0557ca36e82ffdcbec1";
     fetchSubmodules = true;
-    hash = "sha256-FLU1R78C1xLPsJ1udBk9bW0BbVry4lGiC0kvPfMI66c=";
+    hash = "sha256-er8IRmDZ65Axr+9qKDrqba6Qbj9MVdiBEH52xmp2ZHo=";
   };
 
   postPatch = ''
@@ -59,7 +59,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   # https://github.com/wezterm/wezterm/blob/main/nix/flake.nix#L134
   auditable = false;
 
-  cargoHash = "sha256-jY7lTOfbT74tAZ7he1xudCN7BUxZBzY+8+e1d2g2v4I=";
+  cargoHash = "sha256-R47aufhkCuHDSKSV8A7n3eGz0S3s0/HP2Sw0keaEX5s=";
 
   nativeBuildInputs = [
     installShellFiles

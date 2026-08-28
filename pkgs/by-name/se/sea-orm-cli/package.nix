@@ -9,14 +9,14 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "sea-orm-cli";
-  version = "2.0.0";
+  version = "2.0.2";
 
   src = fetchCrate {
     inherit (finalAttrs) pname version;
-    hash = "sha256-zapXno3UPgUMsohUxXpldBPScyqYhesR6/9dTXbFsUA=";
+    hash = "sha256-tkyZSsTE1a08AIif5NNkBazASs+pvBgP69CnZhEZkhw=";
   };
 
-  cargoHash = "sha256-sSXa4hOzhnQD1rFvqsGrev7v0P9MUgEoIo0bRoZx7tM=";
+  cargoHash = "sha256-4+rFHOBRyUGF6DXxT4Y54Y2s4F9MGcNF/ELWj/4fPWo=";
 
   strictDeps = true;
   __structuredAttrs = true;

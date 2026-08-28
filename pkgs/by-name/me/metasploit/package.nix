@@ -18,13 +18,13 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "metasploit-framework";
-  version = "6.5.0";
+  version = "6.5.2";
 
   src = fetchFromGitHub {
     owner = "rapid7";
     repo = "metasploit-framework";
     tag = finalAttrs.version;
-    hash = "sha256-X6ed2TWNLa9EvNs9uJBT2VFabcSv7dpFg0uiyc8vOQY=";
+    hash = "sha256-1xeK/0rvJLRhJ3tz5nfuVD/4hV1O75fYby+UaTKW6Bs=";
   };
 
   __structuredAttrs = true;

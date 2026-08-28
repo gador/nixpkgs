@@ -13,17 +13,17 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "bichon";
-  version = "1.6.2";
+  version = "2.0.2";
   __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "rustmailer";
     repo = "bichon";
     tag = finalAttrs.version;
-    hash = "sha256-a8BAO93eI2eiFwmvMqUsgL1KZ11X3qg/r/Iw6ckMSTs=";
+    hash = "sha256-0RBMkm5qUnc18JLJ3mRcLgtk9YjKsrMJCmaRat/7wUo=";
   };
 
-  cargoHash = "sha256-GC/2bswme76bAFRCsBHFi3lWnYx5x5H58emCmkiyKfE=";
+  cargoHash = "sha256-F2zuAh9mPdpZUAHvbRTPN0bTTaaBI77goEIjgjkfMXc=";
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;

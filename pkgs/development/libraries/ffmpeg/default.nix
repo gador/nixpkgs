@@ -36,8 +36,8 @@ let
   };
 
   v9 = {
-    version = "9.0";
-    hash = "sha256-LbHwxvylAPh5lb/H+o+9eMVTB9X+tphrxYYX0cqAL0k=";
+    version = "9.0.1";
+    hash = "sha256-9Vnryl9jSSXRfvt2jPsNp7vHWL0KYdWA29D2zDRAZ+0=";
   };
 in
 
@@ -75,7 +75,7 @@ rec {
   # unversioned aliases to allow for quicker migration to new releases,
   # but can pin one of the versioned variants if they do not work with
   # the current default version.
-  ffmpeg = ffmpeg_8;
-  ffmpeg-headless = ffmpeg_8-headless;
-  ffmpeg-full = ffmpeg_8-full;
+  ffmpeg = ffmpeg_9;
+  ffmpeg-headless = ffmpeg_9-headless;
+  ffmpeg-full = ffmpeg_9-full;
 }

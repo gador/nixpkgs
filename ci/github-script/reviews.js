@@ -30,7 +30,13 @@ const reviewUsers = [
  *  reviewKey?: string,
  * }} DismissReviewsProps
  */
-async function dismissReviews({ github, context, core, dry, reviewKey }) {
+export async function dismissReviews({
+  github,
+  context,
+  core,
+  dry,
+  reviewKey,
+}) {
   const pull_number = context.payload.pull_request?.number
   if (!pull_number) {
     core.warning('dismissReviews called outside of pull_request context')
@@ -98,7 +104,7 @@ async function dismissReviews({ github, context, core, dry, reviewKey }) {
           commentResolvedRegex.test(review.body) ||
           (reviewKey && reviewKeyRegex.test(review.body)) ||
           // If we are called by check-commits and the review body is clearly
-          // from `commits.js`, then we can safely dismiss the review.
+          // from `commits.ts`, then we can safely dismiss the review.
           // This helps with pre-existing reviews (before the comments were added).
           (reviewKey &&
             reviewKey === 'check-commits' &&
@@ -170,7 +176,7 @@ async function dismissReviews({ github, context, core, dry, reviewKey }) {
  *  reviewKey: string,
  * }} PostReviewProps
  */
-async function postReview({
+export async function postReview({
   github,
   context,
   core,
@@ -261,9 +267,4 @@ async function postReview({
       })
     }
   }
-}
-
-module.exports = {
-  dismissReviews,
-  postReview,
 }

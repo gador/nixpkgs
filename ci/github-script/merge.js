@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { classify } from './supportedBranches.js'
+import { classify } from './supportedBranches.ts'
 
 function runChecklist({
   committers,
@@ -71,7 +71,7 @@ function runChecklist({
         pull_request.head.ref.startsWith('backport-'),
       'Opened by a [committer](https://github.com/orgs/NixOS/teams/nixpkgs-committers).':
         committers.has(pull_request.user.id),
-      'Opened by [@r-ryantm](https://nix-community.github.io/nixpkgs-update/r-ryantm/).':
+      'Opened by [@r-ryantm](https://nixos.github.io/nixpkgs-update/r-ryantm/).':
         pull_request.user.login === 'r-ryantm',
     },
     'PR is not a draft': !pull_request.draft,
@@ -84,7 +84,7 @@ function runChecklist({
 
   if (user) {
     checklist[
-      `${user.login} is a member of [@NixOS/nixpkgs-maintainers](https://github.com/orgs/NixOS/teams/nixpkgs-maintainers).`
+      `${user.login} is a member of [@NixOS/nixpkgs-maintainers](https://github.com/orgs/NixOS/teams/nixpkgs-maintainers) (_see [requesting a new invitation](https://github.com/NixOS/rfc39-record/blob/main/README.md#requesting-a-new-invitation)_).`
     ] = userIsMaintainer
     if (allByName) {
       // We can only determine the below, if all packages are in by-name, since

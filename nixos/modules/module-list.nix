@@ -912,6 +912,7 @@
   ./services/misc/gitolite.nix
   ./services/misc/gitweb.nix
   ./services/misc/gollum.nix
+  ./services/misc/gophernicus.nix
   ./services/misc/gotenberg.nix
   ./services/misc/gpsd.nix
   ./services/misc/graphical-desktop.nix
@@ -958,6 +959,7 @@
   ./services/misc/nzbhydra2.nix
   ./services/misc/octoprint.nix
   ./services/misc/ollama.nix
+  ./services/misc/ollaya.nix
   ./services/misc/ombi.nix
   ./services/misc/omnom.nix
   ./services/misc/open-webui.nix
@@ -1257,7 +1259,6 @@
   ./services/networking/gnunet.nix
   ./services/networking/go-autoconfig.nix
   ./services/networking/go-camo.nix
-  ./services/networking/go-neb.nix
   ./services/networking/go-shadowsocks2.nix
   ./services/networking/gobgpd.nix
   ./services/networking/godns.nix

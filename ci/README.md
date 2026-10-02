@@ -48,7 +48,7 @@ To ensure security and a focused utility, the bot adheres to specific limitation
   - approved by a [committer][@NixOS/nixpkgs-committers].
   - backported via label.
   - opened by a [committer][@NixOS/nixpkgs-committers].
-  - opened by [@r-ryantm](https://nix-community.github.io/nixpkgs-update/r-ryantm/).
+  - opened by [@r-ryantm](https://nixos.github.io/nixpkgs-update/r-ryantm/).
 - The user attempting to merge is a member of [@NixOS/nixpkgs-maintainers].
 - The user attempting to merge is a maintainer of all packages touched by the PR.
 - No [committer][@NixOS/nixpkgs-committers] has an outstanding "changes requested" review.
@@ -104,7 +104,7 @@ For the purposes of CI, branches in the NixOS/nixpkgs repository are classified 
 
 Some branches also have a version component, which is either `unstable` or `YY.MM`.
 
-`ci/github-script/supportedBranches.js` is a script imported by CI to classify the base and head branches of a Pull Request.
+`ci/github-script/supportedBranches.ts` is a script imported by CI to classify the base and head branches of a Pull Request.
 This classification will then be used to skip certain jobs.
 This script can also be run locally to print basic test cases.
 

@@ -166,7 +166,7 @@ let
         # udev's 80-drivers.rules file, which contains rules for
         # automatically calling modprobe.
         ${lib.optionalString (!config.boot.hardwareScan) ''
-          ln -s /dev/null $out/80-drivers.rules
+          ln -sf /dev/null $out/80-drivers.rules
         ''}
       '';
 
@@ -444,20 +444,13 @@ in
 
     boot.kernelParams = lib.mkIf (!config.networking.usePredictableInterfaceNames) [ "net.ifnames=0" ];
 
-    boot.initrd.extraUdevRulesCommands =
-      lib.mkIf (!config.boot.initrd.systemd.enable && config.boot.initrd.services.udev.rules != "")
-        ''
-          cat <<'EOF' > $out/99-local.rules
-          ${config.boot.initrd.services.udev.rules}
-          EOF
-        '';
-
     boot.initrd.services.udev.rules = nixosInitrdRules;
 
     boot.initrd.systemd.additionalUpstreamUnits = [
       "initrd-udevadm-cleanup-db.service"
       "systemd-udevd-control.socket"
       "systemd-udevd-kernel.socket"
+      "systemd-udevd-varlink.socket"
       "systemd-udevd.service"
       "systemd-udev-trigger.service"
     ];

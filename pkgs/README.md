@@ -49,6 +49,11 @@ Before adding a new package, please consider the following questions:
 
 If any of these questions' answer is no, then you should probably not add the package.
 
+> [!NOTE]
+> Many upstream developers submit their own projects for inclusion in Nixpkgs.
+> While these PRs are welcomed, this is often a sign that the package doesn't yet meet the userbase requirements.
+> Consider waiting for another user of your project to submit it instead.
+
 Special care has to be taken with security-critical software components.
 Because entries in the Nix store are inert and do nothing by themselves, packages should be considered by their intended use, e.g. when used together with a NixOS module.
 
@@ -762,14 +767,14 @@ For very simple tests, they can be written inline:
 
 ```nix
 # ... ,
-{ yq-go }:
+{ lib, yq-go }:
 
 buildGoModule rec {
   # …
 
   passthru.tests = {
     simple = runCommand "${pname}-test" { } ''
-      echo "test: 1" | ${yq-go}/bin/yq eval -j > $out
+      echo "test: 1" | ${lib.getExe yq-go} eval -j > $out
       [ "$(cat $out | tr -d $'\n ')" = '{"test":1}' ]
     '';
   };
@@ -845,7 +850,11 @@ stdenv.mkDerivation {
 Create `tests.nix` in the package directory:
 
 ```nix
-{ runCommand, phoronix-test-suite }:
+{
+  lib,
+  runCommand,
+  phoronix-test-suite,
+}:
 
 let
   inherit (phoronix-test-suite) pname version;
@@ -853,14 +862,14 @@ let
 in
 runCommand "${pname}-tests" { meta.timeout = 60; } ''
   # automatic initial setup to prevent interactive questions
-  ${phoronix-test-suite}/bin/phoronix-test-suite enterprise-setup >/dev/null
+  ${lib.getExe phoronix-test-suite} enterprise-setup >/dev/null
   # get version of installed program and compare with package version
-  if [[ `${phoronix-test-suite}/bin/phoronix-test-suite version` != *"${version}"*  ]]; then
+  if [[ `${lib.getExe phoronix-test-suite} version` != *"${version}"*  ]]; then
     echo "Error: program version does not match package version"
     exit 1
   fi
   # run dummy command
-  ${phoronix-test-suite}/bin/phoronix-test-suite dummy_module.dummy-command >/dev/null
+  ${lib.getExe phoronix-test-suite} dummy_module.dummy-command >/dev/null
   # needed for Nix to register the command as successful
   touch $out
 ''
@@ -1310,7 +1319,7 @@ Each entry corresponds to a vulnerable version of a package; as a consequence:
 - One entry can contain several CVEs;
 - A single package can be concerned by several entries.
 
-Maintainers are encouraged to [subscribe to notifications](https://tracker.security.nixos.org/subscriptions/) for the packages they maintain.
+Maintainers are encouraged to [subscribe to notifications](https://tracker.security.nixos.org/user/subscriptions) for the packages they maintain.
 
 #### Triaging and Fixing
 

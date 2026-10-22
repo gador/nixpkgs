@@ -1,6 +1,7 @@
 {
   autoPatchelfHook,
   buildNpmPackage,
+  callPackage,
   fetchFromGitHub,
   lib,
   libuv,
@@ -13,7 +14,7 @@
 
 buildNpmPackage (finalAttrs: {
   pname = "paseo";
-  version = "0.10.3";
+  version = "0.12.0";
 
   __structuredAttrs = true;
   strictDeps = true;
@@ -22,12 +23,12 @@ buildNpmPackage (finalAttrs: {
     owner = "getpaseo";
     repo = "paseo";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-yI/H8XPC0lLdmokePJ4qyVxaV+/PsgePzQupumm5LPQ=";
+    hash = "sha256-vi1LplKz2f4bRQgJi5PFwJSih4WEv6Uh0CRfwi1oEuU=";
   };
 
   nodejs = nodejs_22;
 
-  npmDepsHash = "sha256-uG7EkoQMVLk5CzDEbJbR5aPxeq59x4vjF21JGatxD7k=";
+  npmDepsHash = "sha256-ObBdUmNSW+vDjzA7EbCDfZrB0nYDmcWmWe+UCoTMh/M=";
 
   npmRebuildFlags = [ "--ignore-scripts" ];
 
@@ -71,8 +72,13 @@ buildNpmPackage (finalAttrs: {
       cp -a "$path" "$out/lib/paseo/$path"
     done < daemon-files.txt
 
+    # The CLI resolves this export to locate the supervisor without loading it.
+    cp packages/server/dist/server/server/exports.js \
+      $out/lib/paseo/packages/server/dist/server/server/
+
     nodePty=packages/server/node_modules/node-pty
-    cp -a "$nodePty/build" "$out/lib/paseo/$nodePty/"
+    mkdir -p "$out/lib/paseo/$nodePty/build"
+    cp -a "$nodePty/build/Release" "$out/lib/paseo/$nodePty/build/"
 
     # Root package.json lets node resolve the workspace layout when the
     # CLI/server bin starts from $out.
@@ -93,7 +99,18 @@ buildNpmPackage (finalAttrs: {
     runHook postInstall
   '';
 
-  passthru.updateScript = nix-update-script { };
+  passthru = {
+    desktop = callPackage ./desktop.nix {
+      inherit (finalAttrs)
+        meta
+        nodejs
+        npmDeps
+        src
+        version
+        ;
+    };
+    updateScript = nix-update-script { };
+  };
 
   meta = {
     description = "Orchestrate multiple coding agents from desktop and mobile";

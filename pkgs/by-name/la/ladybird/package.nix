@@ -14,6 +14,7 @@
   pkg-config,
   curlFull, # Websocket support
   libavif,
+  libicns,
   angle, # libEGL
   brotli,
   cpptrace,
@@ -77,23 +78,25 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "ladybird";
-  version = "0-unstable-2026-09-18";
+  version = "0-unstable-2026-10-14";
 
   src = fetchFromGitHub {
     owner = "LadybirdBrowser";
     repo = "ladybird";
-    rev = "b90af890b56cbd51c452d929fe71abcb8adaa36f";
-    hash = "sha256-CfSC0zEn1VUZaoBHi4a91n/QLTdpapygVf9c/v44X9E=";
+    rev = "41e923c58147fd7ff64dcbc1ea52456ddf235c3c";
+    hash = "sha256-LQAe+TkqdpWU0ipq3pkuEwx0fhl0RlTPG+xxEBAjTMY=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit (finalAttrs) pname version src;
-    hash = "sha256-UshQ0YBl5TLbrEanqsNVeXgONYEux2bgBhI4ISby0Qc=";
+    hash = "sha256-r4HKvfwDqcH3nuS72+PmgP9xmlG5yPvmxtGrwbTodSU=";
   };
 
   patches = [
     # https://github.com/LadybirdBrowser/ladybird/issues/11772
     ./build-information-source-archive.patch
+    # https://github.com/LadybirdBrowser/ladybird/issues/12564
+    ./webgl-generation-order.patch
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     # https://github.com/LadybirdBrowser/ladybird/issues/11875
@@ -103,6 +106,20 @@ stdenv.mkDerivation (finalAttrs: {
 
   postPatch = ''
     sed -i '/iconutil/d' UI/CMakeLists.txt
+
+
+    # https://github.com/LadybirdBrowser/ladybird/pull/12751
+    # New Rust releases can deprecate APIs used by this snapshot.
+    substituteInPlace Meta/CMake/rust_crate.cmake \
+      --replace-fail 'set(RUSTC_TARGET_FLAGS -Dwarnings ' 'set(RUSTC_TARGET_FLAGS '
+
+    # Upstream suffixes its reduced FFmpeg build to coexist with system FFmpeg.
+    # Use nixpkgs' FFmpeg, which already provides the additional decoders.
+    substituteInPlace Meta/CMake/check_for_dependencies.cmake \
+      --replace-fail libavcodec-ladybird libavcodec \
+      --replace-fail libavformat-ladybird libavformat \
+      --replace-fail libavutil-ladybird libavutil \
+      --replace-fail libswresample-ladybird libswresample
 
     perl -0pi -e \
       's/find_package\(ICU 78\.[0-9]+ EXACT REQUIRED COMPONENTS data i18n uc\)/find_package(ICU ${icu78.version} EXACT REQUIRED COMPONENTS data i18n uc)/ or die "ICU dependency not found\n"' \
@@ -150,6 +167,7 @@ stdenv.mkDerivation (finalAttrs: {
   ++ lib.optionals stdenv.hostPlatform.isLinux [ glslang ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     makeWrapper
+    libicns
     rcodesign
   ];
 
@@ -192,6 +210,15 @@ stdenv.mkDerivation (finalAttrs: {
       gnFlags = prev.gnFlags ++ [
         "extra_cflags+=[\"-DSKCMS_DLL\"]"
       ];
+      postInstall =
+        (prev.postInstall or "")
+        + lib.optionalString stdenv.hostPlatform.isDarwin ''
+          # Ladybird's native font loader uses SkTypeface_Mac::MakeFromStream.
+          install -Dm644 ../../src/ports/SkTypeface_mac_ct.h \
+            $out/include/skia/src/ports/SkTypeface_mac_ct.h
+          install -Dm644 ../../src/utils/mac/SkUniqueCFRef.h \
+            $out/include/skia/src/utils/mac/SkUniqueCFRef.h
+        '';
     }))
     (wuffs.overrideAttrs (prev: {
       # Ladybird includes the stable 0.3 single-file library.
@@ -242,8 +269,6 @@ stdenv.mkDerivation (finalAttrs: {
     "-DCMAKE_INSTALL_LIBEXECDIR=libexec"
   ];
 
-  # FIXME: Add an option to -DENABLE_QT=ON on macOS to use Qt rather than Cocoa for the GUI
-
   # ld: [...]/OESVertexArrayObject.cpp.o: undefined reference to symbol 'glIsVertexArrayOES'
   # ld: [...]/libGL.so.1: error adding symbols: DSO missing from command line
   # https://github.com/LadybirdBrowser/ladybird/issues/371#issuecomment-2616415434
@@ -252,6 +277,8 @@ stdenv.mkDerivation (finalAttrs: {
   postInstall = lib.optionalString stdenv.hostPlatform.isDarwin ''
     mkdir -p $out/Applications $out/bin
     mv $out/bundle/Ladybird.app $out/Applications
+    png2icns "$out/Applications/Ladybird.app/Contents/Resources/app_icon.icns" \
+      ${finalAttrs.src}/UI/Icons/macos/app_icon.iconset/icon_{16x16,32x32,128x128,256x256,512x512,512x512@2x}.png
     makeWrapper "$out/Applications/Ladybird.app/Contents/MacOS/Ladybird" "$out/bin/Ladybird"
   '';
 
@@ -291,7 +318,7 @@ stdenv.mkDerivation (finalAttrs: {
     ];
 
   meta = {
-    description = "Browser using the SerenityOS LibWeb engine with a Qt or Cocoa GUI";
+    description = "Browser using the SerenityOS LibWeb engine with a Qt GUI";
     homepage = "https://ladybird.org";
     license = lib.licenses.bsd2;
     maintainers = with lib.maintainers; [

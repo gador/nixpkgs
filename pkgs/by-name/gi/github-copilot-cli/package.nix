@@ -23,15 +23,15 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "github-copilot-cli";
-  version = "1.0.88";
+  version = "1.0.98";
 
   src = fetchurl {
     url = "https://github.com/github/copilot-cli/releases/download/v${finalAttrs.version}/github-copilot-${finalAttrs.version}-${platform}.tgz";
     hash =
       {
-        "aarch64-darwin" = "sha256-SfXKoFgpRaBMVhn46oFoCxyMJ2WIgpDPis+QPimFMVs=";
-        "x86_64-linux" = "sha256-w4YmnuG/RLrFFNorsMaypHVGYx8C4pT8Wowg0bG5kP8=";
-        "aarch64-linux" = "sha256-OMULaI8oE9VwRsm8C0CHLSA9xhoJ9HbfyOW2w2anY4w=";
+        "aarch64-darwin" = "sha256-JsYWXLRbzhs3o6jWu81ITi2TjPUT1ZcMvfnvDai5KnA=";
+        "x86_64-linux" = "sha256-pPX/6cooiGypsfiQFpmjpFZQJl27RzzBdXcsv8e4io8=";
+        "aarch64-linux" = "sha256-jAlbr0kiWueOUWMy1Qa4rQil2mD6pBu5OSXb1s4pkKc=";
       }
       .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
   };
@@ -91,7 +91,7 @@ stdenv.mkDerivation (finalAttrs: {
   passthru.updateScript = ./update.sh;
 
   meta = {
-    description = "GitHub Copilot CLI brings the power of Copilot coding agent directly to your terminal";
+    description = "CLI client for GitHub Copilot";
     homepage = "https://github.com/github/copilot-cli";
     changelog = "https://github.com/github/copilot-cli/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.unfree;

@@ -5,7 +5,7 @@
   fetchNpmDeps,
   buildGoModule,
   buildNpmPackage,
-  systemd,
+  systemdLibs,
   installShellFiles,
   versionCheckHook,
   nixosTests,
@@ -55,6 +55,10 @@ buildGoModule (finalAttrs: {
   patchPhase = ''
     cp -av ${finalAttrs.frontend}/share internal/web/ui/dist
 
+    # Use only the system CA store. The embedded fallback bundle does not get cacert updates.
+    substituteInPlace flowcmd/flowcmd.go \
+      --replace-fail '_ "golang.org/x/crypto/x509roots/fallback"' ""
+
     goSumBeylaVersion="$(grep beyla go.sum | head -1 | cut -d ' ' -f2)"
     if [[ "$goSumBeylaVersion" != "${beylaVersion}" ]];then
       echo "beyla version in go.sum ($goSumBeylaVersion) doesn't match the one set in the expression (${beylaVersion}), needs updating."
@@ -96,7 +100,7 @@ buildGoModule (finalAttrs: {
     // lib.optionalAttrs (stdenv.hostPlatform.isLinux) {
       # Uses go-systemd, which uses libsystemd headers.
       # https://github.com/coreos/go-systemd/issues/351
-      NIX_CFLAGS_COMPILE = "-I${lib.getDev systemd}/include";
+      NIX_CFLAGS_COMPILE = "-I${lib.getDev systemdLibs}/include";
     };
 
   nativeBuildInputs = [
@@ -123,7 +127,7 @@ buildGoModule (finalAttrs: {
   postFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
     patchelf \
       --set-rpath "${
-        lib.makeLibraryPath [ (lib.getLib systemd) ]
+        lib.makeLibraryPath [ (lib.getLib systemdLibs) ]
       }:$(patchelf --print-rpath $out/bin/alloy)" \
       $out/bin/alloy
   '';

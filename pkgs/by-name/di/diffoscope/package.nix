@@ -112,12 +112,12 @@ in
 # Note: when upgrading this package, please run the list-missing-tools.sh script as described below!
 python.pkgs.buildPythonApplication rec {
   pname = "diffoscope";
-  version = "332";
+  version = "333";
   pyproject = true;
 
   src = fetchurl {
     url = "https://diffoscope.org/archive/diffoscope-${version}.tar.bz2";
-    hash = "sha256-eNmrIxt0yQlby20WRXgKBVXZ2jNnNLpksOvr25dXJvI=";
+    hash = "sha256-KHjYLCd2f5DRQRhG0L97Og8b20dZUyJq4BtWShVKFos=";
   };
 
   outputs = [
@@ -277,10 +277,16 @@ python.pkgs.buildPythonApplication rec {
 
   makeWrapperArgs = lib.optionals enableBloat (
     [
-      "--prefix PATH : ${lib.makeBinPath [ hdf5 ]}"
+      "--prefix"
+      "PATH"
+      ":"
+      (lib.makeBinPath [ hdf5 ])
     ]
     ++ lib.optionals stdenv.hostPlatform.isDarwin [
-      "--prefix DYLD_LIBRARY_PATH : ${lib.makeLibraryPath [ hdf5 ]}"
+      "--prefix"
+      "DYLD_LIBRARY_PATH"
+      ":"
+      (lib.makeLibraryPath [ hdf5 ])
     ]
   );
 

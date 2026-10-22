@@ -6,7 +6,7 @@
 }:
 buildGoModule (finalAttrs: {
   pname = "cloudflare-dynamic-dns";
-  version = "4.5.10";
+  version = "4.5.12";
 
   __structuredAttrs = true;
 
@@ -14,10 +14,10 @@ buildGoModule (finalAttrs: {
     owner = "zebradil";
     repo = "cloudflare-dynamic-dns";
     tag = finalAttrs.version;
-    hash = "sha256-DW4Lijn+oghw790mV6YVlGJceYc8kpnIwx4cIb2AAc0=";
+    hash = "sha256-ccdub6FAr0NzJbtTgb+XvN6UZA7yxAk1oMRGgcSOPt0=";
   };
 
-  vendorHash = "sha256-qAT6q+bNZhWbNpy06fwc6aIcfb0G3s4jmSWY/xkC4po=";
+  vendorHash = "sha256-CnPahmDsAivydK0KxOphHuKrPZI8ee8OGOvSEPSBIWs=";
 
   subPackages = ".";
 

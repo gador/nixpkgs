@@ -28,8 +28,8 @@
 
   withAppleEmojis ? false,
 }:
-assert lib.warnIf (commandLineArgs != "")
-  "`commandLineArgs` has been deprecated and will be removed in the future. Consider creating a wrapper script or a desktop entry with your desired flags."
+assert lib.throwIf (commandLineArgs != "")
+  "`commandLineArgs` has been removed. Consider creating a wrapper script or a desktop entry with your desired flags."
   true;
 let
   nodejs = nodejs_24;
@@ -42,16 +42,16 @@ let
     inherit nodejs;
   };
 
-  webrtc = callPackage ./webrtc.nix { };
+  webrtc = callPackage ./webrtc.nix { ringrtcSrc = ringrtc.src; };
   ringrtc = callPackage ./ringrtc.nix { inherit webrtc; };
 
-  version = "8.28.0";
+  version = "8.31.0";
 
   src = fetchFromGitHub {
     owner = "signalapp";
     repo = "Signal-Desktop";
     tag = "v${version}";
-    hash = "sha256-zQQ5z9abHoVSYt9d/buN7G9gsG+JhaBW1xgcja98iZI=";
+    hash = "sha256-p4VFmMc5WaQCJAz+FVNkqURuO+5vK95BcHgcrzp5dG8=";
     # Emoji font files will be added in `postFetch` if `withAppleEmojis` is enabled. They
     # are fetched separately below.
     postFetch = ''
@@ -84,7 +84,7 @@ let
         pnpm config set fetch-timeout 300000
       '';
       fetcherVersion = 4;
-      hash = "sha256-vYMT1yBAZ+ABQN9KXfBX4j08i3xKw5BUfpG2kYqs8MY=";
+      hash = "sha256-Rf/hyJVuFvhCM4LTTEiiqvrl76gzNekO2UXMhbSOFUc=";
     };
 
     strictDeps = true;
@@ -191,7 +191,7 @@ stdenv.mkDerivation (finalAttrs: {
       pnpm config set fetch-timeout 300000
     '';
     fetcherVersion = 4;
-    hash = "sha256-vYMT1yBAZ+ABQN9KXfBX4j08i3xKw5BUfpG2kYqs8MY=";
+    hash = "sha256-Rf/hyJVuFvhCM4LTTEiiqvrl76gzNekO2UXMhbSOFUc=";
   };
 
   env = {
@@ -199,7 +199,7 @@ stdenv.mkDerivation (finalAttrs: {
     SIGNAL_ENV = "production";
     # Signal enforces that builds expire 90 days after the last source code change to disallow sending messages from older versions.
     # We set the source-changed date to match the corresponding upstream release date.
-    SOURCE_DATE_EPOCH = 1790198139;
+    SOURCE_DATE_EPOCH = 1792071284;
   };
 
   preBuild = ''

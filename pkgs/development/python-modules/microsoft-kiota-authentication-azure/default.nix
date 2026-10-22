@@ -16,14 +16,14 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "microsoft-kiota-authentication-azure";
-  version = "1.14.1";
+  version = "1.14.4";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "microsoft";
     repo = "kiota-python";
     tag = "microsoft-kiota-authentication-azure-v${finalAttrs.version}";
-    hash = "sha256-O2hwGo7f0soOcPfuwm/Iv9iQ9lLxY1drAKhL5Rl8ciA=";
+    hash = "sha256-8DGTZ/PeUplRJw3rsKpxd6/vl+edv2vb/TOw3lIXrko=";
   };
 
   sourceRoot = "${finalAttrs.src.name}/packages/authentication/azure/";
@@ -46,8 +46,12 @@ buildPythonPackage (finalAttrs: {
 
   pythonImportsCheck = [ "kiota_authentication_azure" ];
 
-  passthru.updateScript = gitUpdater {
-    rev-prefix = "microsoft-kiota-authentication-azure-v";
+  passthru = {
+    # bulk updater uses wrong tag
+    skipBulkUpdate = true;
+    updateScript = gitUpdater {
+      rev-prefix = "microsoft-kiota-authentication-azure-v";
+    };
   };
 
   meta = {

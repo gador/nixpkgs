@@ -26,7 +26,7 @@ stdenv.mkDerivation (finalAttrs: {
       ;
 
     fetcherVersion = 4;
-    hash = "sha256-MWtrbUDTWhPfJ8Uu7SjG4shg3mLPTIOfmywYiygPsFU=";
+    hash = "sha256-7LhcfB/O0p2KipGNe3ixEBe9bYhKRFVdzP8chKwBd3I=";
   };
 
   nativeBuildInputs = [

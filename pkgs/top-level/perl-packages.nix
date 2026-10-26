@@ -599,8 +599,12 @@ with self;
     };
     postPatch = ''
       substituteInPlace Build.PL \
-        --replace "gtk+-2.0" "gtk+-3.0"
+        --replace-fail "gtk+-2.0" "gtk+-3.0"
     '';
+    nativeBuildInputs = [
+      pkgs.pkg-config
+      pkgs.wxwidgets_3_2
+    ];
     propagatedBuildInputs = [
       pkgs.pkg-config
       pkgs.gtk3
@@ -608,6 +612,8 @@ with self;
       ModulePluggable
     ];
     buildInputs = [ LWPProtocolHttps ];
+    strictDeps = true;
+    __structuredAttrs = true;
     meta = {
       description = "Building, finding and using wxWidgets binaries";
       license = with lib.licenses; [
@@ -15367,6 +15373,11 @@ with self;
       pkgs.goocanvas_2
       Gtk3
     ];
+    nativeCheckInputs = [
+      Gtk3
+    ];
+    strictDeps = true;
+    __structuredAttrs = true;
     meta = {
       description = "Perl binding for GooCanvas2 widget using Glib::Object::Introspection";
       license = with lib.licenses; [
@@ -15539,8 +15550,10 @@ with self;
     };
 
     # XXX: It'd be nicer it `GraphViz.pm' could record the path to graphviz.
-    buildInputs = [
+    nativeBuildInputs = [
       pkgs.graphviz
+    ];
+    buildInputs = [
       TestPod
     ];
     propagatedBuildInputs = [
@@ -15551,6 +15564,8 @@ with self;
       XMLXPath
     ];
 
+    strictDeps = true;
+    __structuredAttrs = true;
     meta = {
       description = "Perl interface to the GraphViz graphing tool";
       license = lib.licenses.artistic2;
@@ -33522,6 +33537,11 @@ with self;
       url = "mirror://cpan/authors/id/F/FE/FERREIRA/Term-Size-Perl-0.031.tar.gz";
       hash = "sha256-rppnRssbMF3cj42MpGh4VSucESNiiXHhOidRg4IvIJ4=";
     };
+    # Make build reproducible https://rt.cpan.org/Public/Bug/Display.html?id=127333
+    postPatch = ''
+      substituteInPlace inc/Probe.pm \
+        --replace-fail 'localtime' 'gmtime($ENV{SOURCE_DATE_EPOCH})'
+    '';
     meta = {
       description = "Perl extension for retrieving terminal size (Perl version)";
       license = with lib.licenses; [
@@ -38343,8 +38363,10 @@ with self;
         })
       ];
     env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.cc.isClang "-Wno-return-type";
-    buildInputs = [ pkgs.curl ];
+    nativeBuildInputs = [ pkgs.curl ];
+    strictDeps = true;
     doCheck = false; # performs network access
+    __structuredAttrs = true;
     meta = {
       description = "Perl extension interface for libcurl";
       license = lib.licenses.mit;

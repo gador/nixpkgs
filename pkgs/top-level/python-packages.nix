@@ -2869,6 +2869,8 @@ self: super: with self; {
 
   caldav = callPackage ../development/python-modules/caldav { };
 
+  calendaring-config = callPackage ../development/python-modules/calendaring-config { };
+
   callee = callPackage ../development/python-modules/callee { };
 
   calmjs = callPackage ../development/python-modules/calmjs { };
@@ -6067,6 +6069,8 @@ self: super: with self; {
 
   favicon = callPackage ../development/python-modules/favicon { };
 
+  fdp-scan = callPackage ../development/python-modules/fdp-scan { };
+
   fe25519 = callPackage ../development/python-modules/fe25519 { };
 
   feather-format = callPackage ../development/python-modules/feather-format { };
@@ -6643,8 +6647,6 @@ self: super: with self; {
   furl = callPackage ../development/python-modules/furl { };
 
   furo = callPackage ../development/python-modules/furo { };
-
-  fuse = callPackage ../development/python-modules/fuse-python { inherit (pkgs) fuse; };
 
   fusepy = callPackage ../development/python-modules/fusepy { };
 
@@ -10783,6 +10785,8 @@ self: super: with self; {
 
   memestra = callPackage ../development/python-modules/memestra { };
 
+  memoization = callPackage ../development/python-modules/memoization { };
+
   memory-allocator = callPackage ../development/python-modules/memory-allocator { };
 
   memory-profiler = callPackage ../development/python-modules/memory-profiler { };
@@ -10790,6 +10794,8 @@ self: super: with self; {
   memory-tempfile = callPackage ../development/python-modules/memory-tempfile { };
 
   memray = callPackage ../development/python-modules/memray { };
+
+  menshen-client = callPackage ../development/python-modules/menshen-client { };
 
   meraki = callPackage ../development/python-modules/meraki { };
 
@@ -12433,6 +12439,12 @@ self: super: with self; {
   nvidia-resiliency-ext = callPackage ../development/python-modules/nvidia-resiliency-ext { };
 
   nvmath-python = callPackage ../development/python-modules/nvmath-python { };
+
+  nvtx = callPackage ../development/python-modules/nvtx {
+    # Only for its source and versions. Every CUDA package set from 12.9 on has the same source build, while earlier
+    # ones (possibly the default cudaPackages) use the redistributable.
+    nvtx = pkgs.cudaPackages_13.nvtx;
+  };
 
   nwdiag = callPackage ../development/python-modules/nwdiag { };
 
@@ -14177,6 +14189,8 @@ self: super: with self; {
 
   protobuf-py-ext = callPackage ../development/python-modules/protobuf-py-ext { };
 
+  protobuf-py-pure = callPackage ../development/python-modules/protobuf-py-pure { };
+
   protobuf3-to-dict = callPackage ../development/python-modules/protobuf3-to-dict { };
 
   # Protobuf 4.x
@@ -14214,6 +14228,10 @@ self: super: with self; {
   proton-vpn-local-agent = callPackage ../development/python-modules/proton-vpn-local-agent { };
 
   protonup-ng = callPackage ../development/python-modules/protonup-ng { };
+
+  prototext-codec = callPackage ../development/python-modules/prototext-codec { };
+
+  prototext-graph = callPackage ../development/python-modules/prototext-graph { };
 
   prov = callPackage ../development/python-modules/prov { };
 
@@ -14653,6 +14671,8 @@ self: super: with self; {
 
   pybind11-stubgen = callPackage ../development/python-modules/pybind11-stubgen { };
 
+  pybind11_3_0 = callPackage ../development/python-modules/pybind11/3_0.nix { };
+
   pybindgen = callPackage ../development/python-modules/pybindgen { };
 
   pyblackbird = callPackage ../development/python-modules/pyblackbird { };
@@ -14821,7 +14841,7 @@ self: super: with self; {
 
   pyctr = callPackage ../development/python-modules/pyctr { };
 
-  pycuda = callPackage ../development/python-modules/pycuda { inherit (pkgs.stdenv) mkDerivation; };
+  pycuda = callPackage ../development/python-modules/pycuda { };
 
   pycups = callPackage ../development/python-modules/pycups { };
 
@@ -20948,7 +20968,10 @@ self: super: with self; {
         tk = if pythonAtLeast "3.14" then pkgs.tk-9_0 else pkgs.tk-8_6;
       };
 
-  tkinter-gl = callPackage ../development/python-modules/tkinter-gl { };
+  tkinter-gl = callPackage ../development/python-modules/tkinter-gl {
+    inherit (pkgs) mesa;
+    inherit (pkgs.tclPackages.override { inherit (tkinter) tcl tk; }) tkgl;
+  };
 
   tld = callPackage ../development/python-modules/tld { };
 
@@ -21003,6 +21026,8 @@ self: super: with self; {
   tokenspeed-triton-bin = callPackage ../development/python-modules/tokenspeed-triton/bin.nix { };
 
   tokentrim = callPackage ../development/python-modules/tokentrim { };
+
+  toktok-rs = callPackage ../development/python-modules/toktok-rs { };
 
   tololib = callPackage ../development/python-modules/tololib { };
 
@@ -21272,6 +21297,8 @@ self: super: with self; {
 
   tree-sitter-sql = callPackage ../development/python-modules/tree-sitter-sql { };
 
+  tree-sitter-textproto = callPackage ../development/python-modules/tree-sitter-textproto { };
+
   tree-sitter-typescript = callPackage ../development/python-modules/tree-sitter-typescript { };
 
   tree-sitter-yaml = callPackage ../development/python-modules/tree-sitter-yaml { };
@@ -21315,6 +21342,8 @@ self: super: with self; {
   triton-bin = callPackage ../development/python-modules/triton/bin.nix { };
 
   triton-cuda = self.triton.override { cudaSupport = true; };
+
+  triton-kernels = callPackage ../development/python-modules/triton-kernels { };
 
   triton-no-cuda = self.triton.override { cudaSupport = false; };
 

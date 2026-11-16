@@ -125,7 +125,7 @@ in
 
 stdenv'.mkDerivation (finalAttrs: {
   pname = "blender";
-  version = "5.2.2";
+  version = "5.2.3";
 
   strictDeps = true;
   __structuredAttrs = true;
@@ -133,7 +133,7 @@ stdenv'.mkDerivation (finalAttrs: {
   src = fetchzip {
     name = "source";
     url = "https://download.blender.org/source/blender-${finalAttrs.version}.tar.xz";
-    hash = "sha256-r4XT6ZoVwMXieauP5jOC0DdfNOilTmkGu8JPMAFjuDs=";
+    hash = "sha256-umFiI2GnG54t9LQAKUpC2ZHVeq+oN5xmpOf4H+nql6M=";
   };
 
   patches = [
@@ -151,6 +151,10 @@ stdenv'.mkDerivation (finalAttrs: {
       --replace-fail \
         'static const char *static_libs_path = PREFIX "/" BLENDER_INSTALL_LIBDIR;' \
         'static const char *static_libs_path = BLENDER_INSTALL_LIBDIR;'
+
+    # GlfDrawTarget was removed in OpenUSD 26.11; the include is unused
+    substituteInPlace source/blender/render/hydra/viewport_engine.cc \
+      --replace-fail '#include <pxr/imaging/glf/drawTarget.h>' '#include <pxr/base/gf/vec4i.h>'
   ''
   + (lib.optionalString stdenv.hostPlatform.isDarwin ''
     : > build_files/cmake/platform/platform_apple_xcode.cmake

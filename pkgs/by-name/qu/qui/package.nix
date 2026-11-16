@@ -73,9 +73,11 @@ buildGo127Module (finalAttrs: {
   # some season-pack tests use non-existent source paths (e.g. /media/...) and
   # assert on a same-filesystem check that resolves them up to /. go's
   # t.TempDir honours $TMPDIR, which defaults to /build. so just point it to
-  # something sane
+  # something sane. We use realpath, because on macOS it's symliked to
+  # /private/tmp during the build, and tests were failing when comparing
+  # non-resolved paths to resolved paths.
   preCheck = ''
-    export TMPDIR=/tmp
+    export TMPDIR="$(realpath /tmp)"
   '';
 
   checkFlags = [
@@ -109,7 +111,7 @@ buildGo127Module (finalAttrs: {
     changelog = "https://github.com/autobrr/qui/releases/tag/v${finalAttrs.version}";
     maintainers = with lib.maintainers; [
       pta2002
-      tmarkus
+      AAAAAASomeThingsFailToEvaluate
     ];
     mainProgram = "qui";
     platforms = lib.platforms.unix;

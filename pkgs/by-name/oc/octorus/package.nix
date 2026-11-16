@@ -6,23 +6,30 @@
   gitMinimal,
   gh,
   makeWrapper,
+  pkg-config,
+  oniguruma,
   versionCheckHook,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "octorus";
-  version = "0.7.2";
+  version = "0.7.3";
 
   src = fetchFromGitHub {
     owner = "ushironoko";
     repo = "octorus";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-qwWCH/Yu9idxaOMNMlSM/RTJgSkpFSyV8VcmnK7DTqI=";
+    hash = "sha256-VsrF7w+NgfJqlNC0BxoC0ti5f6YTd2CLk5HgtjK0xL0=";
   };
 
-  cargoHash = "sha256-wFPeBzbR+/n4gd0y15ToN2XRfsxsCu9if+XT6UTa1GI=";
+  cargoHash = "sha256-epAMROmX0Kgp5SEDCTLy55bF7ArWzhgq8Phhk/2PINY=";
 
-  nativeBuildInputs = [ makeWrapper ];
+  nativeBuildInputs = [
+    makeWrapper
+    pkg-config
+  ];
+
+  buildInputs = [ oniguruma ];
 
   nativeCheckInputs = [
     gitMinimal

@@ -12,6 +12,7 @@
   desktop-file-utils,
   openssl,
   libadwaita,
+  sqlite,
   nix-update-script,
 }:
 stdenv.mkDerivation (finalAttrs: {
@@ -49,9 +50,17 @@ stdenv.mkDerivation (finalAttrs: {
   buildInputs = [
     openssl
     libadwaita
+    sqlite
   ];
 
-  passthru.updateScript = nix-update-script { };
+  mesonBuildType = "release";
+
+  passthru.updateScript = nix-update-script {
+    extraArgs = [
+      "--version-regex"
+      "(.*)(?<!pre)$"
+    ];
+  };
 
   meta = {
     description = "A Bitwarden compatible client designed for mobile Linux ";

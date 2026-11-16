@@ -47,6 +47,9 @@
   "cuda-extending-cuda-package-sets": [
     "index.html#cuda-extending-cuda-package-sets"
   ],
+  "cuda-gpu-unlock": [
+    "index.html#cuda-gpu-unlock"
+  ],
   "cuda-modifying-cuda-package-sets": [
     "index.html#cuda-modifying-cuda-package-sets",
     "index.html#cuda-configuring-cuda-package-sets"
@@ -385,6 +388,9 @@
   ],
   "npm-install-hook-variables": [
     "index.html#npm-install-hook-variables"
+  ],
+  "pkgConfigCheckHook": [
+    "index.html#pkgConfigCheckHook"
   ],
   "pkgs-replacevars": [
     "index.html#pkgs-replacevars",
@@ -1732,6 +1738,24 @@
   "sec-meta-license": [
     "index.html#sec-meta-license"
   ],
+  "sec-meta-license-multiple": [
+    "index.html#sec-meta-license-multiple"
+  ],
+  "lib.licenses.OR": [
+    "index.html#lib.licenses.OR"
+  ],
+  "lib.licenses.AND": [
+    "index.html#lib.licenses.AND"
+  ],
+  "lib.licenses.WITH": [
+    "index.html#lib.licenses.WITH"
+  ],
+  "lib.licenses.PLUS": [
+    "index.html#lib.licenses.PLUS"
+  ],
+  "sec-meta-license-generic": [
+    "index.html#sec-meta-license-generic"
+  ],
   "lib.licenses.free-free": [
     "index.html#lib.licenses.free-free"
   ],
@@ -2489,6 +2513,27 @@
   "sec-checkpoint-build-example": [
     "index.html#sec-checkpoint-build-example"
   ],
+  "sec-pkgs-mkProtonBinDerivation": [
+    "index.html#sec-pkgs-mkProtonBinDerivation"
+  ],
+  "sec-pkgs-mkProtonBinDerivation-inputs": [
+    "index.html#sec-pkgs-mkProtonBinDerivation-inputs"
+  ],
+  "sec-pkgs-mkProtonBinDerivation-update-script": [
+    "index.html#sec-pkgs-mkProtonBinDerivation-update-script"
+  ],
+  "sec-pkgs-mkProtonBinDerivation-examples": [
+    "index.html#sec-pkgs-mkProtonBinDerivation-examples"
+  ],
+  "ex-pkgs-mkProtonBinDerivation": [
+    "index.html#ex-pkgs-mkProtonBinDerivation"
+  ],
+  "ex-pkgs-mkProtonBinDerivation-steamDisplayName": [
+    "index.html#ex-pkgs-mkProtonBinDerivation-steamDisplayName"
+  ],
+  "ex-pkgs-mkProtonBinDerivation-userSettings": [
+    "index.html#ex-pkgs-mkProtonBinDerivation-userSettings"
+  ],
   "sec-redisTestHook": [
     "index.html#sec-redisTestHook"
   ],
@@ -2539,6 +2584,9 @@
   ],
   "ssec-pkgs-dockerTools-buildImage-examples": [
     "index.html#ssec-pkgs-dockerTools-buildImage-examples"
+  ],
+  "ex-desktop-to-darwin-bundle": [
+    "index.html#ex-desktop-to-darwin-bundle"
   ],
   "ex-dockerTools-buildImage": [
     "index.html#ex-dockerTools-buildImage"
@@ -2827,6 +2875,12 @@
   ],
   "desktop-file-utils": [
     "index.html#desktop-file-utils"
+  ],
+  "desktop-to-darwin-bundle": [
+    "index.html#desktop-to-darwin-bundle"
+  ],
+  "desktop-to-darwin-bundle-examples": [
+    "index.html#desktop-to-darwin-bundle-examples"
   ],
   "setup-hook-gdk-pixbuf": [
     "index.html#setup-hook-gdk-pixbuf"
@@ -3323,6 +3377,9 @@
   ],
   "sec-chicken-using": [
     "index.html#sec-chicken-using"
+  ],
+  "sec-chicken-cross": [
+    "index.html#sec-chicken-cross"
   ],
   "sec-chicken-updating-eggs": [
     "index.html#sec-chicken-updating-eggs"
@@ -4635,6 +4692,15 @@
   ],
   "ssec-swiftpm-install-phase": [
     "index.html#ssec-swiftpm-install-phase"
+  ],
+  "ssec-swift-macros": [
+    "index.html#ssec-swift-macros"
+  ],
+  "ssec-swift-macros-open-apple-macros": [
+    "index.html#ssec-swift-macros-open-apple-macros"
+  ],
+  "ssec-swift-macros-xcode-macros": [
+    "index.html#ssec-swift-macros-xcode-macros"
   ],
   "ssec-swift-hooks": [
     "index.html#ssec-swift-hooks"

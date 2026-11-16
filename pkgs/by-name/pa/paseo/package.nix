@@ -7,14 +7,14 @@
   libuv,
   makeWrapper,
   nix-update-script,
-  nodejs_22,
+  nodejs_26,
   python3,
   stdenv,
 }:
 
 buildNpmPackage (finalAttrs: {
   pname = "paseo";
-  version = "0.13.2";
+  version = "0.16.0";
 
   __structuredAttrs = true;
   strictDeps = true;
@@ -23,12 +23,13 @@ buildNpmPackage (finalAttrs: {
     owner = "getpaseo";
     repo = "paseo";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-q9CTVmmdN53rLXaY+/cKz1IbW1OQA9ok9xan4lBSH1E=";
+    hash = "sha256-f07SCDr+Dt0FVtQE8LHOgLB9G5OcWdA9xY8hhMW1X9c=";
   };
 
-  nodejs = nodejs_22;
+  nodejs = nodejs_26;
 
-  npmDepsHash = "sha256-eNiKmiZ3XXZMRZRSoGxUbMn2RtY6AX079vUatBYM+qE=";
+  npmDepsFetcherVersion = 2;
+  npmDepsHash = "sha256-XwINDDXOj7QwBeUI3z+W3r+Pu5bdZRrMjGT96YWYFg4=";
 
   npmRebuildFlags = [ "--ignore-scripts" ];
 
@@ -107,6 +108,7 @@ buildNpmPackage (finalAttrs: {
         meta
         nodejs
         npmDeps
+        npmDepsFetcherVersion
         src
         version
         ;

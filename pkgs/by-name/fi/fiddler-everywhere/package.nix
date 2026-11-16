@@ -8,10 +8,10 @@
 
 appimageTools.wrapType2 (finalAttrs: {
   pname = "fiddler-everywhere";
-  version = "8.2.0";
+  version = "8.4.0";
   src = fetchurl {
     url = "https://downloads.getfiddler.com/linux/fiddler-everywhere-${finalAttrs.version}.AppImage";
-    hash = "sha256-cP9DEnDUj0m3DJ71ASe3b3AH7ljUHOdw4bkQrHkey6I=";
+    hash = "sha256-po0Vb6HXmJfPB7XHhxd1vCdXy262YpRY4BwpwLObBrI=";
   };
 
   extraPkgs = pkgs: [ pkgs.icu ];

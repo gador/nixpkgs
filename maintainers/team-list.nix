@@ -379,7 +379,6 @@ with lib.maintainers;
 
   jetbrains = {
     members = [
-      leona
       theCapypara
       jamesward
     ];
@@ -433,6 +432,7 @@ with lib.maintainers;
   libretro = {
     members = [
       aanderse
+      iedame
       igorcafe
       thiagokokada
     ];
@@ -600,9 +600,7 @@ with lib.maintainers;
   };
 
   node = {
-    members = [ winter ];
-    scope = "Maintain Node.js runtimes and build tooling.";
-    shortName = "Node.js";
+    github = "node";
     enableFeatureFreezePing = true;
   };
 

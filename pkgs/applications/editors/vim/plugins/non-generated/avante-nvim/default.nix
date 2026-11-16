@@ -1,7 +1,9 @@
 {
   lib,
+  aws-lc,
   fetchFromGitHub,
   nix-update-script,
+  oniguruma,
   openssl,
   pkg-config,
   rustPlatform,
@@ -12,18 +14,18 @@
   perl,
 }:
 let
-  version = "0.4.2";
+  version = "0.4.8";
   src = fetchFromGitHub {
     owner = "yetone";
     repo = "avante.nvim";
     tag = "v${version}";
-    hash = "sha256-Xh/Y9dDur5oXJRavAxQIwRNg9/3ofAREkAxmM/0Tyks=";
+    hash = "sha256-Ss+l+ZHWPbYRkBEqJMUj3qb6eZFzb3HJsk3e2+ogvXQ=";
   };
   avante-nvim-lib = rustPlatform.buildRustPackage {
     pname = "avante-nvim-lib";
     inherit version src;
 
-    cargoHash = "sha256-Mtku+MLkDdBYN5xj2x4XbyFXFZ+qTfl1eX2g9VcfpFU=";
+    cargoHash = "sha256-D+5CFU1gejqNTXG8F1Y7Dx8sTyfeLYmHAZYgAoDo+G0=";
 
     nativeBuildInputs = [
       pkg-config
@@ -32,6 +34,8 @@ let
     ];
 
     buildInputs = [
+      aws-lc
+      oniguruma
       openssl
     ];
 

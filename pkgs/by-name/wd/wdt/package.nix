@@ -13,13 +13,13 @@
 
 stdenv.mkDerivation {
   pname = "wdt";
-  version = "1.27.1612021-unstable-2026-10-07";
+  version = "1.27.1612021-unstable-2026-11-02";
 
   src = fetchFromGitHub {
-    owner = "facebook";
+    owner = "meta";
     repo = "wdt";
-    rev = "fa978c431afec70234c4cfafad4f0bc6627549d1";
-    hash = "sha256-H+s0FfLYSRx7WTRR10K4TA6XXQrtXihfT7dMlbdAKjE=";
+    rev = "b9ec88a4fb6517a584e6d4127c05c7af6104a28a";
+    hash = "sha256-xH/KsJtF44csQTPitGUbpvjRai2s7p061XYtv3vUBZg=";
   };
 
   nativeBuildInputs = [ cmake ];
@@ -32,7 +32,7 @@ stdenv.mkDerivation {
   ];
 
   # source is expected to be named wdt
-  # https://github.com/facebook/wdt/blob/43319e59d0c77092468367cdadab37d12d7a2383/CMakeLists.txt#L238
+  # https://github.com/meta/wdt/blob/43319e59d0c77092468367cdadab37d12d7a2383/CMakeLists.txt#L238
   postUnpack = ''
     ln -s $sourceRoot wdt
   '';
@@ -63,7 +63,7 @@ stdenv.mkDerivation {
 
   meta = {
     description = "Warp speed Data Transfer";
-    homepage = "https://github.com/facebook/wdt";
+    homepage = "https://github.com/meta/wdt";
     license = lib.licenses.bsd3;
     maintainers = with lib.maintainers; [ nickcao ];
     platforms = [ "x86_64-linux" ];

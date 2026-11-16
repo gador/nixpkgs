@@ -24,7 +24,7 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "unified-memory-framework";
-  version = "1.2.0";
+  version = "1.3.0";
 
   nativeBuildInputs = [
     cmake
@@ -60,7 +60,7 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "oneapi-src";
     repo = "unified-memory-framework";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-HC4ZtW9rcoY9krWJnhdD/vwborBVKjbaZKyS/5MmRjw=";
+    hash = "sha256-yMFKUUS05obXTI0T3G1QYtT+hbjdjY18BuYueOtRjco=";
   };
 
   strictDeps = true;
@@ -84,6 +84,9 @@ stdenv.mkDerivation (finalAttrs: {
       --replace-fail \
         'set(UMF_LIBS umf_utils umf_ba umf_coarse $<BUILD_INTERFACE:''${UMF_HWLOC_NAME}>)' \
         'set(UMF_LIBS umf_utils umf_ba umf_coarse ''${UMF_HWLOC_NAME})'
+
+    # ctest runs the IPC test scripts directly
+    patchShebangs --build test
   '';
 
   # If included, jemalloc needs to be vendored, as they don't support using a pre-built version

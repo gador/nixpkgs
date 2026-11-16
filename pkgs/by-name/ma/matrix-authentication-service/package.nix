@@ -10,6 +10,7 @@
   pkg-config,
   sqlite,
   zstd,
+  aws-lc,
   stdenv,
   open-policy-agent,
   cctools,
@@ -23,29 +24,28 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "matrix-authentication-service";
-  version = "1.27.1";
+  version = "1.29.0";
 
   src = fetchFromGitHub {
     owner = "element-hq";
     repo = "matrix-authentication-service";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-mWlrhG0jbkN2HhGOHyKjCYT3Rvcr0aqCek+87tnKSP8=";
+    hash = "sha256-ZF7hG8ObUby+5FvZt0xpeW0zpGXjW9hoCpn0lX2wc7c=";
   };
 
   patches = [ ./remove-runtime.patch ];
 
-  cargoHash = "sha256-kQs7u8zX3Kf188SA0iYDQK5Zn6z6oXaASXwiqjI+9hY=";
+  cargoHash = "sha256-mJOPX08G+s6V/6NFwQxRuXTDIDiANE33lqve5uptBTQ=";
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs)
       pname
       version
       src
-      patches
       ;
     inherit pnpm;
     fetcherVersion = 4;
-    hash = "sha256-tbSKI3W/gceZLmv+Ol0MNp2a0gmbKc7imMnTRkFDKHI=";
+    hash = "sha256-nTBLC6nNbXWEQfM6WOabWwQiIC8dyjKF2Hj86PMG/fs=";
   };
 
   pnpmRoot = "frontend";
@@ -63,6 +63,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   buildInputs = [
     sqlite
     zstd
+    aws-lc
   ];
 
   depsBuildBuild = [ buildPackages.stdenv.cc ];
@@ -87,19 +88,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
       --replace-fail ./share/policy.wasm "$out/share/$pname/policy.wasm"
   '';
 
-  preBuild =
-    let
-      buildTarget = stdenv.buildPlatform.rust.rustcTarget;
-      buildTargetUnderscore = lib.replaceString "-" "_" buildTarget;
-    in
-    ''
-      make -C policies
-      (cd "$pnpmRoot" && npm run build)
-
-      # Fix aws-lc-sys cross-compilation
-      export CC_${buildTargetUnderscore}=$CC_FOR_BUILD
-      export CXX_${buildTargetUnderscore}=$CXX_FOR_BUILD
-    '';
+  preBuild = ''
+    make -C policies
+    (cd "$pnpmRoot" && npm run build)
+  '';
 
   # Adapted from https://github.com/element-hq/matrix-authentication-service/blob/v0.20.0/.github/workflows/build.yaml#L75-L84
   postInstall = ''

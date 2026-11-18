@@ -140,9 +140,9 @@ self: super: with self; {
 
   affine = callPackage ../development/python-modules/affine { };
 
-  affine-gaps = callPackage ../development/python-modules/affine-gaps { };
-
   affinegap = callPackage ../development/python-modules/affinegap { };
+
+  affinegaps = callPackage ../development/python-modules/affinegaps { };
 
   afsapi = callPackage ../development/python-modules/afsapi { };
 
@@ -228,6 +228,8 @@ self: super: with self; {
 
   aioamqp = callPackage ../development/python-modules/aioamqp { };
 
+  aioanylist = callPackage ../development/python-modules/aioanylist { };
+
   aioapcaccess = callPackage ../development/python-modules/aioapcaccess { };
 
   aioapns = callPackage ../development/python-modules/aioapns { };
@@ -297,6 +299,8 @@ self: super: with self; {
   aioeafm = callPackage ../development/python-modules/aioeafm { };
 
   aioeagle = callPackage ../development/python-modules/aioeagle { };
+
+  aioecosmart = callPackage ../development/python-modules/aioecosmart { };
 
   aioecowitt = callPackage ../development/python-modules/aioecowitt { };
 
@@ -512,15 +516,7 @@ self: super: with self; {
 
   aioquic = callPackage ../development/python-modules/aioquic { };
 
-  aioquic_1_2 = self.aioquic.overrideAttrs rec {
-    version = "1.2.0";
-
-    src = pkgs.fetchPypi {
-      pname = "aioquic";
-      inherit version;
-      hash = "sha256-+RJjuz9xlIxciRW01Q7jcABPIKQW9n+rPcyQVWx+cZk=";
-    };
-  };
+  aioquic_1_2 = callPackage ../development/python-modules/aioquic_1_2 { };
 
   aioraven = callPackage ../development/python-modules/aioraven { };
 
@@ -749,6 +745,8 @@ self: super: with self; {
   alibabacloud-gateway-oss-util =
     callPackage ../development/python-modules/alibabacloud-gateway-oss-util
       { };
+
+  alibabacloud-gateway-pop = callPackage ../development/python-modules/alibabacloud-gateway-pop { };
 
   alibabacloud-gateway-sls = callPackage ../development/python-modules/alibabacloud-gateway-sls { };
 
@@ -1570,6 +1568,8 @@ self: super: with self; {
   atopile = callPackage ../development/python-modules/atopile { };
 
   atopile-easyeda2kicad = callPackage ../development/python-modules/atopile-easyeda2kicad { };
+
+  atopile-kicad-python = callPackage ../development/python-modules/atopile-kicad-python { };
 
   atproto = callPackage ../development/python-modules/atproto { };
 
@@ -2663,6 +2663,8 @@ self: super: with self; {
   bork = callPackage ../development/python-modules/bork { };
 
   bosch-alarm-mode2 = callPackage ../development/python-modules/bosch-alarm-mode2 { };
+
+  bosch-shc-camera-client = callPackage ../development/python-modules/bosch-shc-camera-client { };
 
   boschshcpy = callPackage ../development/python-modules/boschshcpy { };
 
@@ -6185,6 +6187,8 @@ self: super: with self; {
 
   files-to-prompt = callPackage ../development/python-modules/files-to-prompt { };
 
+  fileseq = callPackage ../development/python-modules/fileseq { };
+
   filetype = callPackage ../development/python-modules/filetype { };
 
   filterpy = callPackage ../development/python-modules/filterpy { };
@@ -6645,6 +6649,8 @@ self: super: with self; {
   fritzconnection = callPackage ../development/python-modules/fritzconnection { };
 
   fronius-modbus = callPackage ../development/python-modules/fronius-modbus { };
+
+  fronius-solarapi = callPackage ../development/python-modules/fronius-solarapi { };
 
   frozendict = callPackage ../development/python-modules/frozendict { };
 
@@ -7282,6 +7288,8 @@ self: super: with self; {
 
   googletrans = callPackage ../development/python-modules/googletrans { };
 
+  googlewifiapi = callPackage ../development/python-modules/googlewifiapi { };
+
   gophish = callPackage ../development/python-modules/gophish { };
 
   gorilla = callPackage ../development/python-modules/gorilla { };
@@ -7361,6 +7369,8 @@ self: super: with self; {
   grammalecte = callPackage ../development/python-modules/grammalecte { };
 
   grandalf = callPackage ../development/python-modules/grandalf { };
+
+  grandstream-home-api = callPackage ../development/python-modules/grandstream-home-api { };
 
   granian = callPackage ../development/python-modules/granian { };
 
@@ -7680,6 +7690,8 @@ self: super: with self; {
   hatch-vcs = callPackage ../development/python-modules/hatch-vcs { };
 
   hatchling = callPackage ../development/python-modules/hatchling { };
+
+  haveniaq = callPackage ../development/python-modules/haveniaq { };
 
   haversine = callPackage ../development/python-modules/haversine { };
 
@@ -10467,6 +10479,8 @@ self: super: with self; {
   looseversion = callPackage ../development/python-modules/looseversion { };
 
   loqedapi = callPackage ../development/python-modules/loqedapi { };
+
+  lorawan-connection = callPackage ../development/python-modules/lorawan-connection { };
 
   loro = callPackage ../development/python-modules/loro { };
 
@@ -14659,6 +14673,8 @@ self: super: with self; {
 
   py7zr = callPackage ../development/python-modules/py7zr { };
 
+  pyaaf2 = callPackage ../development/python-modules/pyaaf2 { };
+
   pyabpoa = toPythonModule (
     pkgs.abpoa.override {
       enablePython = true;
@@ -15254,6 +15270,8 @@ self: super: with self; {
 
   pyfnip = callPackage ../development/python-modules/pyfnip { };
 
+  pyforeca = callPackage ../development/python-modules/pyforeca { };
+
   pyforked-daapd = callPackage ../development/python-modules/pyforked-daapd { };
 
   pyformlang = callPackage ../development/python-modules/pyformlang { };
@@ -15396,6 +15414,8 @@ self: super: with self; {
 
   pyhanko-certvalidator = callPackage ../development/python-modules/pyhanko-certvalidator { };
 
+  pyhaseiq = callPackage ../development/python-modules/pyhaseiq { };
+
   pyhaversion = callPackage ../development/python-modules/pyhaversion { };
 
   pyhcl = callPackage ../development/python-modules/pyhcl { };
@@ -15405,6 +15425,8 @@ self: super: with self; {
   pyheck = callPackage ../development/python-modules/pyheck { };
 
   pyhelty = callPackage ../development/python-modules/pyhelty { };
+
+  pyheltycloud = callPackage ../development/python-modules/pyheltycloud { };
 
   pyheos = callPackage ../development/python-modules/pyheos { };
 
@@ -17201,6 +17223,10 @@ self: super: with self; {
   python-gnupg = callPackage ../development/python-modules/python-gnupg { };
 
   python-google-drive-api = callPackage ../development/python-modules/python-google-drive-api { };
+
+  python-google-maps-routing-api =
+    callPackage ../development/python-modules/python-google-maps-routing-api
+      { };
 
   python-google-nest = callPackage ../development/python-modules/python-google-nest { };
 
@@ -20061,6 +20087,8 @@ self: super: with self; {
   sphinxfeed-lsaffre = callPackage ../development/python-modules/sphinxfeed-lsaffre { };
 
   spidev = callPackage ../development/python-modules/spidev { };
+
+  spinev-ble = callPackage ../development/python-modules/spinev-ble { };
 
   spinners = callPackage ../development/python-modules/spinners { };
 

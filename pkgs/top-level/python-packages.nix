@@ -5448,8 +5448,6 @@ self: super: with self; {
 
   e3-core = callPackage ../development/python-modules/e3-core { };
 
-  e3-testsuite = callPackage ../development/python-modules/e3-testsuite { };
-
   e3nn = callPackage ../development/python-modules/e3nn { };
 
   eagle100 = callPackage ../development/python-modules/eagle100 { };
@@ -8387,8 +8385,6 @@ self: super: with self; {
 
   igloohome-api = callPackage ../development/python-modules/igloohome-api { };
 
-  ignite = callPackage ../development/python-modules/ignite { };
-
   ignorant = callPackage ../development/python-modules/ignorant { };
 
   igraph = callPackage ../development/python-modules/igraph { inherit (pkgs) igraph; };
@@ -8869,8 +8865,6 @@ self: super: with self; {
   jax-cuda13-pjrt = callPackage ../development/python-modules/jax-cuda13-pjrt { };
 
   jax-cuda13-plugin = callPackage ../development/python-modules/jax-cuda13-plugin { };
-
-  jax-jumpy = callPackage ../development/python-modules/jax-jumpy { };
 
   jax-tap = callPackage ../development/python-modules/jax-tap { };
 
@@ -10013,6 +10007,8 @@ self: super: with self; {
         inherit (self) libxml2;
       }
     )).py;
+
+  libzfs = callPackage ../development/python-modules/libzfs { };
 
   liccheck = callPackage ../development/python-modules/liccheck { };
 
@@ -11534,6 +11530,8 @@ self: super: with self; {
   mt-940 = callPackage ../development/python-modules/mt-940 { };
 
   mtcnn = callPackage ../development/python-modules/mtcnn { };
+
+  mtranslate = callPackage ../development/python-modules/mtranslate { };
 
   mujoco = callPackage ../development/python-modules/mujoco { };
 
@@ -13399,6 +13397,8 @@ self: super: with self; {
 
   panel = callPackage ../development/python-modules/panel { };
 
+  panel-material-ui = callPackage ../development/python-modules/panel-material-ui { };
+
   panflute = callPackage ../development/python-modules/panflute { };
 
   panphon = callPackage ../development/python-modules/panphon { };
@@ -14570,8 +14570,6 @@ self: super: with self; {
   py-key-value-aio = callPackage ../development/python-modules/py-key-value-aio { };
 
   py-libnuma = callPackage ../development/python-modules/py-libnuma { };
-
-  py-libzfs = callPackage ../development/python-modules/py-libzfs { };
 
   py-lru-cache = callPackage ../development/python-modules/py-lru-cache { };
 
@@ -16373,6 +16371,7 @@ self: super: with self; {
 
   pysail = callPackage ../development/python-modules/pysail {
     protoc = pkgs.protobuf;
+    inherit (pkgs) zstd;
   };
 
   pysam = callPackage ../development/python-modules/pysam { };
@@ -17691,6 +17690,8 @@ self: super: with self; {
 
   pytorch-bench = callPackage ../development/python-modules/pytorch-bench { };
 
+  pytorch-ignite = callPackage ../development/python-modules/pytorch-ignite { };
+
   pytorch-lightning = callPackage ../development/python-modules/pytorch-lightning { };
 
   pytorch-memlab = callPackage ../development/python-modules/pytorch-memlab { };
@@ -18684,6 +18685,8 @@ self: super: with self; {
   rotary-embedding-torch = callPackage ../development/python-modules/rotary-embedding-torch { };
 
   rouge-score = callPackage ../development/python-modules/rouge-score { };
+
+  roundtrip = callPackage ../development/python-modules/roundtrip { };
 
   routeros-api = callPackage ../development/python-modules/routeros-api { };
 

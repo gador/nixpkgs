@@ -577,6 +577,12 @@
     githubId = 15805292;
     name = "Abdirahman Osman";
   };
+  abhi-kr-2100 = {
+    email = "abhi.kr.2100@gmail.com";
+    github = "abhi-kr-2100";
+    githubId = 66527624;
+    name = "Abhishek Kumar";
+  };
   abhi18av = {
     email = "abhi18av@gmail.com";
     github = "abhi18av";
@@ -2382,6 +2388,13 @@
     githubId = 59250656;
     matrix = "@vegardbm:matrix.org";
   };
+  aras14hd = {
+    email = "aras@aras14.dev";
+    name = "Aras";
+    github = "Aras14HD";
+    githubId = 40068291;
+    matrix = "@aras:beeper.com";
+  };
   arbel-arad = {
     email = "arbel@spacetime.technology";
     github = "arbel-arad";
@@ -2561,6 +2574,12 @@
     github = "arnarg";
     githubId = 1291396;
     name = "Arnar Ingason";
+  };
+  arne-zillhardt = {
+    email = "arne@zillhardt.com";
+    github = "Arne-Zillhardt";
+    githubId = 94059017;
+    name = "Arne Zillhardt";
   };
   arnoutkroeze = {
     email = "nixpkgs@arnoutkroeze.nl";
@@ -3246,6 +3265,12 @@
     github = "bachp";
     githubId = 333807;
     name = "Pascal Bach";
+  };
+  backspace-phill = {
+    name = "backspace-phill";
+    email = "mail@backspace-phill.de";
+    github = "backspace-phill";
+    githubId = 87976190;
   };
   backtail = {
     name = "Max Genson";
@@ -7987,6 +8012,13 @@
     github = "dtvillafana";
     githubId = 82293276;
     name = "David Villafaña";
+  };
+  duckysocks22 = {
+    email = "code@olympus.moe";
+    github = "duckysocks22";
+    githubId = 175066341;
+    name = "Jaiden Jones";
+    keys = [ { fingerprint = "zfetx2opVnPHgBgEycfTBbFMwjC46kVXQgZsckFozQM"; } ];
   };
   dudeofawesome = {
     email = "tourist-04.iced@icloud.com";
@@ -13483,6 +13515,11 @@
     githubId = 77426854;
     name = "Jeff Shelton";
   };
+  jeffdess = {
+    github = "JeffDess";
+    githubId = 6100619;
+    name = "Jean-François Dessureault";
+  };
   jefferyoo = {
     email = "oojefferywm@proton.me";
     github = "jefferyoo";
@@ -15058,6 +15095,12 @@
     email = "kanru@kanru.info";
     matrix = "@kanru:wara.tw";
     keys = [ { fingerprint = "374F F2AD 0A12 935F D0B0  C84F 1B13 2E01 CEC6 AD46"; } ];
+  };
+  kanywst = {
+    email = "niwatakuma@icloud.com";
+    github = "kanywst";
+    githubId = 45947799;
+    name = "kt";
   };
   kaptcha0 = {
     name = "J'C Kabunga";

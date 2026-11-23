@@ -1890,11 +1890,6 @@ with pkgs;
     mkFranzDerivation = callPackage ../applications/networking/instant-messengers/franz/generic.nix { };
   };
 
-  inherit (callPackages ../tools/filesystems/garage { })
-    garage_1
-    garage_2
-    ;
-
   gaugePlugins = recurseIntoAttrs (callPackage ../by-name/ga/gauge/plugins { });
 
   gawd = python3Packages.toPythonApplication python3Packages.gawd;
@@ -2404,6 +2399,7 @@ with pkgs;
   patchutils_0_4_2 = callPackage ../tools/text/patchutils/0.4.2.nix { };
 
   inherit (import ../servers/sql/percona-server pkgs)
+    percona-server_9_7
     percona-server_8_4
     percona-server
     ;
@@ -2880,6 +2876,7 @@ with pkgs;
   flutterPackages-bin = recurseIntoAttrs (callPackage ../development/compilers/flutter { });
   flutterPackages = flutterPackages-bin;
   flutter = flutterPackages.stable;
+  flutter350 = flutterPackages.v3_50;
   flutter347 = flutterPackages.v3_47;
   flutter344 = flutterPackages.v3_44;
   flutter341 = flutterPackages.v3_41;
@@ -3363,6 +3360,8 @@ with pkgs;
 
   hscolour = haskell.lib.compose.justStaticExecutables haskellPackages.hscolour;
 
+  cabal-gild = haskell.lib.compose.justStaticExecutables haskellPackages.cabal-gild;
+
   cabal-install = haskell.lib.compose.justStaticExecutables haskellPackages.cabal-install;
 
   stack =
@@ -3749,6 +3748,7 @@ with pkgs;
     cargo-pgrx_0_17_0
     cargo-pgrx_0_18_0
     cargo-pgrx_0_19_0
+    cargo-pgrx_0_19_1
     cargo-pgrx
     ;
 

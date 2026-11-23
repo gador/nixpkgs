@@ -3,6 +3,7 @@
   aws-lc,
   cacert,
   fetchFromGitHub,
+  installShellFiles,
   nix-update-script,
   pkg-config,
   rustPlatform,
@@ -14,7 +15,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "datadog-pup";
-  version = "2.5.1";
+  version = "2.5.2";
 
   __structuredAttrs = true;
 
@@ -22,10 +23,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "DataDog";
     repo = "pup";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-eGYpg560f3o9/I8TckjW4JgfJfV/6vi1exx/TQr5+Yg=";
+    hash = "sha256-ZUmxodD1he2KwGqHgP6uKFsrSjVfS/8VVNsPk6V3HQQ=";
   };
 
-  cargoHash = "sha256-2LcuZ8dFzdr24d7ySuba7HvEkoryzDgufvpD2whcgPs=";
+  cargoHash = "sha256-/pJH+ECuPB10oW0ugWK0W9Zws+0FGIbyIA/SrVEHF/A=";
 
   postPatch = ''
     # Set SSL_CERT_FILE again after clearing the environment in this test, otherwise it fails
@@ -38,6 +39,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   __darwinAllowLocalNetworking = true;
 
   nativeBuildInputs = [
+    installShellFiles
     pkg-config
   ];
 
@@ -45,6 +47,13 @@ rustPlatform.buildRustPackage (finalAttrs: {
     aws-lc
     zstd
   ];
+
+  postInstall = lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
+    installShellCompletion --cmd pup \
+      --bash <($out/bin/pup completions bash) \
+      --zsh <($out/bin/pup completions zsh) \
+      --fish <($out/bin/pup completions fish)
+  '';
 
   nativeCheckInputs = [
     cacert

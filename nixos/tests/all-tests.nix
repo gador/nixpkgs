@@ -335,6 +335,7 @@ in
   benchexec = runTest ./benchexec.nix;
   bentopdf = handleTest ./bentopdf { };
   beszel = runTest ./beszel.nix;
+  bifrost = runTest ./bifrost.nix;
   binary-cache = runTest {
     imports = [ ./binary-cache.nix ];
     _module.args.compression = "zstd";
@@ -549,7 +550,6 @@ in
   deconz = runTest ./deconz.nix;
   deluge = runTest ./deluge.nix;
   dendrite = runTest ./matrix/dendrite.nix;
-  dep-scan = runTest ./dep-scan.nix;
   dependency-track = runTest ./dependency-track.nix;
   devpi-server = runTest ./devpi-server.nix;
   dex-oidc = runTest ./dex-oidc.nix;
@@ -750,6 +750,7 @@ in
   gerrit = runTest ./gerrit.nix;
   getaddrinfo = runTest ./getaddrinfo.nix;
   geth = runTest ./geth.nix;
+  ghostfolio = runTest ./ghostfolio.nix;
   ghostunnel = runTest ./ghostunnel.nix;
   ghostunnel-modular = runTest ./ghostunnel-modular.nix;
   git-pages-modular = runTest ./git-pages.nix;
@@ -1132,7 +1133,9 @@ in
   };
   meilisearch = runTest ./meilisearch.nix;
   memcached = runTest ./memcached.nix;
+  memgraph = runTest ./memgraph.nix;
   merecat = runTest ./merecat.nix;
+  mesh-llm = runTest ./mesh-llm.nix;
   meshtasticd = runTest ./networking/meshtasticd.nix;
   metabase = runTest ./metabase.nix;
   mihomo = runTest ./mihomo.nix;
@@ -1254,7 +1257,7 @@ in
   networking.scripted = handleTest ./networking/networkd-and-scripted.nix { networkd = false; };
   # TODO: put in networking.nix after the test becomes more complete
   networkingProxy = runTest ./networking-proxy.nix;
-  nextcloud = handleTest ./nextcloud { };
+  nextcloud = import ./nextcloud { inherit runTest lib; };
   nextflow = runTestOn [ "x86_64-linux" ] ./nextflow.nix;
   nextjs-ollama-llm-ui = runTest ./web-apps/nextjs-ollama-llm-ui.nix;
   nexus = runTest ./nexus.nix;
@@ -1339,6 +1342,11 @@ in
   ocsinventory-agent = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./ocsinventory-agent.nix { };
   octoprint = runTest ./octoprint.nix;
   oddjobd = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./oddjobd.nix { };
+  odhcpd = {
+    dhcp = runTest ./odhcpd/dhcp.nix;
+    interfaces = runTest ./odhcpd/interfaces.nix;
+    ra = runTest ./odhcpd/ra.nix;
+  };
   odoo17 = runTest {
     imports = [ ./odoo/single-process.nix ];
     _module.args.package = pkgs.odoo17;
@@ -1496,6 +1504,7 @@ in
   pihole-ftl = import ./pihole-ftl { inherit runTest; };
   pinnwand = runTest ./pinnwand.nix;
   pixelfed = import ./web-apps/pixelfed { inherit runTestOn; };
+  plann = import ./plann.nix { inherit pkgs lib; };
   plantuml-server = runTest ./plantuml-server.nix;
   plasma6 = runTest ./plasma6.nix;
   plausible = import ./plausible.nix { inherit runTest; };

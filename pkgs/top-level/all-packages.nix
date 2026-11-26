@@ -1011,10 +1011,6 @@ with pkgs;
 
   inherit (callPackages ../development/libraries/sdbus-cpp { }) sdbus-cpp sdbus-cpp_2;
 
-  sdkmanager = with python3Packages; toPythonApplication sdkmanager;
-
-  shaperglot = with python3Packages; toPythonApplication shaperglot;
-
   ufolint = with python3Packages; toPythonApplication ufolint;
 
   ventoy-full = ventoy.override {
@@ -1032,13 +1028,9 @@ with pkgs;
     defaultGuiType = "qt5";
   };
 
-  vprof = with python3Packages; toPythonApplication vprof;
-
   waydroid-nftables = waydroid.override { withNftables = true; };
 
   winbox = winbox4;
-
-  bump2version = with python3Packages; toPythonApplication bump2version;
 
   datalad = with python3Packages; toPythonApplication datalad;
 
@@ -1244,6 +1236,8 @@ with pkgs;
 
   arpack-mpi = arpack.override { useMpi = true; };
 
+  aurralPlugins = recurseIntoAttrs (callPackage ../by-name/au/aurral/plugins.nix { });
+
   authentik-outposts = recurseIntoAttrs (callPackages ../by-name/au/authentik/outposts.nix { });
 
   autoflake = with python3.pkgs; toPythonApplication autoflake;
@@ -1406,7 +1400,7 @@ with pkgs;
     haskellPackages.generateOptparseApplicativeCompletions [ "cabal2nix" ] haskellPackages.cabal2nix
   );
 
-  stac-validator = with python3Packages; toPythonApplication stac-validator;
+  stac-valid = with python3Packages; toPythonApplication stac-valid;
 
   stack2nix =
     with haskell.lib;
@@ -1731,12 +1725,9 @@ with pkgs;
     };
   };
 
-  interception-tools = callPackage ../tools/inputmethods/interception-tools { };
   interception-tools-plugins = recurseIntoAttrs {
-    caps2esc = callPackage ../tools/inputmethods/interception-tools/caps2esc.nix { };
-    dual-function-keys =
-      callPackage ../tools/inputmethods/interception-tools/dual-function-keys.nix
-        { };
+    caps2esc = callPackage ../by-name/in/interception-tools/caps2esc.nix { };
+    dual-function-keys = callPackage ../by-name/in/interception-tools/dual-function-keys.nix { };
   };
 
   blacken-docs = with python3Packages; toPythonApplication blacken-docs;
@@ -1917,15 +1908,6 @@ with pkgs;
 
   gnupg1 = gnupg1compat; # use config.packageOverrides if you prefer original gnupg1
 
-  gnupg24 = callPackage ../tools/security/gnupg/24.nix {
-    pinentry = if stdenv.hostPlatform.isDarwin then pinentry_mac else pinentry-gnome3;
-  };
-  gnupg = gnupg24;
-  gnupgMinimal = gnupg.override {
-    enableMinimal = true;
-    guiSupport = false;
-  };
-
   inherit (callPackage ../development/tools/godot { })
     godot3
     godot3-export-templates
@@ -2051,7 +2033,7 @@ with pkgs;
 
   iperf = iperf3;
 
-  i-pi = with python3Packages; toPythonApplication i-pi;
+  i-pi = with python3Packages; toPythonApplication ipi;
 
   # ipscan is commonly known under the name angryipscanner
   angryipscanner = ipscan;
@@ -2068,11 +2050,6 @@ with pkgs;
     isl_0_23
     isl_0_27
     ;
-
-  jamesdsp-pulse = callPackage ../by-name/ja/jamesdsp/package.nix {
-    usePipewire = false;
-    usePulseaudio = true;
-  };
 
   jc = with python3Packages; toPythonApplication jc;
 
@@ -2119,7 +2096,7 @@ with pkgs;
 
   lean = lean4;
 
-  limine-full = limine.override { enableAll = true; };
+  logseq = logseq-og;
 
   logstash7 = callPackage ../tools/misc/logstash/7.x.nix {
     # https://www.elastic.co/support/matrix#logstash-and-jvm
@@ -2131,8 +2108,6 @@ with pkgs;
     jre = jdk11_headless;
   };
   logstash = logstash7;
-
-  lagrange-tui = lagrange.override { enableTUI = true; };
 
   matrix-synapse-plugins = recurseIntoAttrs matrix-synapse-unwrapped.plugins;
 
@@ -2259,10 +2234,6 @@ with pkgs;
   nerd-fonts = recurseIntoAttrs (callPackage ../data/fonts/nerd-fonts { });
 
   maple-mono = recurseIntoAttrs (callPackage ../data/fonts/maple-font { });
-
-  netcdf-mpi = netcdf.override {
-    hdf5 = hdf5-mpi.override { apiVersion = "v110"; };
-  };
 
   ioskeley-mono = recurseIntoAttrs (callPackage ../data/fonts/ioskeley-mono { });
 
@@ -2404,6 +2375,7 @@ with pkgs;
     percona-server
     ;
   inherit (import ../tools/backup/percona-xtrabackup pkgs)
+    percona-xtrabackup_9_7
     percona-xtrabackup_8_4
     percona-xtrabackup
     ;
@@ -2736,7 +2708,7 @@ with pkgs;
   ### SHELLS
 
   runtimeShell = "${runtimeShellPackage}${runtimeShellPackage.shellPath}";
-  runtimeShellPackage = bashNonInteractive;
+  runtimeShellPackage = if stdenv.hostPlatform.isWindows then pkgs.rubash else bashNonInteractive;
 
   bash = callPackage ../shells/bash/5.nix { };
   bashNonInteractive = lowPrio (
@@ -2859,7 +2831,7 @@ with pkgs;
 
   dprint-plugins = recurseIntoAttrs (callPackage ../by-name/dp/dprint/plugins { });
 
-  reaction-plugins = reaction.passthru.plugins;
+  reaction-plugins = recurseIntoAttrs reaction.passthru.plugins;
 
   elm2nix = haskell.lib.compose.justStaticExecutables haskellPackages.elm2nix;
 
@@ -3320,14 +3292,13 @@ with pkgs;
 
   haskellPackages = recurseIntoAttrs (
     # Prefer native-bignum to avoid linking issues with gmp;
-    # GHC 9.10 doesn't work too well with iserv-proxy.
     if stdenv.hostPlatform.isStatic then
       haskell.packages.native-bignum.ghc912
     # JS backend can't use gmp
     else if stdenv.hostPlatform.isGhcjs then
-      haskell.packages.native-bignum.ghc910
+      haskell.packages.native-bignum.ghc912
     else
-      haskell.packages.ghc910
+      haskell.packages.ghc912
   );
 
   # haskellPackages.ghc is build->host (it exposes the compiler used to build the
@@ -3341,14 +3312,13 @@ with pkgs;
   ghc =
     targetPackages.haskellPackages.ghc or (
       # Prefer native-bignum to avoid linking issues with gmp;
-      # GHC 9.10 doesn't work too well with iserv-proxy.
       if stdenv.hostPlatform.isStatic then
         haskell.compiler.native-bignum.ghc912
       # JS backend can't use GMP
       else if stdenv.targetPlatform.isGhcjs then
-        haskell.compiler.native-bignum.ghc910
+        haskell.compiler.native-bignum.ghc912
       else
-        haskell.compiler.ghc910
+        haskell.compiler.ghc912
     );
 
   # TODO(@NixOS/haskell): deprecate this alias?
@@ -3545,7 +3515,7 @@ with pkgs;
   lldb = llvmPackages.lldb;
 
   llvm = llvmPackages.llvm;
-  flang = llvmPackages_20.flang;
+  flang = llvmPackages.flang;
 
   libllvm = llvmPackages.libllvm;
   llvm-manpages = llvmPackages.llvm-manpages;
@@ -3690,12 +3660,14 @@ with pkgs;
   wrapRustc = rustc-unwrapped: wrapRustcWith { inherit rustc-unwrapped; };
 
   rust_1_99 = callPackage ../development/compilers/rust/1_99.nix { };
+  rust_1_100 = callPackage ../development/compilers/rust/1_100.nix { };
   rust = rust_1_99;
 
   mrustc = callPackage ../development/compilers/mrustc { };
   mrustc-bootstrap = callPackage ../development/compilers/mrustc/bootstrap.nix { };
 
   rustPackages_1_99 = rust_1_99.packages.stable;
+  rustPackages_1_100 = rust_1_100.packages.stable;
   rustPackages = rustPackages_1_99;
 
   inherit (rustPackages)
@@ -3749,6 +3721,7 @@ with pkgs;
     cargo-pgrx_0_18_0
     cargo-pgrx_0_19_0
     cargo-pgrx_0_19_1
+    cargo-pgrx_0_19_4
     cargo-pgrx
     ;
 
@@ -3771,15 +3744,6 @@ with pkgs;
     stdenv = clangStdenv;
   };
 
-  squirrel-sql = callPackage ../development/tools/database/squirrel-sql {
-    drivers = [
-      jtds_jdbc
-      mssql_jdbc
-      mysql_jdbc
-      postgresql_jdbc
-    ];
-  };
-
   swiftPackages = recurseIntoAttrs (callPackage ./swift-packages.nix { });
   inherit (swiftPackages)
     fetchSwiftPMDeps
@@ -3794,11 +3758,6 @@ with pkgs;
     ;
 
   swi-prolog-gui = swi-prolog.override { withGui = true; };
-
-  teyjus = callPackage ../development/compilers/teyjus {
-    inherit (ocaml-ng.ocamlPackages_4_14) buildDunePackage;
-    stdenv = gcc14Stdenv;
-  };
 
   vcard = python3Packages.toPythonApplication python3Packages.vcard;
 
@@ -4927,12 +4886,6 @@ with pkgs;
 
   gdbHostCpuOnly = gdb.override { hostCpuOnly = true; };
 
-  valgrind-light = (valgrind.override { gdb = null; }).overrideAttrs (oldAttrs: {
-    meta = oldAttrs.meta // {
-      description = "${oldAttrs.meta.description} (without GDB)";
-    };
-  });
-
   vcpkg-tool-unwrapped = vcpkg-tool.override { doWrap = false; };
 
   wild =
@@ -5903,8 +5856,9 @@ with pkgs;
   zunclient = with python313Packages; toPythonApplication python-zunclient;
 
   inherit (callPackages ../by-name/li/libressl { })
-    libressl_4_2
+    # When you remove a version here, add a notice in aliases.nix.
     libressl_4_3
+    libressl_4_4
     ;
 
   openssl = openssl_3_5;
@@ -7072,14 +7026,6 @@ with pkgs;
     enableExperimental = true;
   };
 
-  conky = callPackage ../os-specific/linux/conky (
-    {
-      lua = lua5_5;
-      inherit (linuxPackages.nvidia_x11.settings) libXNVCtrl;
-    }
-    // config.conky or { }
-  );
-
   # Darwin package set
   #
   # Even though this is a set of packages not single package, use `callPackage`
@@ -7210,21 +7156,6 @@ with pkgs;
 
   kmod = callPackage ../os-specific/linux/kmod { };
 
-  lvm2 = callPackage ../os-specific/linux/lvm2/2_03.nix {
-    # break the cyclic dependency:
-    # util-linux (non-minimal) depends (optionally, but on by default) on systemd,
-    # systemd (optionally, but on by default) on cryptsetup and cryptsetup depends on lvm2
-    util-linux = util-linuxMinimal;
-  };
-
-  lvm2_dmeventd = lvm2.override {
-    enableDmeventd = true;
-    enableCmdlib = true;
-  };
-  lvm2_vdo = lvm2_dmeventd.override {
-    enableVDO = true;
-  };
-
   mdadm = mdadm4;
 
   # minimal-bootstrap packages aren't used for anything but bootstrapping our
@@ -7271,14 +7202,6 @@ with pkgs;
       unixtools.net-tools;
 
   open-vm-tools-headless = open-vm-tools.override { withX = false; };
-
-  pam =
-    if stdenv.hostPlatform.isLinux then
-      linux-pam
-    else if stdenv.hostPlatform.isFreeBSD then
-      freebsd.libpam
-    else
-      openpam;
 
   # pam_bioapi ( see http://www.thinkwiki.org/wiki/How_to_enable_the_fingerprint_reader )
 
@@ -8695,18 +8618,6 @@ with pkgs;
   };
   neovim = wrapNeovim neovim-unwrapped { };
 
-  virtualbox = callPackage ../applications/virtualization/virtualbox {
-    stdenv = stdenv_32bit;
-
-    # VirtualBox uses wsimport, which was removed after JDK 8.
-    jdk = jdk8;
-
-    # Opt out of building the guest BIOS sources with the problematic Open Watcom
-    # toolchain. People who need to build the BIOS from sources (for example to
-    # apply patches) can override this.
-    open-watcom-bin = null;
-  };
-
   virtualboxKvm = lowPrio (
     virtualbox.override {
       enableKvm = true;
@@ -9030,32 +8941,6 @@ with pkgs;
     d1x-rebirth-full
     d2x-rebirth-full
     ;
-
-  factorio-experimental = factorio.override {
-    releaseType = "alpha";
-    experimental = true;
-  };
-
-  factorio-headless = factorio.override { releaseType = "headless"; };
-
-  factorio-headless-experimental = factorio.override {
-    releaseType = "headless";
-    experimental = true;
-  };
-
-  factorio-demo = factorio.override { releaseType = "demo"; };
-
-  factorio-demo-experimental = factorio.override {
-    releaseType = "demo";
-    experimental = true;
-  };
-
-  factorio-space-age = factorio.override { releaseType = "expansion"; };
-
-  factorio-space-age-experimental = factorio.override {
-    releaseType = "expansion";
-    experimental = true;
-  };
 
   factorio-utils = callPackage ../by-name/fa/factorio/utils.nix { };
 
@@ -9845,8 +9730,6 @@ with pkgs;
   sane-backends = callPackage ../applications/graphics/sane/backends (config.sane or { });
 
   sane-drivers = callPackage ../applications/graphics/sane/drivers.nix { };
-
-  mkSaneConfig = callPackage ../applications/graphics/sane/config.nix { };
 
   selinuxPackages = recurseIntoAttrs (callPackage ../os-specific/linux/selinux { });
 

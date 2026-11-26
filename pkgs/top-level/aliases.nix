@@ -401,6 +401,7 @@ mapAliases {
   ayu-theme-gtk = throw "'ayu-theme-gtk' has been removed because it depended on 'gtk-engine-murrine', which was removed because it was unmaintained upstream and depended on GTK 2."; # Added 2026-07-22
   b43FirmwareCutter = warnAlias "'b43FirmwareCutter' has been renamed to 'b43-fwcutter'" b43-fwcutter; # Added 2026-02-08
   backlight-auto = throw "'backlight-auto' has been removed as it relies on Zig 0.12 which has been dropped."; # Added 2025-08-22
+  badlion-client = throw "'badlion-client' has been discontinued; use 'lunar-client' instead."; # Added 2026-11-22
   badtouch = throw "'badtouch' has been renamed to/replaced by 'authoscope'"; # Converted to throw 2025-10-27
   balatro-mod-manager = throw "'balatro-mod-manager' has been removed as it was discontinued"; # Added 2026-11-02
   banana-vera = throw "'banana-vera' has been removed as it relies on python3.10"; # Added 2026-02-09
@@ -1477,6 +1478,8 @@ mapAliases {
   libfpx = throw "libfpx has been removed as it was unmaintained in Nixpkgs and had known vulnerabilities"; # Added 2025-05-20
   libFS = libfs; # Added 2026-02-04
   libgadu = throw "'libgadu' has been removed as upstream is unmaintained and has no dependents or maintainers in Nixpkgs"; # Added 2025-05-17
+  libgda5 = throw "'libgda5' has been removed as it was unmaintained upstream, which is problematic for a database client library"; # Added 2026-10-25
+  libgda6 = throw "'libgda6' has been removed as it was unmaintained upstream, which is problematic for a database client library"; # Added 2026-10-25
   libgda = throw "'libgda' has been renamed to/replaced by 'libgda5'"; # Converted to throw 2025-10-27
   libgdamm = throw "'libgdamm' has been removed due to being archived upstream."; # Added 2026-10-24
   libgdata = throw "'libgdata' has been removed due to being archived upstream."; # Added 2026-05-29
@@ -1534,6 +1537,7 @@ mapAliases {
   libreoffice-qt-still-unwrapped = libreoffice-qt-stable-unwrapped; # Added 2026-08-11
   libreoffice-still = warnAlias "LibreOffice upstream has changed the versioning, please use `libreoffice-stable` or just `libreoffice`" libreoffice-stable; # Added 2026-08-11
   ###
+  libressl_4_2 = throw "LibreSSL 4.2 is end of life as of 2026-10-22, update to a newer version.";
   librest_1_0 = warnAlias "'librest_1_0' has been renamed to/replaced by 'librest'" librest; # Added 2026-05-30
   librewolf-wayland = throw "'librewolf-wayland' has been renamed to/replaced by 'librewolf'"; # Converted to throw 2025-10-27
   librtlsdr = throw "'librtlsdr' has been renamed to/replaced by 'rtl-sdr'"; # Converted to throw 2025-10-27
@@ -1572,7 +1576,8 @@ mapAliases {
   libXext = libxext; # Added 2026-02-06
   libXfixes = libxfixes; # Added 2026-02-06
   libXfont2 = libxfont_2; # Added 2026-02-06
-  libXfont = libxfont_1; # Added 2026-01-19
+  libXfont = throw "'libXfont' has been removed as it was unmaintained upstream and had many likely security issues. Consider upgrading to 'libxfont_2' instead."; # Added 2026-11-23
+  libxfont_1 = throw "'libxfont_1' has been removed as it was unmaintained upstream and had many likely security issues. Consider upgrading to 'libxfont_2' instead."; # Added 2026-11-23
   libXft = libxft; # Added 2026-02-06
   libXi = libxi; # Added 2026-02-06
   libXinerama = libxinerama; # Added 2026-02-06
@@ -1857,6 +1862,7 @@ mapAliases {
   minio_legacy_fs = throw "'minio_legacy_fs' has been removed. Users should migrate to alternatives such as Garage, SeaweedFS, or Ceph. S3-compatible clients such as rclone can be used to move data."; # Added 2026-02-02
   minizincide = warnAlias "'minizincide' has been renamed to 'minizinc-ide'" minizinc-ide; # Added 2026-01-03
   minizip2 = throw "'minizip2' has been renamed to/replaced by 'minizip-ng'"; # Converted to throw 2025-10-27
+  mkSaneConfig = throw "'mkSaneConfig' has been removed"; # Added 2026-11-03
   mkTerraform = throw "'mkTerraform' has been removed"; # Added 2026-08-29
   mkYarnModules = throw "'yarn2nix' and its tooling has been removed as it was unusable within nodePackages. Use the standard yarn v1 hooks available in nixpkgs instead."; # Added 2026-04-25
   mkYarnPackage = throw "'yarn2nix' and its tooling has been removed as it was unusable within nodePackages. Use the standard yarn v1 hooks available in nixpkgs instead."; # Added 2026-04-25
@@ -2251,6 +2257,7 @@ mapAliases {
   polyml56 = throw "'polyml56' has been deprecated in favor of polyml"; # Added 2026-06-01
   polyml57 = throw "'polyml57' has been deprecated in favor of polyml"; # Added 2026-06-01
   polypane = throw "'polypane' has been removed due to lack of maintenance in nixpkgs"; # Added 2025-06-25
+  pomodoro-gtk = throw "'pomodoro-gtk' has been removed as it was unmaintained upstream and depended on the unmaintained libgda database client library"; # Added 2026-10-25
   popcorntime = throw "'popcorntime' has been removed since the upstream project has been forked"; # Added 2026-09-03
   poppler_utils = throw "'poppler_utils' has been renamed to/replaced by 'poppler-utils'"; # Converted to throw 2025-10-27
   popura = throw "'popura' is abandoned upstream and in nixpkgs and has been removed"; # Added 2026-01-15
@@ -2397,6 +2404,7 @@ mapAliases {
   rar2fs = throw "'rar2fs' has been removed as it is unmaintained, and depends on the unmaintained fuse2 library"; # Added 2026-05-19
   rates = throw "'rates' has been removed as it was broken and unmaintained upstream"; # Added 2026-08-24
   raycast-beta = throw "'raycast-beta' has been removed because Raycast 2.0 is out of beta. Use 'raycast' instead."; # Added 2026-08-24
+  rdesktop = throw "'rdesktop' has been removed due to a lack of maintenance upstream"; # Added 2026-11-22
   react-native-debugger = throw "'react-native-debugger' has been removed as it was unmaintained upstream and vendoring an EOL version of Electron"; # Added 2026-09-02
   react-static = throw "'react-static' has been removed due to lack of maintenance upstream"; # Added 2025-11-04
   recapp = throw "'recapp' is unmaintained and has been removed"; # Added 2026-05-25
@@ -2496,6 +2504,7 @@ mapAliases {
   semantik = throw "'semantik' has been removed as it depended on EOL qt5 webengine"; # Added 2026-04-17
   semiphemeral = throw "'semiphemeral' has been removed as it is archived upstream"; # Added 2025-11-06
   seq24 = throw "'seq24' has been removed as it was unmaintained upsteam and depended on the deprecated GTK 2 engine."; # Added 2026-08-03
+  sequeler = throw "'sequeler' has been removed as it depended on the unmaintained libgda database client library"; # Added 2026-10-25
   sequoia = throw "'sequoia' has been renamed to/replaced by 'sequoia-sq'"; # Converted to throw 2025-10-27
   sequoia-sqop = sequoia-sop; # Added 2026-01-23
   serverless = throw "'serverless' has been removed because version 3.x is unmaintained upstream and vulnerable, and version 4.x lacks a suitable binary or source download."; # Added 2025-11-22
@@ -2613,6 +2622,7 @@ mapAliases {
   sshd-openpgpg-auth = throw "'sshd-openpgpg-auth' has been removed as it is no longer maintained and fails a few tests."; # Added 2026-10-23
   ssl-proxy = throw "'ssl-proxy' has been removed as it was unmaintained both upstream and in nixpkgs, pinned to dangerously old version of go crypto."; # Added 2026-10-17
   ssm-agent = throw "'ssm-agent' has been renamed to/replaced by 'amazon-ssm-agent'"; # Converted to throw 2025-10-27
+  stac-validator = warnAlias "'stac-validator' has been renamed to 'stac-valid', following upstream's rename" stac-valid; # Added 2026-11-21
   stacer = throw "'stacer' has been removed because it was abandoned upstream and relied upon vulnerable software"; # Added 2025-11-08
   stalwart = warnAlias "`stalwart` is currently pinned to `0.15.5`. If `0.16.x` is needed, it is available as `stalwart_0_16`. Note: `stalwart_0_16` is not compatible with `services.stalwart` at this time." stalwart_0_15;
   stalwart-mail = warnAlias "'stalwart-mail' has been renamed to/replaced by 'stalwart'" stalwart; # Added 2026-01-19

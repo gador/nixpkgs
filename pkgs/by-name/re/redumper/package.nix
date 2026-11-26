@@ -12,7 +12,7 @@
 
 llvmPackages.stdenv.mkDerivation (finalAttrs: {
   pname = "redumper";
-  version = "772";
+  version = "775";
 
   __structuredAttrs = true;
   strictDeps = true;
@@ -21,12 +21,8 @@ llvmPackages.stdenv.mkDerivation (finalAttrs: {
     owner = "superg";
     repo = "redumper";
     tag = "b${finalAttrs.version}";
-    hash = "sha256-CTxJ/ANhxDQeCMys/xTzv3VvW+Y7D72LLXEdMvEQojU=";
+    hash = "sha256-0fX1Eph5EYAzQJJVQR2B+C1aUnFB3AUtqwZ/BVxwrG4=";
   };
-
-  patches = [
-    ./remove-macos-bundling.patch
-  ];
 
   nativeBuildInputs = [
     cmake

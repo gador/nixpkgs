@@ -9,14 +9,12 @@
 
   aws-lc,
   bzip2,
-  foundationdb,
   pkg-config,
   rocksdb_11_8,
   rust-jemalloc-sys-unprefixed,
   sqlite,
   zstd,
 
-  withFoundationdb ? false,
   stalwartEnterprise ? false,
 }:
 let
@@ -24,7 +22,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "stalwart" + (lib.optionalString stalwartEnterprise "-enterprise");
-  version = "1.1.1";
+  version = "1.2.0";
 
   __structuredAttrs = true;
 
@@ -32,10 +30,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "stalwartlabs";
     repo = "stalwart";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-qspkVWx2myrPzctMRrPse3m1tniRe5L7+cAOr8avML8=";
+    hash = "sha256-YZbnObGT94N31yQwEwERDeC0QoOOBs6oSxfbptRw1Zc=";
   };
 
-  cargoHash = "sha256-Wdqv6GAsQZNlt6xdiM/iEyP8WBYK26z0d3fA7iedVoU=";
+  cargoHash = "sha256-2pMTJYkvmc3hryTv0N5aMD2VHiE52ZcCctJqZOC8uU8=";
 
   env = {
     ROCKSDB_INCLUDE_DIR = "${rocksdb}/include";
@@ -66,23 +64,23 @@ rustPlatform.buildRustPackage (finalAttrs: {
     rust-jemalloc-sys-unprefixed
     sqlite
     zstd
-  ]
-  ++ lib.optionals (stdenv.hostPlatform.isLinux && withFoundationdb) [ foundationdb ];
+  ];
 
-  # Issue: https://github.com/stalwartlabs/stalwart/issues/1104
+  # https://github.com/stalwartlabs/stalwart/blob/v1.2.0/.github/workflows/ci.yml#L360
   buildNoDefaultFeatures = true;
   buildFeatures = [
     "sqlite"
     "postgres"
     "mysql"
     "rocks"
+    "foundationdb"
     "s3"
     "redis"
+    "keep"
     "azure"
     "nats"
-    "keep"
+    "exchange"
   ]
-  ++ lib.optionals withFoundationdb [ "foundationdb" ]
   ++ lib.optionals stalwartEnterprise [ "enterprise" ];
 
   cargoBuildFlags = [

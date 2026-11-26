@@ -49,7 +49,6 @@ in
             kernelPatches.bridge_stp_helper
             kernelPatches.request_key_helper
             kernelPatches.libbpf_C23_compat
-            kernelPatches.tools_128bit_types
           ];
         };
 
@@ -58,7 +57,6 @@ in
           kernelPatches = [
             kernelPatches.bridge_stp_helper
             kernelPatches.request_key_helper
-            kernelPatches.tools_128bit_types
           ];
         };
 
@@ -67,7 +65,6 @@ in
           kernelPatches = [
             kernelPatches.bridge_stp_helper
             kernelPatches.request_key_helper
-            kernelPatches.tools_128bit_types
           ];
         };
 
@@ -76,7 +73,6 @@ in
           kernelPatches = [
             kernelPatches.bridge_stp_helper
             kernelPatches.request_key_helper
-            kernelPatches.tools_128bit_types
           ];
         };
 
@@ -122,7 +118,6 @@ in
           kernelPatches = [
             kernelPatches.bridge_stp_helper
             kernelPatches.request_key_helper
-            kernelPatches.tools_128bit_types
           ];
         };
         linux_xanmod_stable = xanmodKernels {
@@ -534,13 +529,9 @@ in
 
         virtio_vmmci = callPackage ../os-specific/linux/virtio_vmmci { };
 
-        virtualbox = callPackage ../os-specific/linux/virtualbox {
-          virtualbox = pkgs.virtualboxHardened;
-        };
+        virtualbox = callPackage ../os-specific/linux/virtualbox { };
 
-        virtualboxGuestAdditions =
-          callPackage ../applications/virtualization/virtualbox/guest-additions
-            { };
+        virtualboxGuestAdditions = callPackage ../by-name/vi/virtualbox/guest-additions { };
 
         mm-tools = callPackage ../os-specific/linux/mm-tools { };
 

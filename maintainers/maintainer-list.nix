@@ -11124,6 +11124,12 @@
     githubId = 343415;
     name = "Greg Roodt";
   };
+  grubmeshi = {
+    email = "agrub@meshcloud.io";
+    github = "grubmeshi";
+    githubId = 247164247;
+    name = "Andreas Grub";
+  };
   gruve-p = {
     email = "groestlcoin@gmail.com";
     github = "gruve-p";
@@ -20567,6 +20573,14 @@
     matrix = "@philip:matrix.munksgaard.me";
     keys = [ { fingerprint = "5658 4D09 71AF E45F CC29 6BD7 4CE6 2A90 EFC0 B9B2"; } ];
   };
+  MuntasirSZN = {
+    name = "Muntasir Mahmud";
+    email = "muntasir.joypurhat@gmail.com";
+    github = "MuntasirSZN";
+    githubId = 161931072;
+    matrix = "@muntasirszn:matrix.org";
+    keys = [ { fingerprint = "DAF9 E3E0 3AA8 70A9 E180  7AE1 E7FE 5EC8 7673 4CA2"; } ];
+  };
   mupdt = {
     email = "nix+mupdt@pdtpartners.com";
     github = "mupdt";
@@ -21055,6 +21069,11 @@
     github = "ndenissov";
     githubId = 70575593;
     name = "Nikita Denissov";
+  };
+  ndgigliotti = {
+    github = "ndgigliotti";
+    githubId = 12902796;
+    name = "Nicholas Gigliotti";
   };
   ndl = {
     email = "ndl@endl.ch";
@@ -21755,6 +21774,12 @@
     github = "nmoya";
     githubId = 1767648;
     name = "Nikolas Moya";
+  };
+  no-mood = {
+    email = "mood.dev@pm.me";
+    github = "no-mood";
+    githubId = 74420740;
+    name = "mood";
   };
   noaccos = {
     name = "Francesco Noacco";
@@ -26168,7 +26193,7 @@
     githubId = 12197024;
   };
   ruuda = {
-    email = "dev+nix@veniogames.com";
+    email = "nixpkgs@ruuda.nl";
     github = "ruuda";
     githubId = 506953;
     name = "Ruud van Asseldonk";

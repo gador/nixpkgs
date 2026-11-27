@@ -18,7 +18,8 @@ let
   };
 
   kernelModules = config.boot.kernelPackages.virtualbox.override {
-    inherit virtualbox;
+    # see https://github.com/NixOS/nixpkgs/issues/593243
+    virtualboxHardened = virtualbox;
   };
 
 in
